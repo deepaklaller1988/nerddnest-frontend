@@ -6,7 +6,6 @@ export default class Header {
         if (headerTitleElement) {
           headerTitleElement.innerHTML = title;
         }
-    // this.title = title;
   }
 
 }
