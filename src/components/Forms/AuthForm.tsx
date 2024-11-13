@@ -8,10 +8,9 @@ import TermsOfServicePopup from "../Modals/Terms&Services";
 
 const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
   const [isOpen, setIsOpen] = useState(false);
-
   const openModal = () => setIsOpen(true);
-
   const closeModal = () => setIsOpen(false);
+  
   return (
     <div className="flex min-h-screen">
       <div className="relative w-1/2 bg-black flex items-center justify-center">
