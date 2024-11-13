@@ -28,7 +28,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
         <div className="max-w-md w-full">
           <div className="flex mb-8">
             <Image
-              src="/logo.png"
+              src="/logo1.png"
               width={50}
               height={50}
               alt="Futuristic Avatar"
