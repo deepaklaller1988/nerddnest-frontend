@@ -2,7 +2,7 @@ import React from 'react'
 
 export default function LatestUpdates() {
     return (
-        <div className='min-w-[280px] max-w-[280px] rounded-lg bg-white p-4'>
+        <div className='min-w-[280px] max-w-[280px] rounded-[12px] bg-white p-4'>
             <h2 className='text-[var(--highlight)] font-semibold pb-4'>LATEST UPDATES</h2>
             <div className='w-full'>
 

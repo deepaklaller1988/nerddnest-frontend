@@ -17,7 +17,7 @@ import { MdLogout } from "react-icons/md";
 
 export default function Sidebar() {
   return (
-    <div className='min-w-[280px] max-w-[280px] rounded-lg bg-white'>
+    <div className='min-w-[280px] max-w-[280px] rounded-[12px] bg-white'>
         <h2 className='text-[var(--highlight)] font-semibold p-4'>WELCOME TO ACCOUNT</h2>
     <section>
         <div className='w-full'>
