@@ -4,13 +4,12 @@ import { CiSettings } from "react-icons/ci";
 import { FaCcDiscover } from "react-icons/fa";
 import { IoLogoGameControllerB } from "react-icons/io";
 
-import Link from "next/link";
 import Menu from "./Menu";
 import { MenuItem, MenuItemsProps } from "@/types/sidebarInterfaces";
 
-const MenuItems :React.FC<MenuItemsProps>= ({ toggleSection, openSections }) => {
-    const menuItems: MenuItem[] = [
-        {
+const MenuItems: React.FC<MenuItemsProps> = ({ toggleSection, openSections }) => {
+  const menuItems: MenuItem[] = [
+    {
       name: "Profile",
       icon: <CgProfile />,
       links: [
@@ -23,9 +22,7 @@ const MenuItems :React.FC<MenuItemsProps>= ({ toggleSection, openSections }) => 
     {
       name: "Games Hub",
       icon: <IoLogoGameControllerB />,
-      links: [
-        { name: "Hub", href: "/account/login" },
-      ],
+      links: [{ name: "Hub", href: "/account/login" }],
     },
     {
       name: "Discover",
@@ -60,16 +57,10 @@ const MenuItems :React.FC<MenuItemsProps>= ({ toggleSection, openSections }) => 
           key={index}
           name={item.name}
           icon={item.icon}
+          links={item.links} 
           isOpen={openSections[item.name] || false}
-          onToggle={() => toggleSection(item.name)}
-        >
-          {item.links &&
-            item.links.map((link, idx) => (
-              <Link key={idx} href={link.href}>
-                <a className="block p-2 hover:bg-gray-200">{link.name}</a>
-              </Link>
-            ))}
-        </Menu>
+          onToggle={() => toggleSection(item.name)} 
+        />
       ))}
     </div>
   );

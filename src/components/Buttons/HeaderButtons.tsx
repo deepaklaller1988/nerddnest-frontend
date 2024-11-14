@@ -7,8 +7,8 @@ import { IoMdArrowDropdownCircle } from "react-icons/io";
 import HeaderModal from "../Modals/HeaderModal";
 import IconButton from "./IconButton";
 import Sidebarr from "../core/Sidebarr";
-type PopupType = "message" | "notification" | "sidebar" | null;
 
+type PopupType = "message" | "notification" | "sidebar" | null;
 
 export default function HeaderButtons() {
   const [currentPopup, setCurrentPopup] = useState<PopupType | null>(null);
@@ -27,11 +27,10 @@ export default function HeaderButtons() {
         setCurrentPopup(null);
       }
     };
-  
+
     document.addEventListener("click", handleClickOutside);
     return () => document.removeEventListener("click", handleClickOutside);
   }, [currentPopup]);
-  
 
   const closePopup = () => {
     setCurrentPopup(null);
@@ -42,12 +41,8 @@ export default function HeaderButtons() {
       <div className="flex gap-6">
         <div className="relative" data-popup-type="message">
           <IconButton
-            icon={
-              <RiMessage2Line
-                className="text-[18px]"
-                onClick={() => togglePopup("message")}
-              />
-            }
+            onClick={() => togglePopup("message")}
+            icon={<RiMessage2Line className="text-[18px]" />}
             className="bg-white rounded-full w-10 h-10 flex items-center justify-center"
           />
           {currentPopup == "message" && (
@@ -56,12 +51,8 @@ export default function HeaderButtons() {
         </div>
         <div className="relative" data-popup-type="notification">
           <IconButton
-            icon={
-              <IoMdNotificationsOutline
-                className="text-[20px]"
-                onClick={() => togglePopup("notification")}
-              />
-            }
+            onClick={() => togglePopup("notification")}
+            icon={<IoMdNotificationsOutline className="text-[20px]" />}
             className="bg-white rounded-full w-10 h-10 flex items-center justify-center"
           />
           {currentPopup == "notification" && (
@@ -406,7 +397,7 @@ export default function HeaderButtons() {
             //     </div>
             //   </section>
             // </div>
-             <Sidebarr/> 
+            <Sidebarr />
           )}
         </div>
       </div>

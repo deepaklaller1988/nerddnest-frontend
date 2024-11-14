@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import MenuItems from './MenuItems';
 
-const Sidebar = () => {
+const Sidebarr = () => {
   const [openSections, setOpenSections] = useState<{ [key: string]: boolean }>({});
 
   const toggleSection = (section: string) => {
-    setOpenSections(prev => ({
+    setOpenSections((prev) => ({
       ...prev,
       [section]: !prev[section],
     }));
@@ -27,4 +27,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default Sidebarr;

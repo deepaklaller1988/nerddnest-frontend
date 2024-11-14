@@ -1,8 +1,9 @@
 import React from "react";
+import Link from "next/link";
 import Image from "next/image";
+
 import MainSearchBar from "../SearchBar/MainSearchBar";
 import HeaderButtons from "../Buttons/HeaderButtons";
-import Link from "next/link";
 
 export default function Header() {
   return (
