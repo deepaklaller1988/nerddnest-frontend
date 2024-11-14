@@ -1,6 +1,13 @@
 export interface ViewButtonProps {
-    name: "View Inbox" | "View Notifications"; 
+    name: string;  
     onClick: () => void; 
     className:string
 
+  }
+
+ export interface TabButtonProps {
+    label: string;
+    count?: number;
+    isActive: boolean;
+    onClick: () => void;
   }

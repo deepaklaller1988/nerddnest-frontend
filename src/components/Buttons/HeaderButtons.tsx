@@ -6,7 +6,7 @@ import { IoMdArrowDropdownCircle } from "react-icons/io";
 
 import HeaderModal from "../Modals/HeaderModal";
 import IconButton from "./IconButton";
-import Sidebarr from "../core/Sidebarr";
+import Sidebar from "../core/Sidebar";
 
 type PopupType = "message" | "notification" | "sidebar" | null;
 
@@ -397,7 +397,7 @@ export default function HeaderButtons() {
             //     </div>
             //   </section>
             // </div>
-            <Sidebarr />
+            <Sidebar type="profile"/>
           )}
         </div>
       </div>

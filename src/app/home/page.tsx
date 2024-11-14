@@ -12,7 +12,7 @@ export default function Home() {
       <div className='w-full max-w-[1230px] py-3 px-4 m-auto'>
         <div className='w-full flex gap-5'>
           <section className='flex flex-col gap-5'>
-            <Sidebar />
+            <Sidebar type="home"/>
             <Connections />
           </section>
           <section className='w-full'>
