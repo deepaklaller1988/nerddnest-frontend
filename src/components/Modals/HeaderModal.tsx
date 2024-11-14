@@ -1,8 +1,20 @@
+"use client";
 import React from "react";
-import { FiArrowRight } from "react-icons/fi";
+import { useRouter } from "next/navigation";
+import { HeaderModalProps } from "@/types/headerInterface";
+import ViewButton from "../Buttons/ViewButtons";
 
-export default function HeaderModal(currentPopup: any) {
-  const type = currentPopup.type;
+export default function HeaderModal({ type, closePopup }: HeaderModalProps) {
+  const router = useRouter();
+
+  const handleRoute = () => {
+    closePopup();
+    if (type === "message") {
+      router.push("/messages");
+    } else {
+      router.push("/notifications");
+    }
+  };
   return (
     <>
       <div className="w-full min-w-[280px] overflow-y-auto overflow-x-hidden rounded-lg bg-white absolute right-0 mt-1 max-h-[500px]">
@@ -22,16 +34,17 @@ export default function HeaderModal(currentPopup: any) {
           <div className="w-full">
             <b className="text-[var(--highlight)]">Ambros Marcos</b>
             <p>
-              "Need help or have questions? Our Support team at Nerdd Nest is
-              here for you!
+              Need help or have questions? Our Support team at Nerdd Nest is
+              here for you! Reach out anytime.
             </p>
           </div>
         </section>
 
-        <button className="sticky bottom-0 bg-white font-semibold w-full p-4 text-center flex gap-2 items-center justify-center text-[var(--highlight-blue)] hover:text-[--highlight] buttonSet">
-          {type == "message" ? "View Inbox" : "View Notifications"}{" "}
-          <FiArrowRight />
-        </button>
+        <ViewButton
+          onClick={handleRoute}
+          className="sticky bottom-0 bg-white font-semibold w-full p-4 text-center flex gap-2 items-center justify-center text-[var(--highlight-blue)] hover:text-[--highlight] buttonSet"
+          name={type == "message" ? "View Inbox" : "View Notifications"}
+        />
       </div>
     </>
   );
