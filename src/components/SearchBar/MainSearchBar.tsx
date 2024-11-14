@@ -25,7 +25,7 @@ export default function MainSearchBar() {
           <div className="w-full">
             <b className="text-[var(--highlight)]">Terms of Service</b>
             <p>
-              "Need help or have questions? Our Support team at Nerdd Nest is
+              Need help or have questions? Our Support team at Nerdd Nest is
               here for you!
             </p>
             <div className="flex flex-wrap gap-x-2">
@@ -44,7 +44,7 @@ export default function MainSearchBar() {
           <div className="w-full">
             <b className="text-[var(--highlight)]">Terms of Service</b>
             <p>
-              "Need help or have questions? Our Support team at Nerdd Nest is
+              Need help or have questions? Our Support team at Nerdd Nest is
               here for you!
             </p>
             <div className="flex flex-wrap gap-x-2">
@@ -63,7 +63,7 @@ export default function MainSearchBar() {
           <div className="w-full">
             <b className="text-[var(--highlight)]">Terms of Service</b>
             <p>
-              "Need help or have questions? Our Support team at Nerdd Nest is
+              Need help or have questions? Our Support team at Nerdd Nest is
               here for you!
             </p>
             <div className="flex flex-wrap gap-x-2">
@@ -82,7 +82,7 @@ export default function MainSearchBar() {
           <div className="w-full">
             <b className="text-[var(--highlight)]">Terms of Service</b>
             <p>
-              "Need help or have questions? Our Support team at Nerdd Nest is
+              Need help or have questions? Our Support team at Nerdd Nest is
               here for you!
             </p>
             <div className="flex flex-wrap gap-x-2">
@@ -101,7 +101,7 @@ export default function MainSearchBar() {
           <div className="w-full">
             <b className="text-[var(--highlight)]">Terms of Service</b>
             <p>
-              "Need help or have questions? Our Support team at Nerdd Nest is
+              Need help or have questions? Our Support team at Nerdd Nest is
               here for you!
             </p>
             <div className="flex flex-wrap gap-x-2">
@@ -120,7 +120,7 @@ export default function MainSearchBar() {
           <div className="w-full">
             <b className="text-[var(--highlight)]">Terms of Service</b>
             <p>
-              "Need help or have questions? Our Support team at Nerdd Nest is
+              Need help or have questions? Our Support team at Nerdd Nest is
               here for you!
             </p>
             <div className="flex flex-wrap gap-x-2">
