@@ -4,6 +4,7 @@ import Groups from '@/components/core/Groups'
 import LatestUpdates from '@/components/core/LatestUpdates'
 import Live from '@/components/core/Live'
 import Sidebar from '@/components/core/Sidebar'
+import AddStory from '@/components/core/AddStory'
 import React from 'react'
 
 export default function Home() {
@@ -15,7 +16,8 @@ export default function Home() {
             <Sidebar type="home"/>
             <Connections />
           </section>
-          <section className='w-full'>
+          <section className='storiesFix'>
+            <AddStory/>
             <Feeds />
           </section>
           <section className='flex flex-col gap-5'>
