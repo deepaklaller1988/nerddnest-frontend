@@ -11,7 +11,16 @@
   --highlght-hover: #013b41;
   --highlight-blue: #003068;
 }
-
+.namellipse{    white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: block;
+  padding: 0 15px;}
+.gradient{background: rgb(0,0,0);
+  background: -moz-linear-gradient(0deg, rgba(0,0,0,0.8799894957983193) 9%, rgba(255,255,255,0) 100%);
+  background: -webkit-linear-gradient(0deg, rgba(0,0,0,0.8799894957983193) 9%, rgba(255,255,255,0) 100%);
+  background: linear-gradient(0deg, rgba(0,0,0,0.8799894957983193) 9%, rgba(255,255,255,0) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#000000",endColorstr="#ffffff",GradientType=1);}
 /* @media (prefers-color-scheme: dark) {
 } */
 *{font-family: "Montserrat", sans-serif; font-size: 14px; outline: none; color: var(--foreground); font-weight: 500;}
@@ -46,6 +55,77 @@ a, button {
 }
 .activeFriends, .activeFriends *{ color: var(--highlight-blue); font-weight: bold;}
 .activeFriends{ font-weight: 700; border-bottom:1px solid var(--highlight-blue);}
+.storiesFix{max-width: calc(100% - 595px); width: 100%;}
+.slick-track{display: flex; gap:15px;}
+.slick-slider{overflow: hidden; position: relative;}
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+button.slick-arrow.slick-prev {
+  font-size: 0px;
+  width: 30px;
+  height: 30px;
+  background: #ffffff;
+  position: absolute;
+  z-index: 1;
+  left: 15px;
+  top: 50%;
+  margin-top: -15px;
+  border-radius: 100%;
+}
+
+button.slick-arrow.slick-next {
+  font-size: 0px;
+  width: 30px;
+  height: 30px;
+  background: #ffffff;
+  position: absolute;
+  z-index: 1;
+  right: 15px;
+  top: 50%;
+  margin-top: -15px;
+  border-radius: 100%;
+}
+
+button.slick-arrow.slick-next:before {
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid #000000;
+  position: absolute;
+  content: '';
+  border-top: 2px solid #000000;
+  transform: rotate(45deg);
+  left: 50%;
+  margin-left: -5px;
+  top: 50%;
+  margin-top: -5px;
+}
+
+button.slick-arrow.slick-prev:before {
+  width: 10px;
+  height: 10px;
+  border-left: 2px solid #000000;
+  position: absolute;
+  content: '';
+  border-bottom: 2px solid #000000;
+  transform: rotate(45deg);
+  left: 50%;
+  margin-left: -5px;
+  top: 50%;
+  margin-top: -5px;
+}
+
+button.slick-arrow.slick-next.slick-disabled {
+  opacity: .4;
+  cursor: none;
+}
+
+button.slick-arrow.slick-prev.slick-disabled {
+  opacity: 0;
+  cursor: none;
+}
 /* @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
