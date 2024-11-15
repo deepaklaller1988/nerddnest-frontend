@@ -30,7 +30,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
         />
       </div>
 
-      <div className="w-1/2 flex flex-col justify-center items-center p-10">
+      <div className="w-1/2 flex flex-col justify-center items-center p-10 bg-white">
         <div className="max-w-md w-full">
           <div className="flex mb-8">
             <Image
@@ -38,7 +38,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
               width={50}
               height={50}
               alt="Futuristic Avatar"
-              className="rounded-full"
+              className="rounded-full h-[50px] w-[50px] m-auto"
             />
           </div>
           {type !== "forgot-password" && (
@@ -51,11 +51,11 @@ const AuthForm: React.FC<AuthFormProps> = ({
                 className="text-sm text-gray-500 cursor-pointer"
               >
                 {type === "login" ? (
-                  <span className="hover:text-blue-500">Create an Account</span>
+                  <span className="hover:text-[var(--highlight-blue)]">Create an Account</span>
                 ) : (
                   <>
                     <span className="mr-1">or</span>
-                    <span className="hover:text-blue-500">Sign in</span>
+                    <span className="hover:text-[var(--highlight-blue)]">Sign in</span>
                   </>
                 )}
               </Link>
@@ -165,7 +165,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
                     </label>
                     <Link
                       href="/auth/forgot-password"
-                      className="text-sm hover:text-blue-500 cursor-pointer"
+                      className="text-sm hover:text-[var(--highlight-blue)] cursor-pointer"
                     >
                       Forgot Password?
                     </Link>
@@ -174,7 +174,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-indigo-500 text-white p-3 rounded-lg font-semibold"
+                  className="w-full bg-[var(--highlight-blue)] text-white p-3 rounded-lg font-semibold"
                 >
                   {type === "login"
                     ? "Log In"
@@ -188,7 +188,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
                   <div className="flex items-center justify-between">
                     <Link
                       href="/auth/login"
-                      className="text-sm hover:text-blue-500 cursor-pointer"
+                      className="text-sm hover:text-[var(--highlight-blue)] cursor-pointer"
                     >
                       Back to sign in
                     </Link>
@@ -200,7 +200,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
           {type !== "signup" && (
             <div
               onClick={openModal}
-              className="text-center mt-4 text-xs font-bold text-black-400 hover:text-blue-500 cursor-pointer"
+              className="text-center mt-4 text-xs font-bold text-black-400 hover:text-[var(--highlight-blue)] cursor-pointer"
             >
               Terms of Service
             </div>
