@@ -10,7 +10,7 @@ export default function ResetPassword() {
   useTitle("Reset Password");
 
   const [register, { isLoading }] = useRegisterMutation();
-  
+
   const initialValues = {
     email: "",
     password: "",
@@ -20,7 +20,7 @@ export default function ResetPassword() {
   const handleSubmit = async (values: typeof initialValues) => {
     try {
       await register(values).unwrap();
-      toasterSuccess("Registration successful", "3000", "id");
+      toasterSuccess("Registration successful", 3000, "id");
     } catch (err) {
       console.error("Error:", err);
     }

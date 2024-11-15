@@ -25,15 +25,15 @@ export interface MenuLink {
     children?: React.ReactNode;
   }
   
-  export interface TabContentProps<T extends string> {
+  export interface TabContentProps<T extends string, Item> {
     title: string;
-    items: any[];
+    items: Item[];
     isLoading: boolean;
     noItemsMessage: string;
     tabs: { label: string; count: number; tabName: T }[];
     onTabSwitch: (tab: T) => void;
     activeTab: T;
-    renderItem: (item: any) => JSX.Element;
+    renderItem: (item: Item) => JSX.Element;
     viewAllText: string;
   }
   

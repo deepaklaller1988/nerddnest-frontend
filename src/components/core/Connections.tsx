@@ -3,31 +3,37 @@ import React, { useState, useEffect } from "react";
 import ConnectionItem from "./ConnectionsItem";
 import TabContent from "./Tabcontent";
 
+interface Connection {
+  name: string;
+  status: "online" | "offline";  
+  imageUrl: string;
+}
 const Connections = () => {
-  const [connections, setConnections] = useState<any[]>([]);
+  const [connections, setConnections] = useState<Connection[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [noConnections, setNoConnections] = useState<boolean>(false);
+  // const [noConnections, setNoConnections] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<"friends" | "connections">("friends");
 
   const fetchConnections = async () => {
     setLoading(true);
     try {
       setTimeout(() => {
-        const data = [
+        const data :Connection[]= [
           { name: "Ambros Marcos", status: "online", imageUrl: "/logo.png" },
           { name: "John Doe", status: "offline", imageUrl: "/logo.png" },
           { name: "Jane Smith", status: "online", imageUrl: "/logo.png" },
         ];
 
         if (data.length === 0) {
-          setNoConnections(true);
+          // setNoConnections(true);
         } else {
           setConnections(data);
-          setNoConnections(false);
+          // setNoConnections(false);
         }
       }, 1000);
     } catch (error) {
-      setNoConnections(true);
+      console.log(error)
+      // setNoConnections(true);
     } finally {
       setLoading(false);
     }

@@ -1,30 +1,36 @@
 "use client"
 import React, { useState } from "react";
-import { FiSearch, FiArrowRight } from "react-icons/fi";
+import { FiSearch } from "react-icons/fi";
 import { MdClose } from "react-icons/md";
 import { IoDocumentText } from "react-icons/io5";
 import ViewButton from "../Buttons/ViewButtons";
 
+// Define the type for the search result item
+interface SearchResult {
+  title: string;
+  description: string;
+  author: string;
+  date: string;
+}
+
 export default function MainSearchBar() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [results, setResults] = useState([]);
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [results, setResults] = useState<SearchResult[]>([]);
   
-  const staticData = [
+  // Static data with type annotations
+  const staticData: SearchResult[] = [
     { title: "Introduction to React", description: "Learn the basics of React.", author: "John Doe", date: "Jan 1, 2024" },
     { title: "Advanced JavaScript", description: "Dive into advanced concepts of JavaScript.", author: "Jane Smith", date: "Feb 15, 2024" },
     { title: "CSS for Beginners", description: "Get started with CSS.", author: "Alice Brown", date: "Mar 10, 2024" },
-    // More static data items as needed
   ];
 
-  // Filter static data based on search term
-  const handleInputChange = (e:any) => {
-    const value = e.target.value ||"";
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value || "";
     
     setSearchTerm(value);
 
     if (value) {
-      // Filter static data to simulate search functionality
-      const filteredResults :any= staticData.filter((item) =>
+      const filteredResults = staticData.filter((item) =>
         item.title.toLowerCase().includes(value.toLowerCase())
       );
       setResults(filteredResults);
@@ -33,14 +39,14 @@ export default function MainSearchBar() {
     }
   };
 
-  // Clear search input and results
   const handleClearSearch = () => {
     setSearchTerm("");
     setResults([]);
   };
-  const handleonClick=()=>{
-    
-  }
+
+  const handleonClick = () => {
+    // Implement the functionality for the View All button click
+  };
 
   return (
     <div className="relative w-[280px]">
@@ -62,7 +68,7 @@ export default function MainSearchBar() {
       {searchTerm && (
         <div className="w-full overflow-y-auto overflow-x-hidden rounded-lg bg-white absolute mt-1 max-h-[500px]">
           {results.length > 0 ? (
-            results.map((result:any, index) => (
+            results.map((result, index) => (
               <section
                 key={index}
                 className="cursor-pointer flex gap-4 justify-between items-start p-4 border-b border-black/10 hover:bg-gray-400/10 duration-[.5s]"
@@ -84,11 +90,12 @@ export default function MainSearchBar() {
           ) : (
             <div className="p-4 text-center text-gray-500">No results found.</div>
           )}
-          {/* <button 
-            <FiArrowRight />
-          </button> */}
 
-          <ViewButton onClick={handleonClick} name="View All" className="sticky bottom-0 bg-white font-semibold w-full p-4 text-center flex gap-2 items-center justify-center text-[var(--highlight-blue)] hover:text-[--highlight]"/>
+          <ViewButton
+            onClick={handleonClick}
+            name="View All"
+            className="sticky bottom-0 bg-white font-semibold w-full p-4 text-center flex gap-2 items-center justify-center text-[var(--highlight-blue)] hover:text-[--highlight]"
+          />
         </div>
       )}
     </div>

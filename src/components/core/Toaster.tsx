@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-export const toasterSuccess = (message: any, time: any = 3000, customId?: any) => {
+export const toasterSuccess = (message: string, time: number  = 3000, customId?: string | number) => {
   toast(message || "process has been done successfully", {
     type: "success",
     toastId: customId,
@@ -16,22 +16,22 @@ export const toasterSuccess = (message: any, time: any = 3000, customId?: any) =
   });
 };
 
-export const toasterError = (message: any, time: any = 3000, customId?: any) => {
+export const toasterError = (message: string , time: number  = 3000, customId?: string | number ) => {
   toast(message || "An error has been encountered", {
     type: "error",
     toastId: customId,
     position: "bottom-right",
-    autoClose: time, // Display toast for 3 seconds
+    autoClose: time, 
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: true,
     draggable: true,
     theme: "colored",
-    className: 'text-sm text-white'
+    className: 'text-sm toaster-white font-bold'
   });
 };
 
-export const toasterInfo = (message: any, time: any= 3000, customId?: any) => {
+export const toasterInfo = (message: string, time: number = 3000, customId?: string | number ) => {
   toast(message, {
     type: "info",
     toastId: customId,
@@ -44,7 +44,7 @@ export const toasterInfo = (message: any, time: any= 3000, customId?: any) => {
   });
 };
 
-export const toasterWarning = (message: any) => {
+export const toasterWarning = (message: string ) => {
   toast(message, {
     type: "warning",
     position: "bottom-right",

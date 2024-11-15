@@ -2,12 +2,16 @@
 import { useRegisterMutation } from "@/app/redux/services/auth";
 import { toasterSuccess } from "@/components/core/Toaster";
 import AuthForm from "@/components/Forms/AuthForm";
+import useTitle from "@/hooks/useTitle";
+import { SignupFormValues } from "@/types/authInterfaces";
 import { signupValidationSchema } from "@/utils/validationSchemas";
 
-const Signup = () => {
-  const [register, { isLoading }] = useRegisterMutation();
 
-  const initialValues = {
+const Signup = () => {
+  useTitle("Register an Account");
+
+  const [register, { isLoading,isError,error }] = useRegisterMutation();
+  const initialValues: SignupFormValues = {
     email: "",
     confirmemail: "",
     password: "",
@@ -16,16 +20,14 @@ const Signup = () => {
     lastname: "",
     handle: "",
     dob: "",
-    location: "",
+    location: "", 
+    agree: false, 
   };
+  
 
   const handleSubmit = async (values: typeof initialValues) => {
-    try {
       await register(values).unwrap();
-      toasterSuccess("Registration successful", "3000", "id");
-    } catch (err) {
-      console.error("Error:", err);
-    }
+      toasterSuccess("Registration successful", 3000, "id");
   };
 
   return (

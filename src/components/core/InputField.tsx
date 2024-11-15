@@ -1,5 +1,4 @@
 import { Field, ErrorMessage } from "formik";
-import { FiMail, FiLock } from "react-icons/fi";
 
 type InputFieldProps = {
   name: string;
@@ -10,6 +9,7 @@ type InputFieldProps = {
 
 const InputField: React.FC<InputFieldProps> = ({ name, type, placeholder, icon }) => {
   return (
+    <div className="flex flex-col">
     <div className="flex items-center border border-gray-300 rounded-lg p-2">
       {icon}
       <Field
@@ -18,12 +18,15 @@ const InputField: React.FC<InputFieldProps> = ({ name, type, placeholder, icon }
         className="w-full p-2 focus:outline-none"
         placeholder={placeholder}
       />
-      <ErrorMessage
-        name={name}
-        component="div"
-        className="text-red-500 text-sm"
-      />
     </div>
+    
+    <ErrorMessage
+      name={name}
+      component="div"
+      className="text-red-500 text-sm mt-1"
+    />
+  </div>
+  
   );
 };
 

@@ -5,7 +5,7 @@ interface LoginFormValues {
   password: string;
 }
 
-interface SignupFormValues {
+export interface SignupFormValues {
   email: string;
   confirmemail: string;
   password: string;
@@ -14,16 +14,23 @@ interface SignupFormValues {
   lastname: string;
   handle: string;
   dob: string;
-  location: string;
+  location?: string |undefined | null;
+  agree: boolean
 }
+
 interface ForgotPasswordFormValues {
   email: string;
 }
 
-export interface AuthFormProps {
-  type: "login" | "signup" | "forgot-password" | "reset-password";  
-  initialValues: LoginFormValues | SignupFormValues |ForgotPasswordFormValues;  
-  validationSchema: Yup.ObjectSchema<LoginFormValues | SignupFormValues | ForgotPasswordFormValues>; 
-  onSubmit: (values: LoginFormValues | SignupFormValues | ForgotPasswordFormValues) => void | Promise<void>; 
-  isLoading :boolean
+export type AuthFormValues =
+  | LoginFormValues
+  | SignupFormValues
+  | ForgotPasswordFormValues;
+
+export interface AuthFormProps<T extends AuthFormValues> {
+  type: "login" | "signup" | "forgot-password" | "reset-password";
+  initialValues: T;
+  validationSchema: Yup.ObjectSchema<T>;
+  onSubmit: (values: T) => void | Promise<void>;
+  isLoading: boolean;
 }

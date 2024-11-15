@@ -48,6 +48,9 @@ a, button {
   text-decoration: none;
   transition: .5s;
 }
+.toaster-white, .toaster-white *{
+  color:white !important
+}
 .buttonSet:hover svg{fill: var(--highlight);}
 .userHover:hover *, .userHover:hover {
   color: #003068;

@@ -2,19 +2,20 @@
 import Image from "next/image";
 import Link from "next/link";
 import { FiMail, FiLock } from "react-icons/fi";
-import { AuthFormProps } from "@/types/authInterfaces";
+import { AuthFormProps, AuthFormValues } from "@/types/authInterfaces";
 import { useState } from "react";
 import TermsOfServicePopup from "../Modals/Terms&Services";
 import { Formik, Form } from "formik";
 import InputField from "../core/InputField";
 
-const AuthForm: React.FC<AuthFormProps> = ({
+const AuthForm = <T extends AuthFormValues>({
   type,
   initialValues,
   validationSchema,
   onSubmit,
-  isLoading
-}) => {
+  isLoading,
+}: AuthFormProps<T>) => {
+  console.log(isLoading, "isLoading");
   const [isOpen, setIsOpen] = useState(false);
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
@@ -52,11 +53,15 @@ const AuthForm: React.FC<AuthFormProps> = ({
                 className="text-sm text-gray-500 cursor-pointer"
               >
                 {type === "login" ? (
-                  <span className="hover:text-[var(--highlight-blue)]">Create an Account</span>
+                  <span className="hover:text-[var(--highlight-blue)]">
+                    Create an Account
+                  </span>
                 ) : (
                   <>
                     <span className="mr-1">or</span>
-                    <span className="hover:text-[var(--highlight-blue)]">Sign in</span>
+                    <span className="hover:text-[var(--highlight-blue)]">
+                      Sign in
+                    </span>
                   </>
                 )}
               </Link>
@@ -128,7 +133,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
                       placeholder="Handle"
                     />
 
-                    <InputField name="dob" type="text" placeholder="birthday" />
+                    <InputField name="dob" type="date" placeholder="birthday" />
                     <InputField
                       name="location"
                       type="text"
@@ -138,6 +143,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
                     <label className="flex items-center">
                       <input
                         type="checkbox"
+                        name="agree"
                         className="h-4 w-4 text-indigo-500 border-gray-300 rounded"
                       />
                       <span className="ml-2 text-sm text-gray-600">
@@ -149,6 +155,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
                           Terms of Service.
                         </span>
                       </span>
+    
                     </label>
                   </>
                 )}

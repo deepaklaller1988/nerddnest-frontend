@@ -2,9 +2,12 @@
 import { useRegisterMutation } from "@/app/redux/services/auth";
 import { toasterSuccess } from "@/components/core/Toaster";
 import AuthForm from "@/components/Forms/AuthForm";
+import useTitle from "@/hooks/useTitle";
 import { loginValidationSchema } from "@/utils/validationSchemas";
 
 const Login = () => {
+  useTitle("Login");
+
   const [login, { isLoading }] = useRegisterMutation();
 
   const initialValues  = {
