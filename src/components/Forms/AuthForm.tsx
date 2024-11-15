@@ -5,12 +5,19 @@ import { FiMail, FiLock } from "react-icons/fi";
 import { AuthFormProps } from "@/types/authInterfaces";
 import { useState } from "react";
 import TermsOfServicePopup from "../Modals/Terms&Services";
+import { Formik, Form } from "formik";
+import InputField from "../core/InputField";
 
-const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
+const AuthForm: React.FC<AuthFormProps> = ({
+  type,
+  initialValues,
+  validationSchema,
+  onSubmit,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
-  
+
   return (
     <div className="flex min-h-screen">
       <div className="relative w-1/2 bg-black flex items-center justify-center">
@@ -60,150 +67,136 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
               email message with instructions on how to reset your password.
             </p>
           )}
-          <form className="space-y-6">
-            <div className="flex items-center border border-gray-300 rounded-lg p-2">
-              <FiMail className="text-gray-400 mr-2" />
-              <input
-                type="email"
-                className="w-full p-2 focus:outline-none"
-                placeholder="Email Address"
-              />
-            </div>
-
-            {type == "signup" && (
-              <div className="flex items-center border border-gray-300 rounded-lg p-2">
-                <FiMail className="text-gray-400 mr-2" />
-                <input
+          <Formik
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            onSubmit={onSubmit}
+          >
+            {({ isSubmitting }) => (
+              <Form className="space-y-6">
+                <InputField
+                  name="email"
                   type="email"
-                  className="w-full p-2 focus:outline-none"
-                  placeholder="Confirm Email Address"
+                  placeholder="Email Address"
+                  icon={<FiMail className="text-gray-400 mr-2" />}
                 />
-              </div>
-            )}
-            {type !== "forgot-password" && (
-              <>
-                <div className="flex items-center border border-gray-300 rounded-lg p-2">
-                  <FiLock className="text-gray-400 mr-2" />
-                  <input
-                    type="password"
-                    className="w-full p-2 focus:outline-none"
-                    placeholder="Password"
-                  />
-                </div>
+
                 {type === "signup" && (
-                  <div className="flex items-center border border-gray-300 rounded-lg p-2">
-                    <FiLock className="text-gray-400 mr-2" />
-                    <input
+                  <InputField
+                    name="confirmemail"
+                    type="email"
+                    placeholder="Confirm Email Address"
+                    icon={<FiMail className="text-gray-400 mr-2" />}
+                  />
+                )}
+                {type !== "forgot-password" && (
+                  <>
+                    <InputField
+                      name="password"
                       type="password"
-                      className="w-full p-2 focus:outline-none"
-                      placeholder="Confirm Password"
+                      placeholder="Password"
+                      icon={<FiLock className="text-gray-400 mr-2" />}
                     />
+                    {type === "signup" && (
+                      <InputField
+                        name="confirmpassword"
+                        type="password"
+                        placeholder="Confirm Password"
+                        icon={<FiLock className="text-gray-400 mr-2" />}
+                      />
+                    )}
+                  </>
+                )}
+
+                {type == "signup" && (
+                  <>
+                    <InputField
+                      name="firstname"
+                      type="text"
+                      placeholder="First Name"
+                    />
+                    <InputField
+                      name="lastname"
+                      type="text"
+                      placeholder="Last Name"
+                    />
+
+                    <InputField
+                      name="handle"
+                      type="text"
+                      placeholder="Handle"
+                    />
+
+                    <InputField name="dob" type="text" placeholder="birthday" />
+                    <InputField
+                      name="location"
+                      type="text"
+                      placeholder="Where are you from? (optional)"
+                    />
+
+                    <label className="flex items-center">
+                      <input
+                        type="checkbox"
+                        className="h-4 w-4 text-indigo-500 border-gray-300 rounded"
+                      />
+                      <span className="ml-2 text-sm text-gray-600">
+                        I agree to the
+                        <span
+                          onClick={openModal}
+                          className="text-sm hover:text-blue-500 cursor-pointer ml-1"
+                        >
+                          Terms of Service.
+                        </span>
+                      </span>
+                    </label>
+                  </>
+                )}
+
+                {type == "login" && (
+                  <div className="flex items-center justify-between">
+                    <label className="flex items-center">
+                      <input
+                        type="checkbox"
+                        className="h-4 w-4 text-indigo-500 border-gray-300 rounded"
+                      />
+                      <span className="ml-2 text-sm text-gray-600">
+                        Remember Me
+                      </span>
+                    </label>
+                    <Link
+                      href="/auth/forgot-password"
+                      className="text-sm hover:text-blue-500 cursor-pointer"
+                    >
+                      Forgot Password?
+                    </Link>
                   </div>
                 )}
-              </>
-            )}
-
-            {type == "signup" && (
-              <>
-                <div className="flex items-center border border-gray-300 rounded-lg p-2">
-                  <input
-                    type="name"
-                    className="w-full p-2 focus:outline-none"
-                    placeholder="First Name"
-                  />
-                </div>
-
-                <div className="flex items-center border border-gray-300 rounded-lg p-2">
-                  <input
-                    type="name"
-                    className="w-full p-2 focus:outline-none"
-                    placeholder="Last Name"
-                  />
-                </div>
-
-                <div className="flex items-center border border-gray-300 rounded-lg p-2">
-                  <input
-                    type="name"
-                    className="w-full p-2 focus:outline-none"
-                    placeholder="Handle"
-                  />
-                </div>
-                <div className="flex items-center border border-gray-300 rounded-lg p-2">
-                  <input
-                    type="name"
-                    className="w-full p-2 focus:outline-none"
-                    placeholder="birthday"
-                  />
-                </div>
-
-                <div className="flex items-center border border-gray-300 rounded-lg p-2">
-                  <input
-                    type="name"
-                    className="w-full p-2 focus:outline-none"
-                    placeholder="Where are you from? (optional)"
-                  />
-                </div>
-
-                <label className="flex items-center">
-                  <input
-                    type="checkbox"
-                    className="h-4 w-4 text-indigo-500 border-gray-300 rounded"
-                  />
-                  <span className="ml-2 text-sm text-gray-600">
-                    I agree to the
-                    <span
-                      onClick={openModal}
-                      className="text-sm hover:text-blue-500 cursor-pointer ml-1"
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full bg-indigo-500 text-white p-3 rounded-lg font-semibold"
+                >
+                  {type === "login"
+                    ? "Log In"
+                    : type == "signup"
+                    ? "Create an Account"
+                    : type == "forgot-password"
+                    ? "Request reset link"
+                    : ""}
+                </button>
+                {type == "forgot-password" && (
+                  <div className="flex items-center justify-between">
+                    <Link
+                      href="/auth/login"
+                      className="text-sm hover:text-blue-500 cursor-pointer"
                     >
-                      Terms of Service.
-                    </span>
-                  </span>
-                </label>
-              </>
+                      Back to sign in
+                    </Link>
+                  </div>
+                )}
+              </Form>
             )}
-
-            {type == "login" && (
-              <div className="flex items-center justify-between">
-                <label className="flex items-center">
-                  <input
-                    type="checkbox"
-                    className="h-4 w-4 text-indigo-500 border-gray-300 rounded"
-                  />
-                  <span className="ml-2 text-sm text-gray-600">
-                    Remember Me
-                  </span>
-                </label>
-                <Link
-                  href="/auth/forgot-password"
-                  className="text-sm hover:text-blue-500 cursor-pointer"
-                >
-                  Forgot Password?
-                </Link>
-              </div>
-            )}
-            <button
-              type="submit"
-              className="w-full bg-indigo-500 text-white p-3 rounded-lg font-semibold"
-            >
-              {type === "login"
-                ? "Log In"
-                : type == "signup"
-                ? "Create an Account"
-                : type == "forgot-password"
-                ? "Request reset link"
-                : ""}
-            </button>
-            {type == "forgot-password" && (
-              <div className="flex items-center justify-between">
-                <Link
-                  href="/auth/login"
-                  className="text-sm hover:text-blue-500 cursor-pointer"
-                >
-                  Back to sign in
-                </Link>
-              </div>
-            )}
-          </form>
+          </Formik>
           {type !== "signup" && (
             <div
               onClick={openModal}

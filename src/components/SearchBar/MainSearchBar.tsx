@@ -1,10 +1,47 @@
-import React from "react";
-import { FiSearch } from "react-icons/fi";
+"use client"
+import React, { useState } from "react";
+import { FiSearch, FiArrowRight } from "react-icons/fi";
 import { MdClose } from "react-icons/md";
 import { IoDocumentText } from "react-icons/io5";
-import { FiArrowRight } from "react-icons/fi";
+import ViewButton from "../Buttons/ViewButtons";
 
 export default function MainSearchBar() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [results, setResults] = useState([]);
+  
+  const staticData = [
+    { title: "Introduction to React", description: "Learn the basics of React.", author: "John Doe", date: "Jan 1, 2024" },
+    { title: "Advanced JavaScript", description: "Dive into advanced concepts of JavaScript.", author: "Jane Smith", date: "Feb 15, 2024" },
+    { title: "CSS for Beginners", description: "Get started with CSS.", author: "Alice Brown", date: "Mar 10, 2024" },
+    // More static data items as needed
+  ];
+
+  // Filter static data based on search term
+  const handleInputChange = (e:any) => {
+    const value = e.target.value ||"";
+    
+    setSearchTerm(value);
+
+    if (value) {
+      // Filter static data to simulate search functionality
+      const filteredResults :any= staticData.filter((item) =>
+        item.title.toLowerCase().includes(value.toLowerCase())
+      );
+      setResults(filteredResults);
+    } else {
+      setResults([]);
+    }
+  };
+
+  // Clear search input and results
+  const handleClearSearch = () => {
+    setSearchTerm("");
+    setResults([]);
+  };
+  const handleonClick=()=>{
+    
+  }
+
   return (
     <div className="relative w-[280px]">
       <div className="relative flex items-center justify-between">
@@ -13,129 +50,47 @@ export default function MainSearchBar() {
           className="bg-white rounded-full p-[10px] pl-12 w-full"
           type="text"
           placeholder="Search..."
+          value={searchTerm}
+          onChange={handleInputChange}
         />
-        <MdClose className="absolute right-[15px] text-[var(--lightgrey)] cursor-pointer opacity-0" />
-        {/* replace opacity-0 with opacity-1 after fill text in field and on click cross field should be empty */}
+        <MdClose
+          className={`absolute right-[15px] text-[var(--lightgrey)] cursor-pointer ${searchTerm ? "opacity-1" : "opacity-0"}`}
+          onClick={handleClearSearch}
+        />
       </div>
-      <div className="hidden w-full overflow-y-auto overflow-x-hidden rounded-lg bg-white absolute mt-1 max-h-[500px]">
-        <section className="cursor-pointer flex gap-4 justify-between items-start p-4 border-b border-b-1 border-black/10 hover:bg-gray-400/10 duration-[.5s]">
-          <span className="min-w-12 min-h-12 w-12 h-12 bg-black/10 rounded-full flex items-center justify-center">
-            <IoDocumentText className="text-black/50 w-6 h-6" />
-          </span>
-          <div className="w-full">
-            <b className="text-[var(--highlight)]">Terms of Service</b>
-            <p>
-              Need help or have questions? Our Support team at Nerdd Nest is
-              here for you!
-            </p>
-            <div className="flex flex-wrap gap-x-2">
-              <span className="text-black/30 text-[13px]">By Lord Lexy</span>
-              <span className="middot text-black/30 text-[13px]">·</span>
-              <span className="text-black/30 text-[13px]">
-                October 23, 2024
-              </span>
-            </div>
-          </div>
-        </section>
-        <section className="cursor-pointer flex gap-4 justify-between items-start p-4 border-b border-b-1 border-black/10 hover:bg-gray-400/10 duration-[.5s]">
-          <span className="min-w-12 min-h-12 w-12 h-12 bg-black/10 rounded-full flex items-center justify-center">
-            <IoDocumentText className="text-black/50 w-6 h-6" />
-          </span>
-          <div className="w-full">
-            <b className="text-[var(--highlight)]">Terms of Service</b>
-            <p>
-              Need help or have questions? Our Support team at Nerdd Nest is
-              here for you!
-            </p>
-            <div className="flex flex-wrap gap-x-2">
-              <span className="text-black/30 text-[13px]">By Lord Lexy</span>
-              <span className="middot text-black/30 text-[13px]">·</span>
-              <span className="text-black/30 text-[13px]">
-                October 23, 2024
-              </span>
-            </div>
-          </div>
-        </section>
-        <section className="cursor-pointer flex gap-4 justify-between items-start p-4 border-b border-b-1 border-black/10 hover:bg-gray-400/10 duration-[.5s]">
-          <span className="min-w-12 min-h-12 w-12 h-12 bg-black/10 rounded-full flex items-center justify-center">
-            <IoDocumentText className="text-black/50 w-6 h-6" />
-          </span>
-          <div className="w-full">
-            <b className="text-[var(--highlight)]">Terms of Service</b>
-            <p>
-              Need help or have questions? Our Support team at Nerdd Nest is
-              here for you!
-            </p>
-            <div className="flex flex-wrap gap-x-2">
-              <span className="text-black/30 text-[13px]">By Lord Lexy</span>
-              <span className="middot text-black/30 text-[13px]">·</span>
-              <span className="text-black/30 text-[13px]">
-                October 23, 2024
-              </span>
-            </div>
-          </div>
-        </section>
-        <section className="cursor-pointer flex gap-4 justify-between items-start p-4 border-b border-b-1 border-black/10 hover:bg-gray-400/10 duration-[.5s]">
-          <span className="min-w-12 min-h-12 w-12 h-12 bg-black/10 rounded-full flex items-center justify-center">
-            <IoDocumentText className="text-black/50 w-6 h-6" />
-          </span>
-          <div className="w-full">
-            <b className="text-[var(--highlight)]">Terms of Service</b>
-            <p>
-              Need help or have questions? Our Support team at Nerdd Nest is
-              here for you!
-            </p>
-            <div className="flex flex-wrap gap-x-2">
-              <span className="text-black/30 text-[13px]">By Lord Lexy</span>
-              <span className="middot text-black/30 text-[13px]">·</span>
-              <span className="text-black/30 text-[13px]">
-                October 23, 2024
-              </span>
-            </div>
-          </div>
-        </section>
-        <section className="cursor-pointer flex gap-4 justify-between items-start p-4 border-b border-b-1 border-black/10 hover:bg-gray-400/10 duration-[.5s]">
-          <span className="min-w-12 min-h-12 w-12 h-12 bg-black/10 rounded-full flex items-center justify-center">
-            <IoDocumentText className="text-black/50 w-6 h-6" />
-          </span>
-          <div className="w-full">
-            <b className="text-[var(--highlight)]">Terms of Service</b>
-            <p>
-              Need help or have questions? Our Support team at Nerdd Nest is
-              here for you!
-            </p>
-            <div className="flex flex-wrap gap-x-2">
-              <span className="text-black/30 text-[13px]">By Lord Lexy</span>
-              <span className="middot text-black/30 text-[13px]">·</span>
-              <span className="text-black/30 text-[13px]">
-                October 23, 2024
-              </span>
-            </div>
-          </div>
-        </section>
-        <section className="cursor-pointer flex gap-4 justify-between items-start p-4 border-b border-b-1 border-black/10 hover:bg-gray-400/10 duration-[.5s]">
-          <span className="min-w-12 min-h-12 w-12 h-12 bg-black/10 rounded-full flex items-center justify-center">
-            <IoDocumentText className="text-black/50 w-6 h-6" />
-          </span>
-          <div className="w-full">
-            <b className="text-[var(--highlight)]">Terms of Service</b>
-            <p>
-              Need help or have questions? Our Support team at Nerdd Nest is
-              here for you!
-            </p>
-            <div className="flex flex-wrap gap-x-2">
-              <span className="text-black/30 text-[13px]">By Lord Lexy</span>
-              <span className="middot text-black/30 text-[13px]">·</span>
-              <span className="text-black/30 text-[13px]">
-                October 23, 2024
-              </span>
-            </div>
-          </div>
-        </section>
-        <button className="sticky bottom-0 bg-white font-semibold w-full p-4 text-center flex gap-2 items-center justify-center text-[var(--highlight-blue)] hover:text-[--highlight] buttonSet">
-          View All <FiArrowRight />
-        </button>
-      </div>
+
+      {searchTerm && (
+        <div className="w-full overflow-y-auto overflow-x-hidden rounded-lg bg-white absolute mt-1 max-h-[500px]">
+          {results.length > 0 ? (
+            results.map((result:any, index) => (
+              <section
+                key={index}
+                className="cursor-pointer flex gap-4 justify-between items-start p-4 border-b border-black/10 hover:bg-gray-400/10 duration-[.5s]"
+              >
+                <span className="min-w-12 min-h-12 w-12 h-12 bg-black/10 rounded-full flex items-center justify-center">
+                  <IoDocumentText className="text-black/50 w-6 h-6" />
+                </span>
+                <div className="w-full">
+                  <b className="text-[var(--highlight)]">{result.title}</b>
+                  <p>{result.description}</p>
+                  <div className="flex flex-wrap gap-x-2 text-[13px] text-black/30">
+                    <span>By {result.author}</span>
+                    <span className="middot">·</span>
+                    <span>{result.date}</span>
+                  </div>
+                </div>
+              </section>
+            ))
+          ) : (
+            <div className="p-4 text-center text-gray-500">No results found.</div>
+          )}
+          {/* <button 
+            <FiArrowRight />
+          </button> */}
+
+          <ViewButton onClick={handleonClick} name="View All" className="sticky bottom-0 bg-white font-semibold w-full p-4 text-center flex gap-2 items-center justify-center text-[var(--highlight-blue)] hover:text-[--highlight]"/>
+        </div>
+      )}
     </div>
   );
 }
