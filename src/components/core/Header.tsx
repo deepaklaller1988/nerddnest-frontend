@@ -1,5 +1,7 @@
 import React from "react";
+import Link from "next/link";
 import Image from "next/image";
+
 import MainSearchBar from "../SearchBar/MainSearchBar";
 import HeaderButtons from "../Buttons/HeaderButtons";
 
@@ -9,7 +11,7 @@ export default function Header() {
       <section className="w-full max-w-[1230px] py-3 px-4 m-auto">
         <div className="flex w-full justify-between items-center">
           <section className="flex gap-4 items-center">
-            <a href="" className="w-12 h-12">
+            <Link href="/home" className="w-12 h-12">
               <span className="rounded-full overflow-hidden block">
                 <Image
                   alt="Logo"
@@ -19,7 +21,7 @@ export default function Header() {
                   src="/logo1.png"
                 />
               </span>
-            </a>
+            </Link>
             <MainSearchBar />
           </section>
           <HeaderButtons />
