@@ -1,4 +1,3 @@
-// redux/store.ts
 import { configureStore } from '@reduxjs/toolkit';
 import { authApi } from './services/auth';
 

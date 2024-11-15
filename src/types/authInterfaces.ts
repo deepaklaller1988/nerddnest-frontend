@@ -16,10 +16,14 @@ interface SignupFormValues {
   dob: string;
   location: string;
 }
+interface ForgotPasswordFormValues {
+  email: string;
+}
 
 export interface AuthFormProps {
   type: "login" | "signup" | "forgot-password" | "reset-password";  
-  initialValues: LoginFormValues | SignupFormValues;  // Adjust this based on the form type
-  validationSchema: Yup.ObjectSchema<LoginFormValues | SignupFormValues>;  // Yup validation schema type with correct form values type
-  onSubmit: (values: LoginFormValues | SignupFormValues) => void | Promise<void>; // Submit handler type
+  initialValues: LoginFormValues | SignupFormValues |ForgotPasswordFormValues;  
+  validationSchema: Yup.ObjectSchema<LoginFormValues | SignupFormValues | ForgotPasswordFormValues>; 
+  onSubmit: (values: LoginFormValues | SignupFormValues | ForgotPasswordFormValues) => void | Promise<void>; 
+  isLoading :boolean
 }

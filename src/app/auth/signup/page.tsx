@@ -1,14 +1,13 @@
-// pages/auth/signup.tsx
-"use client"
-import * as Yup from "yup";
+"use client";
 import { useRegisterMutation } from "@/app/redux/services/auth";
 import { toasterSuccess } from "@/components/core/Toaster";
 import AuthForm from "@/components/Forms/AuthForm";
+import { signupValidationSchema } from "@/utils/validationSchemas";
 
 const Signup = () => {
   const [register, { isLoading }] = useRegisterMutation();
 
-  const initialValues: any = {
+  const initialValues = {
     email: "",
     confirmemail: "",
     password: "",
@@ -20,19 +19,7 @@ const Signup = () => {
     location: "",
   };
 
-  const validationSchema = Yup.object({
-    email: Yup.string().email("Invalid email format").required("Email is required"),
-    confirmemail: Yup.string().oneOf([Yup.ref("email")], "Emails must match").required("Confirm Email is required"),
-    password: Yup.string().min(8, "Password must be at least 8 characters").required("Password is required"),
-    confirmpassword: Yup.string().oneOf([Yup.ref("password")], "Passwords must match").required("Confirm Password is required"),
-    firstname: Yup.string().required("First Name is required"),
-    lastname: Yup.string().required("Last Name is required"),
-    handle: Yup.string().required("Handle is required"),
-    dob: Yup.date().required("Date of Birth is required"),
-    location: Yup.string(),
-  });
-
-  const handleSubmit = async (values: any) => {
+  const handleSubmit = async (values: typeof initialValues) => {
     try {
       await register(values).unwrap();
       toasterSuccess("Registration successful", "3000", "id");
@@ -44,8 +31,9 @@ const Signup = () => {
   return (
     <AuthForm
       type="signup"
+      isLoading={isLoading}
       initialValues={initialValues}
-      validationSchema={validationSchema}
+      validationSchema={signupValidationSchema}
       onSubmit={handleSubmit}
     />
   );

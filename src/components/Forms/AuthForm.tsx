@@ -13,6 +13,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
   initialValues,
   validationSchema,
   onSubmit,
+  isLoading
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const openModal = () => setIsOpen(true);
