@@ -31,7 +31,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
               width={50}
               height={50}
               alt="Futuristic Avatar"
-              className="opacity-90"
+              className="rounded-full"
             />
           </div>
           {type !== "forgot-password" && (
