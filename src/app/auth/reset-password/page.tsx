@@ -1,5 +1,5 @@
 "use client";
-import { useRegisterMutation } from "@/app/redux/services/auth";
+import { useRegisterMutation } from "@/redux/services/auth";
 import { toasterSuccess } from "@/components/core/Toaster";
 import AuthForm from "@/components/Forms/AuthForm";
 import useTitle from "@/hooks/useTitle";

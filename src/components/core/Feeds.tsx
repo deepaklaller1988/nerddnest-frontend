@@ -15,7 +15,6 @@ import { RiUnpinLine } from "react-icons/ri";
 import { FaRegEdit } from "react-icons/fa";
 import { RiNotificationOffLine } from "react-icons/ri";
 import { BiSolidLike } from "react-icons/bi";
-import { BiLike } from "react-icons/bi";
 import { MdOutlineLinkedCamera } from "react-icons/md";
 import { HiOutlineVideoCamera } from "react-icons/hi2";
 import { IoDocumentAttachOutline } from "react-icons/io5";

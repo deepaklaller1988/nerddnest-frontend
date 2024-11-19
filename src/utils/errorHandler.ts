@@ -1,4 +1,3 @@
-// utils/errorHandler.ts
 export const getErrorMessage = (errorCode: string): string => {
   switch (errorCode) {
     case 'ERR_EMAIL_ALREADY_EXIST':

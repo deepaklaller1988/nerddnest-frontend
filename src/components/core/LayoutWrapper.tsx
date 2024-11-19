@@ -2,7 +2,7 @@
 import { usePathname } from "next/navigation";
 import Header from "@/components/core/Header";
 import Footer from "@/components/core/Footer";
-import { store } from '../../app/redux/store'
+import { store } from '../../redux/store'
 import { Provider } from 'react-redux'
 
 export default function LayoutWrapper({ children }: { children: React.ReactNode }) {

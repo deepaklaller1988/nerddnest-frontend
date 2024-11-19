@@ -1,5 +1,5 @@
 "use client";
-import { useLoginMutation } from "@/app/redux/services/auth"; // Use login mutation
+import { useLoginMutation } from "@/redux/services/auth";
 import { toasterSuccess } from "@/components/core/Toaster";
 import AuthForm from "@/components/Forms/AuthForm";
 import useTitle from "@/hooks/useTitle";
