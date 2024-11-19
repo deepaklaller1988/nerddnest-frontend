@@ -5,6 +5,7 @@ import LatestUpdates from '@/components/core/LatestUpdates'
 import Live from '@/components/core/Live'
 import Sidebar from '@/components/core/Sidebar'
 import AddStory from '@/components/core/AddStory'
+import PostFeed from '@/components/core/PostFeed'
 import React from 'react'
 
 export default function Home() {
@@ -18,6 +19,7 @@ export default function Home() {
           </section>
           <section className='storiesFix'>
             <AddStory/>
+            <PostFeed/>
             <Feeds />
           </section>
           <section className='flex flex-col gap-5'>
