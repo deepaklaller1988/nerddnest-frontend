@@ -1,33 +1,33 @@
 "use client";
-import { useRegisterMutation } from "@/app/redux/services/auth";
+import { useLoginMutation } from "@/app/redux/services/auth"; // Use login mutation
 import { toasterSuccess } from "@/components/core/Toaster";
 import AuthForm from "@/components/Forms/AuthForm";
 import useTitle from "@/hooks/useTitle";
 import { loginValidationSchema } from "@/utils/validationSchemas";
+import { LoginFormValues } from "@/types/authInterfaces";
+import { useRouter } from "next/navigation";
 
 const Login = () => {
   useTitle("Login");
+  const router = useRouter()
 
-  const [login, { isLoading }] = useRegisterMutation();
+  const [login, { isLoading }] = useLoginMutation(); 
 
-  const initialValues  = {
+  const initialValues: LoginFormValues = {
     email: "",
     password: "",
   };
 
   const handleSubmit = async (values: typeof initialValues) => {
-    try {
       await login(values).unwrap();
-      toasterSuccess("Login successful", "3000", "id");
-    } catch (err) {
-      console.error("Error:", err);
-    }
+      toasterSuccess("Login successful", 1000, "id");
+      router.push("/home");
   };
 
   return (
     <AuthForm
       type="login"
-      isLoading ={isLoading}
+      isLoading={isLoading}
       initialValues={initialValues}
       validationSchema={loginValidationSchema}
       onSubmit={handleSubmit}

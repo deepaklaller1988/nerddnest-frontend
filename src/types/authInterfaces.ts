@@ -1,6 +1,6 @@
 import * as Yup from "yup";
 
-interface LoginFormValues {
+export interface LoginFormValues {
   email: string;
   password: string;
 }
@@ -18,7 +18,7 @@ export interface SignupFormValues {
   agree: boolean
 }
 
-interface ForgotPasswordFormValues {
+export interface ForgotPasswordFormValues {
   email: string;
 }
 

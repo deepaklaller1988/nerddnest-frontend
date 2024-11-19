@@ -11,6 +11,7 @@ const Signup = () => {
   useTitle("Register an Account");
 
   const [register, { isLoading,isError,error }] = useRegisterMutation();
+
   const initialValues: SignupFormValues = {
     email: "",
     confirmemail: "",
@@ -24,10 +25,10 @@ const Signup = () => {
     agree: false, 
   };
   
-
   const handleSubmit = async (values: typeof initialValues) => {
+    console.log(values)
       await register(values).unwrap();
-      toasterSuccess("Registration successful", 3000, "id");
+      toasterSuccess("Registration successful", 1000, "id");
   };
 
   return (

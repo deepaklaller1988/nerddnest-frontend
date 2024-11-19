@@ -12,7 +12,7 @@ export const toasterSuccess = (message: string, time: number  = 3000, customId?:
     pauseOnHover: true,
     draggable: true,
     theme: "colored",
-    className: 'text-sm'
+    className: 'text-sm toaster-white'
   });
 };
 
@@ -40,7 +40,7 @@ export const toasterInfo = (message: string, time: number = 3000, customId?: str
     hideProgressBar: false,
     closeOnClick: true,
     draggable: true,
-    className: 'text-sm p-2'
+    className: 'text-sm p-2 toaster-white'
   });
 };
 
@@ -54,7 +54,7 @@ export const toasterWarning = (message: string ) => {
     pauseOnHover: true,
     draggable: true,
     theme: "colored",
-    className: 'text-sm'
+    className: 'text-sm toaster-white'
   });
 };
 
