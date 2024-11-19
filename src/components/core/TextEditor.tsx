@@ -1,35 +1,39 @@
 import React, { useState, useEffect, useRef } from "react";
-import Quill from "quill";
-import "quill/dist/quill.snow.css";
+import "quill/dist/quill.snow.css"; // Import Quill CSS directly
 
-const TextEditor = () => {
+const TextEditor = ({ togglePopup }: any) => {
   const editorRef = useRef<HTMLDivElement>(null);
   const [userText, setUserText] = useState(""); // State to store custom text input
-  const quillRef = useRef<Quill | null>(null); // Properly type the quill instance
+  const quillRef = useRef<any>(null); // Type Quill reference as 'any'
 
   useEffect(() => {
-    if (editorRef.current) {
-      // Initialize Quill editor
-      const quill = new Quill(editorRef.current, {
-        theme: "snow",
-        modules: {
-          toolbar: [
-            ["bold", "italic", "underline"],
-            [{ list: "ordered" }, { list: "bullet" }],
-            ["blockquote", "link", "code-block"],
-          ],
-        },
-      });
-      quillRef.current = quill; // Save quill instance to ref
-    }
+    // Dynamically import Quill only on the client-side
+    const loadQuill = async () => {
+      if (typeof window !== "undefined" && editorRef.current) {
+        const Quill = (await import("quill")).default; // Import Quill dynamically in useEffect
+        const quill = new Quill(editorRef.current, {
+          theme: "snow",
+          modules: {
+            toolbar: [
+              ["bold", "italic", "underline"],
+              [{ list: "ordered" }, { list: "bullet" }],
+              ["blockquote", "link", "code-block"],
+            ],
+          },
+        });
+        quillRef.current = quill; // Save Quill instance to ref
+      }
+    };
+
+    loadQuill(); // Load Quill when component mounts
 
     return () => {
       // Proper cleanup of Quill instance when component unmounts
       if (quillRef.current) {
-        quillRef.current = null; // Set quill instance reference to null
+        quillRef.current = null;
       }
     };
-  }, []);
+  }, []); // Empty dependency array ensures this runs only once when the component mounts
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserText(e.target.value);
