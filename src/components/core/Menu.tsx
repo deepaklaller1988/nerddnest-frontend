@@ -11,7 +11,7 @@ const Menu: React.FC<MenuItemProp> = ({ name, icon, links, isOpen, onToggle }) =
       onClick={onToggle}
     >
       <span className="flex items-center gap-2 p-3 pl-4">
-        {icon} {name}
+        <b className='text-[20px]'>{icon}</b> {name}
       </span>
       {links && (
         <span className="p-4">
@@ -22,9 +22,9 @@ const Menu: React.FC<MenuItemProp> = ({ name, icon, links, isOpen, onToggle }) =
     {links && isOpen && (
       <section className="bg-black/5 duration-[.5s] max-h-[100vh] overflow-hidden">
         {links.map((link, idx) => (
-          <div key={idx} className="px-4 py-2">
-            <Link href={link.href} legacyBehavior>
-              <a className="flex items-center gap-2 hover:bg-gray-200">
+          <div key={idx}>
+            <Link className="hover:bg-gray-200" href={link.href} legacyBehavior>
+              <a className="flex items-center gap-2 px-4 py-2 ">
                 <IoMdArrowDropright /> {link.name}
               </a>
             </Link>
