@@ -42,7 +42,7 @@ const NotificationCard = () => {
 
       <div className="space-y-4" key={"1"}>
         {notifications.map((notification) => (
-          <div className="flex gap-3">
+          <div className="flex gap-3" key={"1"}>
             <input type="checkbox" name="" id="" />
             <div
               key={notification.id}

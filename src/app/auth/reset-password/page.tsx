@@ -1,5 +1,5 @@
 "use client";
-import { useRegisterMutation } from "@/app/redux/services/auth";
+import { useRegisterMutation } from "@/redux/services/auth";
 import { toasterSuccess } from "@/components/core/Toaster";
 import AuthForm from "@/components/Forms/AuthForm";
 import useTitle from "@/hooks/useTitle";
@@ -20,7 +20,7 @@ export default function ResetPassword() {
   const handleSubmit = async (values: typeof initialValues) => {
     try {
       await register(values).unwrap();
-      toasterSuccess("Registration successful", 3000, "id");
+      toasterSuccess("Registration successful", 1000, "id");
     } catch (err) {
       console.error("Error:", err);
     }

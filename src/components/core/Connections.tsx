@@ -55,7 +55,7 @@ const Connections = () => {
       noItemsMessage="There are no users currently available."
       tabs={[
         { label: "Online", count: connections.filter((c) => c.status === "online").length, tabName: "friends" },
-        { label: "Connections", count: connections.length, tabName: "connections" },
+        { label: "Followers", count: connections.length, tabName: "connections" },
       ]}
       onTabSwitch={handleTabSwitch}
       activeTab={activeTab}

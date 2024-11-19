@@ -5,7 +5,7 @@ import { useEffect } from "react";
 export default function useTitle(title: string, ignore: boolean = false) {
   useEffect(() => {
     if (ignore) document.title = title;
-    else document.title = title +  " - "  + "nerdd nest" 
+    else document.title = title +  " - "  + "Nerdd Nest" 
     
 
     Header.setHeader(title)

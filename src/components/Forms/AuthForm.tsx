@@ -5,7 +5,8 @@ import { FiMail, FiLock } from "react-icons/fi";
 import { AuthFormProps, AuthFormValues } from "@/types/authInterfaces";
 import { useState } from "react";
 import TermsOfServicePopup from "../Modals/Terms&Services";
-import { Formik, Form } from "formik";
+import { Formik, Form ,Field, ErrorMessage} from "formik";
+
 import InputField from "../core/InputField";
 
 const AuthForm = <T extends AuthFormValues>({
@@ -140,7 +141,7 @@ const AuthForm = <T extends AuthFormValues>({
                       placeholder="Where are you from? (optional)"
                     />
 
-                    <label className="flex items-center">
+                    {/* <label className="flex items-center">
                       <input
                         type="checkbox"
                         name="agree"
@@ -156,7 +157,28 @@ const AuthForm = <T extends AuthFormValues>({
                         </span>
                       </span>
     
+                    </label> */}
+                    <label className="flex items-center">
+                      <Field
+                        type="checkbox"
+                        name="agree"
+                        className="h-4 w-4 text-indigo-500 border-gray-300 rounded"
+                      />
+                      <span className="ml-2 text-sm text-gray-600">
+                        I agree to the
+                        <span
+                          onClick={openModal}
+                          className="text-sm hover:text-blue-500 cursor-pointer ml-1"
+                        >
+                          Terms of Service.
+                        </span>
+                      </span>
                     </label>
+                    <ErrorMessage
+                      name="agree"
+                      component="div"
+                      className="text-red-500 text-sm mt-1"
+                    />
                   </>
                 )}
 
