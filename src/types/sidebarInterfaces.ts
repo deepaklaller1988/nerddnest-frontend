@@ -5,7 +5,7 @@ export interface MenuLink {
   
   export interface MenuItem {
     name: string;
-    icon: React.ReactNode;
+    icon?: any;
     links: MenuLink[];
   }
   
