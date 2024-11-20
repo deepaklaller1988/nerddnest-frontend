@@ -1,8 +1,10 @@
-import React, { useState } from "react";
 
 
-const CreateStoryModal = ({togglePopup}:any) => {
+interface CreateStoryModalProps {
+  togglePopup: () => void;
+}
 
+const CreateStoryModal: React.FC<CreateStoryModalProps> = ({ togglePopup }) => {
   return (
     <>
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 ">

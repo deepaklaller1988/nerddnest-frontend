@@ -2,6 +2,10 @@
 import React, { useState } from "react";
 import TabContent from "./Tabcontent";
 
+type Group = {
+  name: string;
+  activeSince: string; // or Date, depending on how you store the timestamp
+};
 const Groups = () => {
   const [activeTab, setActiveTab] = useState<"Newest" | "Active" | "Popular">("Newest");
 
@@ -22,7 +26,7 @@ const Groups = () => {
       ]}
       onTabSwitch={handleTabSwitch}
       activeTab={activeTab}
-      renderItem={(group:any) => (
+      renderItem={(group:Group) => (
         <section key={group.name} className="cursor-pointer flex items-center gap-2">
           <span className="relative min-w-10 min-h-10 max-w-10 max-h-10 rounded-full block border border-2 border-black/5 border-white">
             <img

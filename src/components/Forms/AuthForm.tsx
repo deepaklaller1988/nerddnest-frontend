@@ -14,7 +14,6 @@ const AuthForm = <T extends AuthFormValues>({
   initialValues,
   validationSchema,
   onSubmit,
-  isLoading,
 }: AuthFormProps<T>) => {
 
   const [isOpen, setIsOpen] = useState(false);
@@ -25,7 +24,7 @@ const AuthForm = <T extends AuthFormValues>({
     <div className="flex min-h-screen">
       <div className="relative w-1/2 bg-black flex items-center justify-center">
         <Image
-          src="/formimage.webp"
+          src="/formImage.png"
           alt="Futuristic Avatar"
           layout="fill"
           objectFit="cover"
@@ -204,7 +203,9 @@ const AuthForm = <T extends AuthFormValues>({
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-[var(--highlight-blue)] text-white p-3 rounded-lg font-semibold"
+                  className={`w-full p-3 rounded-lg font-semibold ${isSubmitting ? 'bg-[var(--highlight-blue)] cursor-not-allowed' : 'bg-[var(--highlight-blue)] cursor-pointer'} text-white`}
+
+                  // className={`w-full p-3 rounded-lg font-semibold ${isSubmitting ? 'bg-blue-400' : 'bg-[var(--highlight-blue)]'} text-white`}
                 >
                   {type === "login"
                     ? "Log In"

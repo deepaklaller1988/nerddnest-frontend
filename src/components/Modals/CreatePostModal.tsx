@@ -1,10 +1,11 @@
+"use client"
 import React, { useState } from "react";
 import { MdOutlineLinkedCamera } from "react-icons/md";
 import { HiOutlineVideoCamera } from "react-icons/hi2";
 import { IoDocumentAttachOutline } from "react-icons/io5";
 import { HiOutlineGif } from "react-icons/hi2";
 import { BiBarChartSquare } from "react-icons/bi";
-import TextEditor from "../core/TextEditor";
+// import TextEditor from "../core/TextEditor";
 
 const CreatePostPopup = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -60,7 +61,7 @@ const CreatePostPopup = () => {
               </span>
             </section>
 
-            <TextEditor togglePopup={togglePopup}/>
+            {/* <TextEditor /> */}
 
             {/* Post Button */}
             <button className="w-full mt-4 bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700">

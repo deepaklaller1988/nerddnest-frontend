@@ -26,7 +26,6 @@ const Signup = () => {
   };
   
   const handleSubmit = async (values: typeof initialValues) => {
-    console.log(values)
       await register(values).unwrap();
       toasterSuccess("Registration successful", 1000, "id");
   };
