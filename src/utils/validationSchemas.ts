@@ -20,7 +20,7 @@ export const signupValidationSchema = Yup.object({
   confirmpassword: confirmPasswordValidation("password"),
   firstname: Yup.string().required("First Name is Required"),
   lastname: Yup.string().required("Last Name is Required"),
-  handle: Yup.string().required("Handle is Required"),
+  handle: Yup.string().min(3,"Handle must be at least 3 characters").required("Handle is Required"),
   dob: Yup.string().required("Date of birth is Required"),
   location: Yup.string().notRequired(), 
   agree: Yup.bool().oneOf([true], "You must agree to the Terms of Service").required("Required"),

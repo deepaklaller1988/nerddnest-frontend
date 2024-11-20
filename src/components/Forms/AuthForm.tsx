@@ -14,6 +14,7 @@ const AuthForm = <T extends AuthFormValues>({
   initialValues,
   validationSchema,
   onSubmit,
+  isLoading
 }: AuthFormProps<T>) => {
 
   const [isOpen, setIsOpen] = useState(false);
@@ -78,7 +79,7 @@ const AuthForm = <T extends AuthFormValues>({
             validationSchema={validationSchema}
             onSubmit={onSubmit}
           >
-            {({ isSubmitting }) => (
+            {() => (
               <Form className="space-y-6">
                 <InputField
                   name="email"
@@ -139,24 +140,6 @@ const AuthForm = <T extends AuthFormValues>({
                       type="text"
                       placeholder="Where are you from? (optional)"
                     />
-
-                    {/* <label className="flex items-center">
-                      <input
-                        type="checkbox"
-                        name="agree"
-                        className="h-4 w-4 text-indigo-500 border-gray-300 rounded"
-                      />
-                      <span className="ml-2 text-sm text-gray-600">
-                        I agree to the
-                        <span
-                          onClick={openModal}
-                          className="text-sm hover:text-blue-500 cursor-pointer ml-1"
-                        >
-                          Terms of Service.
-                        </span>
-                      </span>
-    
-                    </label> */}
                     <label className="flex items-center">
                       <Field
                         type="checkbox"
@@ -202,10 +185,9 @@ const AuthForm = <T extends AuthFormValues>({
                 )}
                 <button
                   type="submit"
-                  disabled={isSubmitting}
-                  className={`w-full p-3 rounded-lg font-semibold ${isSubmitting ? 'bg-[var(--highlight-blue)] cursor-not-allowed' : 'bg-[var(--highlight-blue)] cursor-pointer'} text-white`}
+                  disabled={isLoading}
+                  className={`w-full p-3 rounded-lg font-semibold bg-[var(--highlight-blue)] ${isLoading ? 'cursor-not-allowed' : 'cursor-pointer'} text-white`}
 
-                  // className={`w-full p-3 rounded-lg font-semibold ${isSubmitting ? 'bg-blue-400' : 'bg-[var(--highlight-blue)]'} text-white`}
                 >
                   {type === "login"
                     ? "Log In"

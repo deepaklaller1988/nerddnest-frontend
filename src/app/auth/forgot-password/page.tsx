@@ -14,6 +14,7 @@ export default function ForgotPassword() {
     const initialValues :ForgotPasswordFormValues= {
       email: "",
     };
+    
     const handleSubmit = async (values: typeof initialValues) => {
       try {
         await forgotpassword(values).unwrap();

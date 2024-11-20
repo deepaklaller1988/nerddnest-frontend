@@ -1,10 +1,11 @@
 "use client";
 import React, { useState } from "react";
 import TabContent from "./Tabcontent";
+import Image from "next/image";
 
 type Group = {
   name: string;
-  activeSince: string; // or Date, depending on how you store the timestamp
+  activeSince: string; 
 };
 const Groups = () => {
   const [activeTab, setActiveTab] = useState<"Newest" | "Active" | "Popular">("Newest");
@@ -29,7 +30,9 @@ const Groups = () => {
       renderItem={(group:Group) => (
         <section key={group.name} className="cursor-pointer flex items-center gap-2">
           <span className="relative min-w-10 min-h-10 max-w-10 max-h-10 rounded-full block border border-2 border-black/5 border-white">
-            <img
+          <Image
+            height={50}
+            width={50}
               className="w-full block h-full bg-cover bg-center overflow-hidden rounded-full"
               src="/logo.png"
               alt="group logo"

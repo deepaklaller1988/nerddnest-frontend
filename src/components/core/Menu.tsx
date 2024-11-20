@@ -5,11 +5,11 @@ import { MenuItemProp } from '@/types/sidebarInterfaces';
 import { IoIosArrowDown, IoMdArrowDropright } from 'react-icons/io';
 
 const Menu: React.FC<MenuItemProp> = ({ name, icon, links, isOpen, onToggle }) => {
-  const [active, setActive] = useState(false); // Manage class toggling
+  const [active, setActive] = useState(false); 
   
   const handleToggle = () => {
-    onToggle();  // Call parent toggle
-    setActive(prev => !prev);  // Toggle the active class state
+    onToggle();  
+    setActive(prev => !prev);  
   };
 
   return (

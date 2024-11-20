@@ -5,7 +5,6 @@ import { MdClose } from "react-icons/md";
 import { IoDocumentText } from "react-icons/io5";
 import ViewButton from "../Buttons/ViewButtons";
 
-// Define the type for the search result item
 interface SearchResult {
   title: string;
   description: string;
@@ -17,7 +16,6 @@ export default function MainSearchBar() {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [results, setResults] = useState<SearchResult[]>([]);
   
-  // Static data with type annotations
   const staticData: SearchResult[] = [
     { title: "Introduction to React", description: "Learn the basics of React.", author: "John Doe", date: "Jan 1, 2024" },
     { title: "Advanced JavaScript", description: "Dive into advanced concepts of JavaScript.", author: "Jane Smith", date: "Feb 15, 2024" },
@@ -45,7 +43,6 @@ export default function MainSearchBar() {
   };
 
   const handleonClick = () => {
-    // Implement the functionality for the View All button click
   };
 
   return (

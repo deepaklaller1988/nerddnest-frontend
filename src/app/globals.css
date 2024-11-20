@@ -66,6 +66,16 @@ a, button {
   padding: 0;
   margin: 0;
 }
+
+.drop, .drop * {
+  color: var(--highlight-blue); 
+  font-weight: bold;
+}
+
+.drop {
+  font-weight: 700;
+  text-decoration: none; 
+}
 button.slick-arrow.slick-prev {
   font-size: 0px;
   width: 30px;

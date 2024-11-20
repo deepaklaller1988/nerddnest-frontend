@@ -14,7 +14,6 @@ const TabContent = <T extends string, Item>({
 }: TabContentProps<T, Item>) => {
   
   const handleClick = () => {
-    // handle view all button click
   };
 
   return (

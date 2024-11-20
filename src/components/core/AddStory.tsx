@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import Slider from "react-slick";
 import CreateStoryModal from "../Modals/CreateStoryModal";
+import Image from "next/image";
 export default function AddStory() {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
@@ -21,7 +22,9 @@ export default function AddStory() {
       <div className="w-full">
         <Slider {...settings}>
           <div className="relative h-[160px] rounded-[12px] overflow-hidden">
-            <img
+            <Image
+              height={50}
+              width={50}
               className="w-full h-full object-cover"
               src="/dp.jpg"
               alt="dp"
@@ -39,13 +42,17 @@ export default function AddStory() {
             </button>
           </div>
           <div className="relative h-[160px] rounded-[12px] overflow-hidden">
-            <img
+            <Image
+              height={50}
+              width={50}
               className="w-full h-full object-cover"
               src="/dp.jpg"
               alt="dp"
             />
             <span className="absolute left-2 top-2 min-w-10 min-h-10 max-w-10 max-h-10 rounded-full block border border-2 border-black/5 border-white">
-              <img
+              <Image
+                height={50}
+                width={50}
                 className="w-full block h-full bg-cover bg-center overflow-hidden rounded-full"
                 src="/logo.png"
                 alt="logo"
@@ -58,13 +65,17 @@ export default function AddStory() {
             </div>
           </div>
           <div className="relative h-[160px] rounded-[12px] overflow-hidden">
-            <img
+            <Image
+              height={50}
+              width={50}
               className="w-full h-full object-cover"
               src="/dp.jpg"
               alt="dp"
             />
             <span className="absolute left-2 top-2 min-w-10 min-h-10 max-w-10 max-h-10 rounded-full block border border-2 border-black/5 border-white">
-              <img
+              <Image
+                height={50}
+                width={50}
                 className="w-full block h-full bg-cover bg-center overflow-hidden rounded-full"
                 src="/logo.png"
                 alt="logo"
@@ -77,13 +88,17 @@ export default function AddStory() {
             </div>
           </div>
           <div className="relative h-[160px] rounded-[12px] overflow-hidden">
-            <img
+            <Image
+              height={50}
+              width={50}
               className="w-full h-full object-cover"
               src="/dp.jpg"
               alt="dp"
             />
             <span className="absolute left-2 top-2 min-w-10 min-h-10 max-w-10 max-h-10 rounded-full block border border-2 border-black/5 border-white">
-              <img
+              <Image
+                height={50}
+                width={50}
                 className="w-full block h-full bg-cover bg-center overflow-hidden rounded-full"
                 src="/logo.png"
                 alt="logo"
@@ -96,13 +111,17 @@ export default function AddStory() {
             </div>
           </div>
           <div className="relative h-[160px] rounded-[12px] overflow-hidden">
-            <img
+            <Image
+              height={50}
+              width={50}
               className="w-full h-full object-cover"
               src="/dp.jpg"
               alt="dp"
             />
             <span className="absolute left-2 top-2 min-w-10 min-h-10 max-w-10 max-h-10 rounded-full block border border-2 border-black/5 border-white">
-              <img
+              <Image
+                height={50}
+                width={50}
                 className="w-full block h-full bg-cover bg-center overflow-hidden rounded-full"
                 src="/logo.png"
                 alt="logo"
@@ -115,13 +134,17 @@ export default function AddStory() {
             </div>
           </div>
           <div className="relative h-[160px] rounded-[12px] overflow-hidden">
-            <img
+            <Image
+              height={50}
+              width={50}
               className="w-full h-full object-cover"
               src="/dp.jpg"
               alt="dp"
             />
             <span className="absolute left-2 top-2 min-w-10 min-h-10 max-w-10 max-h-10 rounded-full block border border-2 border-black/5 border-white">
-              <img
+              <Image
+                height={50}
+                width={50}
                 className="w-full block h-full bg-cover bg-center overflow-hidden rounded-full"
                 src="/logo.png"
                 alt="logo"
@@ -135,9 +158,7 @@ export default function AddStory() {
           </div>
         </Slider>
       </div>
-      {isPopupOpen && (
-       <CreateStoryModal togglePopup={togglePopup}/>
-      )}
+      {isPopupOpen && <CreateStoryModal togglePopup={togglePopup} />}
     </section>
   );
 }

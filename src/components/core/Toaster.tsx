@@ -48,7 +48,7 @@ export const toasterWarning = (message: string ) => {
   toast(message, {
     type: "warning",
     position: "bottom-right",
-    autoClose: 3000, // Display toast for 3 seconds
+    autoClose: 3000, 
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: true,
