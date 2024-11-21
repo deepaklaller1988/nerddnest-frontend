@@ -7,24 +7,45 @@ import Link from "next/link";
 import { FeedVisiblityMenu } from "@/lib/MenuBar/FeedVisibiltyMenu";
 import { PostActionsMenu } from "@/lib/MenuBar/PostActionsMenu ";
 import CommentSection from "./CommentSection";
+import DeletePopup from "../Modals/DeleteConfirmation";
 
 export default function PostContent() {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenOptions, setIsOpenOptions] = useState(false);
   const [selectedItem, setSelectedItem] = useState(FeedVisiblityMenu[0]);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-
+  const [isPinned, setIsPinned] = useState(false);
+  const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
   const handleMouseEnter = (index: number) => setHoveredIndex(index);
   const handleMouseLeave = () => setHoveredIndex(null);
-
+  const [isCommentingEnabled, setIsCommentingEnabled] = useState(true);
   const handleItemClick = (item: (typeof FeedVisiblityMenu)[number]) => {
     setSelectedItem(item);
     setIsOpen(false);
   };
+  const toggleCommenting = () => {
+    setIsCommentingEnabled(!isCommentingEnabled); 
+  };
 
+  const handleDeleteClick = () => {
+    setIsDeletePopupOpen(true);
+  };
+
+  const handleClosePopup = () => {
+    setIsDeletePopupOpen(false);
+  };
+
+
+  const handleTogglePin = () => setIsPinned((prev) => !prev);
   return (
     <>
       <div className="w-full flex flex-col gap-4 mb-4">
+
+      {isDeletePopupOpen && (
+        <>
+        <DeletePopup message ={"Are you sure want to Delete"} onDelete ={handleDeleteClick} onCancel ={handleClosePopup}/>
+        </>
+      )}
         <section className="w-full bg-white rounded-[12px]">
           <section className="cursor-pointer flex items-start justify-between gap-4 p-4">
             <div className="flex items-start gap-2">
@@ -75,8 +96,16 @@ export default function PostContent() {
             </div>
             <div className="flex items-center gap-3">
               <span>
-                <LuPin className="w-4 h-4" />
+                {isPinned ? (
+                  ""
+                ) : (
+                  <LuPin
+                    className="w-4 h-4 cursor-pointer"
+                    onClick={handleTogglePin}
+                  />
+                )}
               </span>
+
               <div className="flex relative">
                 <span>
                   <MdMoreHoriz
@@ -86,24 +115,25 @@ export default function PostContent() {
                 </span>
 
                 {isOpenOptions && (
-                  <>
-                    <div className="shadow-[0_-5px_25px_-15px_rgba(0,0,0,0.3)] w-full min-w-[210px] py-2 rounded-lg bg-white absolute mt-5 right-0">
-                      {PostActionsMenu.map(({ href, icon, label }, index) => (
-                        <Link
+                  <div className="shadow-[0_-5px_25px_-15px_rgba(0,0,0,0.3)] w-full min-w-[210px] py-2 rounded-lg bg-white absolute mt-5 right-0">
+                    {PostActionsMenu(isPinned, handleTogglePin,isCommentingEnabled, toggleCommenting).map(
+                      ({ icon, label, onClick }, index) => (
+                        <button
                           key={index}
-                          href={href}
-                          className={`flex gap-2 items-center px-4 py-2 hover:bg-gray-500/10 ${
+                          className={`flex gap-2 items-center px-4 py-2 w-full text-left hover:bg-gray-500/10 focus:outline-none ${
                             hoveredIndex === index ? "drop" : ""
                           }`}
                           aria-label={label}
                           onMouseEnter={() => handleMouseEnter(index)}
                           onMouseLeave={handleMouseLeave}
+                          onClick={label === "Delete" ? handleDeleteClick : onClick}
                         >
                           {icon} {label}
-                        </Link>
-                      ))}
-                    </div>
-                  </>
+                        </button>
+                      )
+                    )}
+
+                  </div>
                 )}
               </div>
             </div>

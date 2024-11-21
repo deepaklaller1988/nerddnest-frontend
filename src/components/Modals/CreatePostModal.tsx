@@ -7,20 +7,24 @@ import { BiBarChartSquare } from "react-icons/bi";
 import Image from "next/image";
 import { TiArrowSortedDown } from "react-icons/ti";
 import VisibilityPopup from "./CreatePostVisibilty";
+import SchedulePostPopup from "./SchedulePostModal";
 
 interface CreatePostPopupProps {
   setIsPopupOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const CreatePostPopup: React.FC<CreatePostPopupProps> = ({ setIsPopupOpen }) => {
+const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
+  setIsPopupOpen,
+}) => {
   const [toggleVisibilityPopup, setToggleVisibilityPopup] = useState(false);
+  const [isSchedulePopupOpen, setSchedulePopupOpen] = useState(false);
 
   const closePopup = () => {
     setIsPopupOpen(false);
   };
 
   const toggleVisibility = () => {
-    setToggleVisibilityPopup((prev) => !prev); 
+    setToggleVisibilityPopup((prev) => !prev);
   };
 
   return (
@@ -42,6 +46,8 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({ setIsPopupOpen }) => 
           />
         )}
 
+    
+
         <div className="p-4">
           <div className="flex items-center mb-4">
             <Image
@@ -57,11 +63,9 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({ setIsPopupOpen }) => 
             </p>
             <TiArrowSortedDown onClick={toggleVisibility} />
           </div>
-
           <div className="w-full bg-gray-200 p-2 px-5 rounded-full flex items-center text-gray-500/70">
             Share whats on your mind, Alvin Marcos...
           </div>
-
           <section className="border-t border-gray-500/10 p-4 flex gap-4">
             <span className="cursor-pointer">
               <MdOutlineLinkedCamera className="w-6 h-6 fill-green-600" />
@@ -79,11 +83,24 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({ setIsPopupOpen }) => 
               <BiBarChartSquare className="w-6 h-6 fill-black" />
             </span>
           </section>
+          <button
+            onClick={() => setSchedulePopupOpen(true)}
+            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md"
+          >
+            Open Schedule Post Popup
+          </button>{" "}
+
+
 
           <button className="w-full mt-4 bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700">
             Post
           </button>
         </div>
+
+        <SchedulePostPopup
+          isOpen={isSchedulePopupOpen}
+          onClose={() => setSchedulePopupOpen(false)}
+        />
       </div>
     </div>
   );
