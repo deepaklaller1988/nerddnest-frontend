@@ -12,7 +12,7 @@ type VisibilityPopupProps = {
           <ul className="space-y-4">
             <li>
               <label className="flex items-start space-x-3">
-                <input type="radio" name="visibility" value="public" defaultChecked />
+              <label className="customRadio flex items-center gap-2"><input type="radio" name="" id=""/><span></span></label>
                 <div>
                   <span className="font-medium">Public</span>
                   <p className="text-sm text-gray-500">
@@ -23,7 +23,7 @@ type VisibilityPopupProps = {
             </li>
             <li>
               <label className="flex items-start space-x-3">
-                <input type="radio" name="visibility" value="all-members" />
+              <label className="customRadio flex items-center gap-2"><input type="radio" name="" id=""/><span></span></label>
                 <div>
                   <span className="font-medium">All Members</span>
                   <p className="text-sm text-gray-500">
@@ -34,7 +34,7 @@ type VisibilityPopupProps = {
             </li>
             <li>
               <label className="flex items-start space-x-3">
-                <input type="radio" name="visibility" value="connections" />
+              <label className="customRadio flex items-center gap-2"><input type="radio" name="" id=""/><span></span></label>
                 <div>
                   <span className="font-medium">My Connections</span>
                   <p className="text-sm text-gray-500">
@@ -45,7 +45,7 @@ type VisibilityPopupProps = {
             </li>
             <li>
               <label className="flex items-start space-x-3">
-                <input type="radio" name="visibility" value="only-me" />
+              <label className="customRadio flex items-center gap-2"><input type="radio" name="" id=""/><span></span></label>
                 <div>
                   <span className="font-medium">Only Me</span>
                   <p className="text-sm text-gray-500">Visible only to you</p>
@@ -54,7 +54,7 @@ type VisibilityPopupProps = {
             </li>
             <li>
               <label className="flex items-start space-x-3">
-                <input type="radio" name="visibility" value="group" />
+              <label className="customRadio flex items-center gap-2"><input type="radio" name="" id=""/><span></span></label>
                 <div>
                   <span className="font-medium">Post in Group</span>
                   <p className="text-sm text-gray-500">
@@ -66,7 +66,7 @@ type VisibilityPopupProps = {
           </ul>
           <button
             onClick={toggleVisibilityPopup}
-            className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 w-full"
+            className="mt-4 text-white px-4 py-2 rounded-md w-full bg-[var(--highlght-hover)] text-white rounded-[8px] px-4 py-1 h-[36px]"
           >
             Close
           </button>

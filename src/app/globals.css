@@ -165,8 +165,112 @@ button.slick-arrow.slick-prev.slick-disabled {
   background: transparent;
   border-left: 2px solid #e3e3e3;
 }
+.checkboxSelected input:checked + div {
+  background: #ffe7e7;
+}
+.showInnerDiv:hover .thisInnerDiv{display: inline;}
+label.customCheckbox {
+  position: relative;
+}
+
+label.customCheckbox span {
+  width: 20px;
+  height: 20px;
+  background: #f3f3f3;
+  display: block;
+  border-radius: 6px;
+  border: 1px solid silver;
+  position: relative;
+  transition: .5s;
+  cursor: pointer;
+}
+
+label.customCheckbox input[type="checkbox"] {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  opacity: 0;
+  cursor: pointer;
+}
+
+label.customCheckbox input[type="checkbox"]:checked + span {
+  background: var(--highlght-hover);
+  border-color: var(--highlght-hover);
+}
+
+label.customCheckbox span:before {
+  content: '';
+  position: absolute;
+  width: 6px;
+  height: 12px;
+  border-right: 2px solid white;
+  border-bottom: 2px solid white;
+  transform: rotate(45deg) scale(.6);
+  left: 6px;
+  top: 2px;
+  transition: .5s;
+  opacity: 0;
+}
+
+label.customCheckbox input[type="checkbox"]:checked + span:before {
+  opacity: 1;
+  transform: scale(1) rotate(45deg);
+}
+.fixReactSelect {
+  border-radius: 8px !important;
+  padding-left: 10px;
+  outline: none;
+  box-shadow: none !important;
+}
 /* @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
   }
 } */
+label.customRadio {
+  position: relative;
+}
+
+label.customRadio span {
+  width: 20px;
+  height: 20px;
+  background: #f3f3f3;
+  display: block;
+  border-radius: 10px;
+  border: 1px solid silver;
+  position: relative;
+  transition: .5s;
+  cursor: pointer;
+}
+
+label.customRadio input[type="radio"] {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  opacity: 0;
+  cursor: pointer;
+}
+
+label.customRadio input[type="radio"]:checked + span {
+  background: var(--highlght-hover);
+  border-color: var(--highlght-hover);
+}
+
+label.customRadio span:before {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 10px;
+background-color: white;
+border-radius:10px;
+  transform: rotate(45deg) scale(.6);
+  left: 4px;
+  top: 4px;
+  transition: .5s;
+  opacity: 0;
+}
+
+label.customRadio input[type="radio"]:checked + span:before {
+  opacity: 1;
+  transform: scale(1) rotate(45deg);
+}

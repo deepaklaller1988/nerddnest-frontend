@@ -25,11 +25,11 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({ setIsPopupOpen }) => 
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-      <div className="bg-white w-[50%] rounded-lg shadow-lg">
-        <div className="flex items-center justify-between px-4 py-2 border-b">
-          <h2 className="text-lg font-semibold">Create a Post</h2>
+      <div className="bg-white w-full max-w-[500px] rounded-[12px] shadow-lg">
+        <div className="flex items-center justify-between p-4 border-b">
+          <h2 className="text-lg font-semibold text-center block">Create a Post</h2>
           <button
-            className="text-xl font-bold text-gray-600 hover:text-gray-800"
+            className="bg-gray-200 w-10 h-10 p-0 flex items-center justify-center rounded-full text-[30px] text-gray-600 hover:text-gray-800"
             onClick={closePopup}
           >
             &times;
@@ -44,7 +44,7 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({ setIsPopupOpen }) => 
         )}
 
         <div className="p-4">
-          <div className="flex items-center mb-4">
+          <div className="flex items-center mb-2">
             <Image
               height={50}
               width={50}
@@ -59,11 +59,11 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({ setIsPopupOpen }) => 
             <TiArrowSortedDown onClick={toggleVisibility} />
           </div>
 
-          <div className="w-full bg-gray-200 p-2 px-5 rounded-full flex items-center text-gray-500/70">
-            Share whats on your mind, Alvin Marcos...
+          <div className="w-full">
+            <textarea className="w-full p-2 text-gray-500 text-lg" placeholder="Share whats on your mind, Alvin Marcos..."></textarea>
           </div>
 
-          <section className="border-t border-gray-500/10 p-4 flex gap-4">
+          <section className="border-t border-gray-500/10 p-4 flex gap-4 mt-4">
             <span className="cursor-pointer">
               <MdOutlineLinkedCamera className="w-6 h-6 fill-green-600" />
             </span>
@@ -81,7 +81,7 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({ setIsPopupOpen }) => 
             </span>
           </section>
 
-          <button className="w-full mt-4 bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700">
+          <button className="w-full mt-4 bg-[var(--highlght-hover)] text-white rounded-[8px] px-4 py-1 h-[36px]">
             Post
           </button>
         </div>
