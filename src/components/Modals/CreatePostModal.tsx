@@ -36,10 +36,9 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({ setIsPopupOpen }) => 
           </button>
         </div>
 
-        {/* Visibility Popup */}
         {toggleVisibilityPopup && (
           <VisibilityPopup
-            toggleVisibilityPopup={() => setToggleVisibilityPopup(false)} // Pass function to close VisibilityPopup
+            toggleVisibilityPopup={() => setToggleVisibilityPopup(false)}
           />
         )}
 
