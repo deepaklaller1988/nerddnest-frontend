@@ -21,17 +21,17 @@ import { HiOutlineGif } from "react-icons/hi2";
 import { BiBarChartSquare } from "react-icons/bi";
 import { MdOutlineModeComment } from "react-icons/md";
 import { IoPaperPlaneSharp } from "react-icons/io5";
-
 import Link from "next/link";
 import Image from "next/image";
 import FeedSearchBar from "../SearchBar/FeedSearchBar";
 import { FeedVisiblityMenu } from "../../lib/MenuBar/FeedVisibiltyMenu";
 import { PostActionsMenu } from "../../lib/MenuBar/PostActionsMenu ";
+import CommentSection from "./CommentSection";
 
 export default function Feeds() {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenOptions, setIsOpenOptions] = useState(false);
-
+  const [isCommentSectionVisible, setCommentSectionVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState(FeedVisiblityMenu[0]);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
@@ -178,11 +178,15 @@ export default function Feeds() {
                     {/* <BiLike className="w-5 h-5"/> */}
                     <BiSolidLike className="fill-green-600 w-5 h-5" /> Like
                   </Link>
-                  <Link href="" className="flex items-center gap-2">
-                    <MdOutlineModeComment className="w-5 h-5" /> Comment
-                  </Link>
+                  <button className="flex items-center gap-2" onClick={() => setCommentSectionVisible((prev) => !prev)}>
+                    <MdOutlineModeComment
+                      className="w-5 h-5"
+                      
+                    />{" "}
+                    Comment
+                  </button>
                 </section>
-                <div className="mt-3 border-t border-gray-500/20">
+                {/* <div className="mt-3 border-t border-gray-500/20">
                   <div className="w-full py-4">
                     <div className="w-full">
                       <div className="flex items-start gap-2">
@@ -385,7 +389,9 @@ export default function Feeds() {
                       </section>
                     </section>
                   </div>
-                </div>
+                </div> */}
+
+                {isCommentSectionVisible && <CommentSection />}
               </div>
             </section>
           </div>
