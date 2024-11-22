@@ -19,7 +19,6 @@ const CreateStoryModal: any = ({ togglePopup, onAddStory }: any) => {
   };
 
   const handleAddStory = (values: StoryFormValues) => {
-    console.log("Form submitted with values:", values);
     onAddStory({
       id: Date.now(),
       title: values.storyCoverTitle,
@@ -52,7 +51,6 @@ const CreateStoryModal: any = ({ togglePopup, onAddStory }: any) => {
           onSubmit={handleAddStory}
         >
           {({ setFieldValue,errors,values }) => (
-            console.log(errors,values,initialValues),
             <Form className="space-y-6 px-8 py-6  bg-gray-200">
               <div className="bg-white p-8 rounded-xl">
                 <h3 className="text-center text-lg font-semibold mb-4 text-[var(--highlight-blue)]">
@@ -135,7 +133,7 @@ const CreateStoryModal: any = ({ togglePopup, onAddStory }: any) => {
                 <p>Ie: "See Article"</p>
                 <div className="mt-4">
                   <label
-                    htmlFor="file-upload"
+                    htmlFor="file-upload1"
                     className="block text-md font-medium text-[var(--highlight-blue)]"
                   >
                     Story Media (Image/Video)
@@ -144,7 +142,7 @@ const CreateStoryModal: any = ({ togglePopup, onAddStory }: any) => {
                   <div className="bg-gray-50 p-8 rounded-xl">
                     <div className="p-4 bg-gray-200 rounded-xl">
                       <label
-                        htmlFor="file-upload"
+                        htmlFor="file-upload1"
                         className="cursor-pointer text-[var(--highlight-blue)] py-2 px-4 rounded-md mt-2 block text-center transition-all"
                       >
                         Drag & Drop your file or Browser
@@ -154,14 +152,13 @@ const CreateStoryModal: any = ({ togglePopup, onAddStory }: any) => {
                       Allowed types: .jpg, .jpeg, .png, .gif, .mp4, .mov, .wmv,
                       .avi, .mpeg, .3gp.
                     </p>
-
                     
                   </div>
 
                   <Field
                     type="file"
                     name="storyMedia"
-                    id="file-upload"
+                    id="file-upload1"
                     className="hidden"
                    
                     onChange={(e: any) =>
