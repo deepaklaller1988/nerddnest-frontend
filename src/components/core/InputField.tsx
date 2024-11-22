@@ -4,12 +4,19 @@ type InputFieldProps = {
   name: string;
   type: string;
   placeholder: string;
+  label?:string
   icon?: JSX.Element;
+  min?:number
 };
 
-const InputField: React.FC<InputFieldProps> = ({ name, type, placeholder, icon }) => {
+const InputField: React.FC<InputFieldProps> = ({ name, type, placeholder, icon,label }) => {
   return (
     <div className="flex flex-col">
+      {label && (
+        <label htmlFor={name} className="text-sm font-medium text-gray-700">
+          {label}
+        </label>
+      )}
     <div className="flex items-center border border-gray-300 rounded-lg p-2">
       {icon}
       <Field

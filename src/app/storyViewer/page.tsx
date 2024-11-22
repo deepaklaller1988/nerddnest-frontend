@@ -4,13 +4,14 @@ import Stories, { WithSeeMore } from "react-insta-stories";
 
 const App = () => {
   const [stories, setStories] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
     const fetchStories = async () => {
-      const fetchedStories :any= [
+      const fetchedStories: any = [
         {
-          content: ({ action, isPaused }:any) => (
-            <div style={contentStyle}>
+          content: ({ action, isPaused }: any) => (
+            <div style={contentStyle} onClick={handleStoryClick}>
               <img
                 style={image}
                 src="https://i.ibb.co/fY1DmQW/8aacdef9ba37db60c7a96271877cfbb5.jpg"
@@ -20,14 +21,14 @@ const App = () => {
           ),
         },
         {
-          content: ({ action, story }:any) => (
+          content: ({ action, story }: any) => (
             <WithSeeMore story={story} action={action}>
             </WithSeeMore>
           ),
-          seeMoreCollapsed: ({ toggleMore, action }:any) => (
+          seeMoreCollapsed: ({ toggleMore, action }: any) => (
             <p onClick={() => toggleMore(true)}>Click to see more →</p>
           ),
-          seeMore: ({ close }:any) => (
+          seeMore: ({ close }: any) => (
             <div style={{ maxWidth: "100%", height: "100%", padding: 40, background: "white" }}>
               <h2>More details about the dynamic story.</h2>
               <p style={{ textDecoration: "underline" }} onClick={close}>Close</p>
@@ -43,8 +44,13 @@ const App = () => {
     fetchStories();
   }, []);
 
+  const handleStoryClick = () => {
+    // Increment the current index to go to the next story
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % stories.length);
+  };
+
   if (!stories || stories.length === 0) {
-    return <div>Loading stories...</div>; 
+    return <div>Loading stories...</div>;
   }
 
   return (
@@ -55,9 +61,9 @@ const App = () => {
           keyboardNavigation
           defaultInterval={10000}
           stories={stories}
+          currentIndex={currentIndex}
         />
       </div>
-     
     </div>
   );
 };

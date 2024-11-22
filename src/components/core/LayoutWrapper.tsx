@@ -8,13 +8,14 @@ import { Provider } from 'react-redux'
 export default function LayoutWrapper({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isAuthRoute = pathname.startsWith("/auth");
+  const isStoryViewer = pathname.startsWith("/storyviewer");
 
   return (
     <>
     <Provider store={store}>
-      {!isAuthRoute && <Header />}
+      {!(isAuthRoute || isStoryViewer ) && <Header />}
       {children}
-      {!isAuthRoute && <Footer />}
+      {!(isAuthRoute || isStoryViewer ) && <Footer />}
       </Provider>
     </>
   );

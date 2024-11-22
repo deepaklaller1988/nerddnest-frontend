@@ -1,57 +1,44 @@
-"use client"
-import React, { useState } from "react";
+import React from "react";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import InputField from "../core/InputField";
+import { AddStoryValidationSchema } from "@/utils/validationSchemas";
+import { StoryFormValues } from "@/types/storyInterface";
+import Button from "../Buttons/Button";
+import { IoMdAdd } from "react-icons/io";
+import { IoMdSend } from "react-icons/io";
 
-interface CreateStoryModalProps {
-  togglePopup: () => void;
-  onAddStory: (story: {
-    id: number;
-    title: string;
-    image: string;
-    logo: string;
-    link: string;
-    duration: number;
-    visibility: string;
-  }) => void;
-}
+const CreateStoryModal: any = ({ togglePopup, onAddStory }: any) => {
+  const initialValues: StoryFormValues = {
+    storyCoverImage: null,
+    storyCoverTitle: "",
+    storyLinkText: "",
+    storyLink: "",
+    storyMedia: null,
+    duration: 6,
+    visibility: "Everyone",
+  };
 
-const CreateStoryModal: React.FC<CreateStoryModalProps> = ({
-  togglePopup,
-  onAddStory,
-}) => {
-  const [title, setTitle] = useState("");
-  const [linkText, setLinkText] = useState("");
-  const [storyLink, setStoryLink] = useState("");
-  const [duration, setDuration] = useState(60);
-  const [visibility, setVisibility] = useState("everyone");
-  const [coverImage, setCoverImage] = useState<File | null>(null);
-  const [storyMedia, setStoryMedia] = useState<File | null>(null);
-
-  const handleAddStory = () => {
-    if (!title || !storyLink || !coverImage) {
-      alert("Please fill in all required fields.");
-      return;
-    }
-
-    const newStory = {
+  const handleAddStory = (values: StoryFormValues) => {
+    console.log("Form submitted with values:", values);
+    onAddStory({
       id: Date.now(),
-      title,
-      image: URL.createObjectURL(coverImage),
-      logo: URL.createObjectURL(coverImage), // Assuming logo is the same for now
-      link: storyLink,
-      duration,
-      visibility,
-    };
-
-    onAddStory(newStory);
+      title: values.storyCoverTitle,
+      image: values.storyCoverImage,
+      logo: values.storyMedia,
+      link: values.storyLink,
+      duration: values.duration,
+      visibility: values.visibility,
+    });
     togglePopup();
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white w-full max-w-[500px] rounded-[12px] shadow-2xl">
-        {/* Header */}
-        <div className="flex justify-between items-center px-6 py-4 bg-gray-50 border-b">
-          <h2 className="text-xl font-bold text-gray-800">Create Story</h2>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 ">
+      <div className="bg-gray-200 w-full max-w-[600px] h-[90%] rounded-[12px] shadow-2xl overflow-y-auto">
+        <div className="flex justify-between items-center px-6 py-4 bg-gray-50 border-b ">
+          <h2 className="text-xl font-bold text-gray-800 text-[var(--highlight-blue)]">
+            Create Story
+          </h2>
           <button
             className="bg-gray-200 w-10 h-10 p-0 flex items-center justify-center rounded-full text-[30px] text-gray-600 hover:text-gray-800"
             onClick={togglePopup}
@@ -59,154 +46,196 @@ const CreateStoryModal: React.FC<CreateStoryModalProps> = ({
             &times;
           </button>
         </div>
+        <Formik
+          initialValues={initialValues}
+          validationSchema={AddStoryValidationSchema}
+          onSubmit={handleAddStory}
+        >
+          {({ setFieldValue,errors,values }) => (
+            console.log(errors,values,initialValues),
+            <Form className="space-y-6 px-8 py-6  bg-gray-200">
+              <div className="bg-white p-8 rounded-xl">
+                <h3 className="text-center text-lg font-semibold mb-4 text-[var(--highlight-blue)]">
+                  Story Cover Image
+                </h3>
 
-        {/* Body */}
-        <div className="px-6 py-6 space-y-6">
-          {/* Cover Image */}
-          <div>
-            <h3 className="text-md font-semibold text-gray-700 mb-2">
-              Cover Image
-            </h3>
-            <div className="w-full border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center p-6 bg-gray-50">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) =>
-                  setCoverImage(e.target.files ? e.target.files[0] : null)
-                }
-              />
-            </div>
-            <p className="text-xs text-gray-400 mt-2">
-              Recommended size: 180x180 px.
-            </p>
-          </div>
+                <div className="border-2 border-dashed bg-gray-100 border-gray-300 rounded-full w-36 h-36 mx-auto flex items-center justify-center mb-4">
+                  <label
+                    htmlFor="file-upload"
+                    className="text-center text-gray-500  cursor-pointer hover:text-green-600"
+                  >
+                    <p className="text-sm text-[var(--highlight-blue)]">
+                      Drag & Drop your file
+                    </p>
+                    <p className="text-sm text-[var(--highlight-blue)]">
+                      or <u className="text-[var(--highlight-blue)]">Browse</u>
+                    </p>
+                    <Field
+                      type="file"
+                      name="storyCoverImage"
+                      id="file-upload"
+                      className="hidden"
+                      onChange={(e: any) =>
+                        setFieldValue("storyCoverImage", e.target.files[0])
+                      }
+                      value={initialValues.storyCoverImage}
+                    />
+                  </label>
+                </div>
+                <p className="text-center">Recommended sizes: 180x180 px.</p>
+                <ErrorMessage
+                  name="storyCoverImage"
+                  component="div"
+                  className="text-red-500 text-sm mt-1"
+                />
 
-          <div className="space-y-4">
-            <div>
-              <label
-                htmlFor="storyTitle"
-                className="block text-sm font-medium text-gray-600"
-              >
-                Story Title
-              </label>
-              <input
-                id="storyTitle"
-                type="text"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                className="w-full mt-1 border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                placeholder="Enter your title"
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="storyLinkText"
-                className="block text-sm font-medium text-gray-600"
-              >
-                Link Text
-              </label>
-              <input
-                id="storyLinkText"
-                type="text"
-                value={linkText}
-                onChange={(e) => setLinkText(e.target.value)}
-                className="w-full mt-1 border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                placeholder="e.g., 'See More'"
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="storyLink"
-                className="block text-sm font-medium text-gray-600"
-              >
-                Story Link
-              </label>
-              <input
-                id="storyLink"
-                type="url"
-                value={storyLink}
-                onChange={(e) => setStoryLink(e.target.value)}
-                className="w-full mt-1 border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                placeholder="Enter the link"
-              />
-            </div>
-          </div>
+                <div className="mt-4">
+                  <label
+                    htmlFor="storyCoverTitle"
+                    className="block text-md font-medium text-[var(--highlight-blue)]"
+                  >
+                    Story Cover Title
+                  </label>
+                  <InputField
+                    name="storyCoverTitle"
+                    type="text"
+                    placeholder="Enter Story Cover Title"
+                  />
+                </div>
+              </div>
 
-          <div>
-            <h3 className="text-md font-semibold text-gray-700 mb-2">
-              Story Media
-            </h3>
-            <div className="w-full border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center p-6 bg-gray-50">
-              <input
-                type="file"
-                accept=".jpg,.png,.gif,.mp4"
-                onChange={(e) =>
-                  setStoryMedia(e.target.files ? e.target.files[0] : null)
-                }
-              />
-            </div>
-            <p className="text-xs text-gray-400 mt-2">
-              Allowed types: .jpg, .png, .gif, .mp4, etc.
-            </p>
-            <p className="text-xs text-gray-400">
-              Recommended size: 1080x1920 px.
-            </p>
-          </div>
+              <div className="bg-white p-8 rounded-xl">
+                <div>
+                  <label
+                    htmlFor="storyLinkText"
+                    className="block text-md font-medium text-[var(--highlight-blue)]"
+                  >
+                    Story Link Text
+                  </label>
+                  <InputField
+                    name="storyLinkText"
+                    type="text"
+                    placeholder="Enter link text"
+                  />
+                </div>
 
-          <div className="space-y-4">
-            <div>
-              <label
-                htmlFor="duration"
-                className="block text-sm font-medium text-gray-600"
-              >
-                Duration (seconds)
-              </label>
-              <input
-                id="duration"
-                type="number"
-                min="1"
-                value={duration}
-                onChange={(e) => setDuration(Number(e.target.value))}
-                className="w-full mt-1 border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                placeholder="60"
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="visibility"
-                className="block text-sm font-medium text-gray-600"
-              >
-                Visibility
-              </label>
-              <select
-                id="visibility"
-                value={visibility}
-                onChange={(e) => setVisibility(e.target.value)}
-                className="w-full mt-1 border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-              >
-                <option value="everyone">Everyone</option>
-                <option value="friends">Friends</option>
-                <option value="private">Private</option>
-              </select>
-            </div>
-          </div>
-        </div>
+                <div className="mt-4">
+                  <label
+                    htmlFor="storyLink"
+                    className="block text-md font-medium text-[var(--highlight-blue)]"
+                  >
+                    Story Link
+                  </label>
+                  <InputField
+                    name="storyLink"
+                    type="url"
+                    placeholder="Enter the story link"
+                  />
+                </div>
+                <p>Ie: "See Article"</p>
+                <div className="mt-4">
+                  <label
+                    htmlFor="file-upload"
+                    className="block text-md font-medium text-[var(--highlight-blue)]"
+                  >
+                    Story Media (Image/Video)
+                  </label>
 
-        {/* Footer */}
-        <div className="flex justify-end items-center space-x-3 px-6 py-4 bg-gray-50 border-t">
-          <button
-            className="px-5 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
-            onClick={togglePopup}
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleAddStory}
-            className="px-5 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-          >
-            Add Story
-          </button>
-        </div>
+                  <div className="bg-gray-50 p-8 rounded-xl">
+                    <div className="p-4 bg-gray-200 rounded-xl">
+                      <label
+                        htmlFor="file-upload"
+                        className="cursor-pointer text-[var(--highlight-blue)] py-2 px-4 rounded-md mt-2 block text-center transition-all"
+                      >
+                        Drag & Drop your file or Browser
+                      </label>
+                    </div>
+                    <p className="text-black mt-6">
+                      Allowed types: .jpg, .jpeg, .png, .gif, .mp4, .mov, .wmv,
+                      .avi, .mpeg, .3gp.
+                    </p>
+
+                    
+                  </div>
+
+                  <Field
+                    type="file"
+                    name="storyMedia"
+                    id="file-upload"
+                    className="hidden"
+                   
+                    onChange={(e: any) =>
+                      setFieldValue(
+                        "storyMedia",
+                        e.target.files[0]
+                      )
+                      
+                    }
+                    value={initialValues.storyMedia}
+                  />
+                  
+                  <ErrorMessage
+                    name="storyMedia"
+                    component="div"
+                    className="text-red-500 text-sm mt-1"
+                  />
+                    <p>Recommended sizes: 1080x1920 px.</p>
+                </div>
+
+                <div className="mt-4">
+                  <label
+                    htmlFor="duration"
+                    className="block text-md font-medium text-[var(--highlight-blue)]"
+                  >
+                    Duration (seconds)
+                  </label>
+                  <InputField
+                    name="duration"
+                    min={1}
+                    type="number"
+                    placeholder="Duration (seconds)"
+                  />
+                </div>
+
+                <div className="mt-4 ">
+                  <label
+                    htmlFor="visibility"
+                    className="block text-md font-medium text-[var(--highlight-blue)]"
+                  >
+                    Visibility
+                  </label>
+                  <select
+                    id="visibility"
+                    name="visibility"
+                    onChange={(e) =>
+                      setFieldValue("visibility", e.target.value)
+                    }
+                    className="w-full mt-1 border border-gray-300 rounded-lg p-4"
+                  >
+                    <option value="Everyone">Everyone</option>
+                    <option value="Friends">Friends</option>
+                    <option value="Private">Private</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="flex gap-2">
+                <Button
+                  type="submit"
+                  label={"Add Story"}
+                  icon={<IoMdAdd className="fill-white" />}
+                  variant="default"
+                />
+                <Button
+                  type="submit"
+                  label={"Publish"}
+                  icon={<IoMdSend className="fill-white" />}
+                  variant="default"
+                />
+              </div>
+            </Form>
+          )}
+        </Formik>
       </div>
     </div>
   );

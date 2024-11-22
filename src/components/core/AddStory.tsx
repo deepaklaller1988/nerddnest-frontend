@@ -26,10 +26,11 @@ export default function AddStory() {
     speed: 500,
     slidesToShow: 4.5,
     slidesToScroll: 1,
+    arrows:true
   };
 
   const handleStoryClick = (storyId: number) => {
-    router.push(`/storyViewer?id=${storyId}&stories=${JSON.stringify(stories)}`);
+    router.push(`/storyviewer?id=${storyId}&stories=${JSON.stringify(stories)}`);
   };
 
   return (

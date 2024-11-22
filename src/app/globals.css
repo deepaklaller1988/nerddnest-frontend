@@ -274,3 +274,7 @@ label.customRadio input[type="radio"]:checked + span:before {
   opacity: 1;
   transform: scale(1) rotate(45deg);
 }
+
+/* .slick-arrow {
+  display: none !important;
+} */
