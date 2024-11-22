@@ -37,7 +37,6 @@ export const forgotValidationSchema = Yup.object({
 });
 
 export const resetValidationSchema =Yup.object({
-  email: emailValidation,
   password: passwordValidation,
-  confirmpassword : confirmPasswordValidation("password"),
+  confirmpassword :confirmPasswordValidation("password")
 })

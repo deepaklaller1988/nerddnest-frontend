@@ -5,7 +5,7 @@ import { FiMail, FiLock } from "react-icons/fi";
 import { AuthFormProps, AuthFormValues } from "@/types/authInterfaces";
 import { useState } from "react";
 import TermsOfServicePopup from "../Modals/Terms&Services";
-import { Formik, Form ,Field, ErrorMessage} from "formik";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 
 import InputField from "../core/InputField";
 
@@ -14,7 +14,7 @@ const AuthForm = <T extends AuthFormValues>({
   initialValues,
   validationSchema,
   onSubmit,
-  isLoading
+  isLoading,
 }: AuthFormProps<T>) => {
 
   const [isOpen, setIsOpen] = useState(false);
@@ -81,12 +81,14 @@ const AuthForm = <T extends AuthFormValues>({
           >
             {() => (
               <Form className="space-y-6">
-                <InputField
-                  name="email"
-                  type="email"
-                  placeholder="Email Address"
-                  icon={<FiMail className="text-gray-400 mr-2" />}
-                />
+                {type !== "reset-password" && (
+                  <InputField
+                    name="email"
+                    type="email"
+                    placeholder="Email Address"
+                    icon={<FiMail className="text-gray-400 mr-2" />}
+                  />
+                )}
 
                 {type === "signup" && (
                   <InputField
@@ -104,7 +106,7 @@ const AuthForm = <T extends AuthFormValues>({
                       placeholder="Password"
                       icon={<FiLock className="text-gray-400 mr-2" />}
                     />
-                    {type === "signup" && (
+                    {(type === "signup" || type === "reset-password" )&&(
                       <InputField
                         name="confirmpassword"
                         type="password"
@@ -186,8 +188,9 @@ const AuthForm = <T extends AuthFormValues>({
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className={`w-full p-3 rounded-lg font-semibold bg-[var(--highlight-blue)] ${isLoading ? 'cursor-not-allowed' : 'cursor-pointer'} text-white`}
-
+                  className={`w-full p-3 rounded-lg font-semibold bg-[var(--highlight-blue)] ${
+                    isLoading ? "cursor-not-allowed" : "cursor-pointer"
+                  } text-white`}
                 >
                   {type === "login"
                     ? "Log In"
@@ -195,6 +198,8 @@ const AuthForm = <T extends AuthFormValues>({
                     ? "Create an Account"
                     : type == "forgot-password"
                     ? "Request reset link"
+                    : type == "reset-password"
+                    ? "Reset Password"
                     : ""}
                 </button>
                 {type == "forgot-password" && (
@@ -210,7 +215,7 @@ const AuthForm = <T extends AuthFormValues>({
               </Form>
             )}
           </Formik>
-          {type !== "signup" && (
+          {type !== "signup" && type !== "reset-password" && (
             <div
               onClick={openModal}
               className="text-center mt-4 text-xs font-bold text-black-400 hover:text-[var(--highlight-blue)] cursor-pointer"

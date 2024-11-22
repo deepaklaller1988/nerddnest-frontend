@@ -1,6 +1,6 @@
 "use client"
-import React from 'react'
-import { useRegisterMutation } from '@/redux/services/auth'
+import React, { useState } from 'react'
+import { useForgotpasswordMutation } from '@/redux/services/auth'
 import { toasterSuccess } from '@/components/core/Toaster'
 import AuthForm from '@/components/Forms/AuthForm'
 import useTitle from '@/hooks/useTitle'
@@ -9,19 +9,17 @@ import { ForgotPasswordFormValues } from "@/types/authInterfaces";
 
 export default function ForgotPassword() {
     useTitle("Lost Password")
-    const [forgotpassword, { isLoading }] = useRegisterMutation();
+    const [forgotpassword, { isLoading }] = useForgotpasswordMutation();
 
-    const initialValues :ForgotPasswordFormValues= {
+    const [initialValues, setInitialValues] = useState<ForgotPasswordFormValues>({
       email: "",
-    };
+    });
     
     const handleSubmit = async (values: typeof initialValues) => {
-      try {
         await forgotpassword(values).unwrap();
-        toasterSuccess("Login successful", 1000, "id");
-      } catch (err) {
-        console.error("Error:", err);
-      }
+        toasterSuccess("Please Check Your Register Gmail Id", 3000, "id");
+        setInitialValues({ email: "" });
+      
     };
     return (
       <div>

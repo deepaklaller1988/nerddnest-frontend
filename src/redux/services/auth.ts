@@ -19,6 +19,7 @@ interface RegisterResponse {
   firstname: string;
   email: string;
   password:string
+  accessToken: string; 
 }
 
 interface LoginResponse {
@@ -32,6 +33,10 @@ interface LoginResponse {
 interface ForgotResponse {
   email: string;
 }
+interface ResetResponse {
+  email: string;
+}
+
 
 const url = process.env.NEXT_PUBLIC_API_URL;
 
@@ -47,7 +52,6 @@ export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery: async (args, api, extraOptions) => {
     const result = await fetchBaseQuery({ baseUrl: `${url}auth/` })(args, api, extraOptions);
-    
     if (result.error) {
       const errorData = result.error.data as ApiError;
       handleError(errorData);
@@ -72,14 +76,22 @@ export const authApi = createApi({
       }),
     }),
 
-    forgotpassword: builder.mutation<ApiResponse<ForgotResponse>, { email: string; password: string }>({
-      query: (userData) => ({
+    forgotpassword: builder.mutation<ApiResponse<ForgotResponse>, { email: string }>({
+      query: (forgot) => ({
         url: "forgot-password",
         method: "POST",
-        body: userData,
+        body: forgot,
+      }),
+    }),
+
+    resetPassword: builder.mutation<ApiResponse<ResetResponse>, { password: string }>({
+      query: (reset) => ({
+        url: "reset-password",
+        method: "POST",
+        body: reset,
       }),
     }),
   }),
 });
 
-export const { useRegisterMutation, useLoginMutation, useForgotpasswordMutation } = authApi;
+export const { useRegisterMutation, useLoginMutation, useForgotpasswordMutation , useResetPasswordMutation} = authApi;

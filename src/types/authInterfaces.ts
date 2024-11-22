@@ -22,10 +22,16 @@ export interface ForgotPasswordFormValues {
   email: string;
 }
 
+export interface ResettPasswordFormValues {
+  password: string;
+  confirmpassword: string;
+}
+
 export type AuthFormValues =
   | LoginFormValues
   | SignupFormValues
-  | ForgotPasswordFormValues;
+  | ForgotPasswordFormValues
+  |ResettPasswordFormValues;
 
 export interface AuthFormProps<T extends AuthFormValues> {
   type: "login" | "signup" | "forgot-password" | "reset-password";

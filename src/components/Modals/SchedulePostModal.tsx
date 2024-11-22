@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 
-const SchedulePostPopup = ({ isOpen, onClose }: any) => {
+type SchedulePostPopupProps = {
+    isOpen: boolean;
+    onClose: () => void;
+  };
+  
+
+const SchedulePostPopup = ({ isOpen, onClose }: SchedulePostPopupProps) => {
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
 
