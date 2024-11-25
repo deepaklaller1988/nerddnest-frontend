@@ -4,17 +4,17 @@ import { RootState } from "../store";
 const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
 const baseQuery = fetchBaseQuery({
-    baseUrl,
-    prepareHeaders: (headers, { getState }) => {
-      const token = (getState() as RootState).auth.accessToken;
-      if (token) {
-        headers.set("Authorization", `Bearer ${token}`);
-      }
-      headers.set("Content-Type", "application/json");
-      return headers;
-    },
-  });
-
+  baseUrl,
+  prepareHeaders: (headers, { getState }) => {
+    const token = (getState() as RootState).auth.accessToken;
+    if (token) {
+      headers.set("Authorization", `Bearer ${token}`);
+    }
+    headers.set("Content-Type", "application/json");
+    return headers;
+  },
+  credentials: "include",
+});
 
 export const apiSlice = createApi({
   reducerPath: "api",
@@ -31,10 +31,19 @@ export const apiSlice = createApi({
   }),
   endpoints: (builder) => ({
     dynamicRequest: builder.mutation({
-      query: ({ method, url, body }: { method: string; url: string; body?: any }) => ({
+      query: ({
+        method,
+        url,
+        body,
+      }: {
+        method: string;
+        url: string;
+        body?: any;
+      }) => ({
         url,
         method,
         body,
+        credentials: "include",
       }),
     }),
   }),
