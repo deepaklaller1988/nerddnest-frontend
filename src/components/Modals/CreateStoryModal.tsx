@@ -130,7 +130,8 @@ const CreateStoryModal: any = ({ togglePopup, onAddStory }: any) => {
                     placeholder="Enter the story link"
                   />
                 </div>
-                <p>Ie: "See Article"</p>
+                <p>Ie: &quot;See Article&quot;</p>
+
                 <div className="mt-4">
                   <label
                     htmlFor="file-upload1"

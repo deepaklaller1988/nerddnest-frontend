@@ -27,7 +27,6 @@ export default function ResetPassword() {
 function InnerResetPassword({ route }: { route: ReturnType<typeof useRouter> }) {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
-  const [resetPassword, { isLoading }] = useResetPasswordMutation();
   const { API } = useApi();
   const dispatch = useDispatch();
   const initialValues = {
@@ -51,7 +50,6 @@ function InnerResetPassword({ route }: { route: ReturnType<typeof useRouter> }) 
     <div>
       <AuthForm
         type="reset-password"
-        isLoading={isLoading}
         initialValues={initialValues}
         validationSchema={resetValidationSchema}
         onSubmit={handleSubmit}

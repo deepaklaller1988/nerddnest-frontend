@@ -1,6 +1,5 @@
 "use client";
-import React, { useState } from "react";
-import { useForgotpasswordMutation } from "@/redux/services/auth";
+import React, { useEffect, useState } from "react";
 import { toasterError, toasterSuccess } from "@/components/core/Toaster";
 import AuthForm from "@/components/Forms/AuthForm";
 import useTitle from "@/hooks/useTitle";
@@ -15,14 +14,16 @@ export default function ForgotPassword() {
   useTitle("Lost Password");
   const { API } = useApi();
   const dispatch = useDispatch();
-
-  const [forgotpassword, { isLoading }] = useForgotpasswordMutation();
+  const [isClient, setIsClient] = useState(false);
 
   const [initialValues] = useState<ForgotPasswordFormValues>({
     email: "",
   });
-
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
   const handleSubmit = async (values: typeof initialValues) => {
+    if (!isClient) return;
     const { success, data, error } = await API.post(
       "auth/forgot-password",
       values
@@ -41,10 +42,13 @@ export default function ForgotPassword() {
     }
   };
 
+  if (!isClient) {
+    return null; // Or a loading spinner, etc.
+  }
+
   return (
     <div>
       <AuthForm
-        isLoading={isLoading}
         type="forgot-password"
         initialValues={initialValues}
         validationSchema={forgotValidationSchema}

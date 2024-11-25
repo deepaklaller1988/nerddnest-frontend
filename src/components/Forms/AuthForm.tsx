@@ -17,14 +17,11 @@ const AuthForm = <T extends AuthFormValues>({
   initialValues,
   validationSchema,
   onSubmit,
-  isLoading,
   isRegistered,
   isActivated,
   errorMessage,
   successMsg
 }: AuthFormProps<T>) => {
-  console.log(successMsg,isRegistered,isActivated,"=======================")
-  const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
   const Type = searchParams.get("type") ||"";
@@ -218,10 +215,11 @@ const AuthForm = <T extends AuthFormValues>({
                     )}
                     <button
                       type="submit"
-                      disabled={isLoading}
-                      className={`w-full p-3 rounded-lg font-semibold bg-[var(--highlight-blue)] ${
-                        isLoading ? "cursor-not-allowed" : "cursor-pointer"
-                      } text-white`}
+                      // disabled={isLoading}
+                      className="w-full p-3 rounded-lg font-semibold bg-[var(--highlight-blue)] cursor-pointer text-white"
+                      // className={`w-full p-3 rounded-lg font-semibold bg-[var(--highlight-blue)] ${
+                      //   "isLoading" ? "cursor-not-allowed" : "cursor-pointer"
+                      // } text-white`}
                     >
                       {type === "login"
                         ? "Log In"

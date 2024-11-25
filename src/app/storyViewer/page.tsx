@@ -2,15 +2,22 @@
 import React, { useEffect, useState } from "react";
 import Stories, { WithSeeMore } from "react-insta-stories";
 
+interface Story {
+  content: ({ action, isPaused }: { action: any, isPaused: boolean }) => JSX.Element;
+  seeMoreCollapsed?: ({ toggleMore, action }: { toggleMore: (value: boolean) => void, action: any }) => JSX.Element;
+  seeMore?: ({ close }: { close: () => void }) => JSX.Element;
+  duration?: number;
+}
+
 const App = () => {
-  const [stories, setStories] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [stories, setStories] = useState<Story[]>([]); 
+   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
     const fetchStories = async () => {
-      const fetchedStories: any = [
+      const fetchedStories: Story[] = [
         {
-          content: ({ action, isPaused }: any) => (
+          content: ({ action, isPaused }) => (
             <div style={contentStyle} onClick={handleStoryClick}>
               <img
                 style={image}
@@ -21,14 +28,14 @@ const App = () => {
           ),
         },
         {
-          content: ({ action, story }: any) => (
+          content: ({ action, story }:any) => (
             <WithSeeMore story={story} action={action}>
             </WithSeeMore>
           ),
-          seeMoreCollapsed: ({ toggleMore, action }: any) => (
+          seeMoreCollapsed: ({ toggleMore, action }) => (
             <p onClick={() => toggleMore(true)}>Click to see more →</p>
           ),
-          seeMore: ({ close }: any) => (
+          seeMore: ({ close }) => (
             <div style={{ maxWidth: "100%", height: "100%", padding: 40, background: "white" }}>
               <h2>More details about the dynamic story.</h2>
               <p style={{ textDecoration: "underline" }} onClick={close}>Close</p>
@@ -43,7 +50,6 @@ const App = () => {
 
     fetchStories();
   }, []);
-
   const handleStoryClick = () => {
     // Increment the current index to go to the next story
     setCurrentIndex((prevIndex) => (prevIndex + 1) % stories.length);

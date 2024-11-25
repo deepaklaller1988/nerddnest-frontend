@@ -10,44 +10,50 @@ import { useApi } from "@/hooks/useAPI";
 import { useDispatch } from "react-redux";
 import { getErrorMessage } from "@/utils/errorHandler";
 import { setAuth } from "@/redux/slices/auth.slice";
+import { useEffect, useState } from "react";
 
 const Login = () => {
   useTitle("Login");
-  const router = useRouter()
 
-  const [login, { isLoading }] = useLoginMutation(); 
-  const {API} = useApi();
+  // State to check if the component is mounted on the client side
+  const [isClient, setIsClient] = useState(false);
+
+  const router = useRouter();
+  const { API } = useApi();
   const dispatch = useDispatch();
+  
   const initialValues: LoginFormValues = {
     email: "",
     password: "",
   };
 
+  useEffect(() => {
+    setIsClient(true); 
+  }, []);
+
   const handleSubmit = async (values: typeof initialValues) => {
-    const { success, data, error } = await API.post('auth/login', values);
+    const { success, data, error } = await API.post("auth/login", values);
     if (success) {
       dispatch(setAuth({ accessToken: data.accessToken, userId: data.id }));
       toasterSuccess("Login successful", 1000, "id");
       router.push("/home");
-
     } else {
       const errorMessage = getErrorMessage(error.code);
-      toasterError(errorMessage, 1000, "id"); 
+      toasterError(errorMessage, 1000, "id");
     }
+  };
 
+  if (!isClient) {
+    return null; 
+  }
 
-};
   return (
-    <>
     <AuthForm
       type="login"
-      isLoading={isLoading}
       initialValues={initialValues}
       validationSchema={loginValidationSchema}
       onSubmit={handleSubmit}
     />
-    
-    </>
   );
 };
 
