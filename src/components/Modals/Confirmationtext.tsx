@@ -1,12 +1,23 @@
+import { useRouter } from "next/navigation";
 import React from "react";
 import { IoMdInformationCircleOutline } from "react-icons/io";
 
 interface ConfirmationTextProps {
-  heading?: string; 
+  heading?: string;
   text: string;
+  buttontext?: string;
+  type?: string;
+  error?:string
 }
 
-export default function Confirmationtext({ heading, text }: ConfirmationTextProps) {
+export default function Confirmationtext({
+  type,
+  heading,
+  text,
+  buttontext,
+  error
+}: ConfirmationTextProps) {
+  const router = useRouter();
   return (
     <div>
       {heading && <p className="text-black text-3xl text-center">{heading}</p>}
@@ -17,6 +28,17 @@ export default function Confirmationtext({ heading, text }: ConfirmationTextProp
         <div>
           <p className="text-black text-xl">{text}</p>
         </div>
+      </div>
+      <div className="text-center justify-center items-center ">
+        
+        {type === "activation"   && !error && (
+          <button
+            className="bg-blue-500 text-white rounded-xl p-4 mt-6"
+            onClick={() => router.push("/home")}
+          >
+            {buttontext}
+          </button>
+        )}
       </div>
     </div>
   );

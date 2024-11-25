@@ -67,6 +67,8 @@ const getVerifiedUser = async () => {
     setErrorMessage(errorMessage);
     if (success) {
       setIsActivated(true);
+      setSuccessMsg("Your Account is Succesfully Verified ! Click on Ok Button")
+
     } else {
       const errorMessage = getErrorMessage(error?.code);
       setErrorMessage(errorMessage);

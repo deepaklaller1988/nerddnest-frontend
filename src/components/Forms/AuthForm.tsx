@@ -27,6 +27,7 @@ const AuthForm = <T extends AuthFormValues>({
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
+  const Type = searchParams.get("type") ||"";
   const [isOpen, setIsOpen] = useState(false);
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
@@ -54,15 +55,18 @@ const AuthForm = <T extends AuthFormValues>({
             />
           </div>
 
-       {(successMsg|| errorMessage) &&<Confirmationtext
+       {(token ||successMsg|| errorMessage) &&<Confirmationtext
             heading={"We’re almost there!"}
             text={successMsg ? successMsg : errorMessage ||""}
+            buttontext={Type =="activation"?"OK":""}
+            type={Type}
+            error={errorMessage}
           />}
 
-            {(token ) &&<Confirmationtext
+            {/* {(token ) &&<Confirmationtext
             heading={"We’re almost there!"}
             text={successMsg ? successMsg : errorMessage ||""}
-          />}
+          />} */}
 
           {!(token || isRegistered) ?  (
             <>

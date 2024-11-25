@@ -87,8 +87,8 @@ const CommentSection = () => {
       <div className="mt-3 border-t border-gray-500/20">
         {commentsData.length > 0 ? (
           commentsData.map((comment) => (
-            <>
-              <div key={comment.id} className="w-full py-4">
+            <div  key={comment.id}>
+              <div  className="w-full py-4">
                 <div className="w-full">
                   <div className="flex items-start gap-2">
                     <span className="relative min-w-10 min-h-10 max-w-10 max-h-10 rounded-full block border border-2 border-black/5 border-white">
@@ -252,7 +252,7 @@ const CommentSection = () => {
                   </section>
                 </section>
               </div>
-            </>
+            </div>
           ))
         ) : (
           <div className="w-full">
