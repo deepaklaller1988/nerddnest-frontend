@@ -17,6 +17,7 @@ export const useApi = () => {
           const response = await dynamicRequest({ method: 'POST', url, body }).unwrap();
           return { success: true, data: response.data };
         } catch (error: any) {
+          console.log(error.data?.error,"=============")
           return { success: false, error: error.data?.error || error };
         }
       },
