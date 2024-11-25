@@ -42,4 +42,5 @@ export interface AuthFormProps<T extends AuthFormValues> {
   isRegistered?:boolean
   isActivated?:boolean
   errorMessage?:string
+  successMsg:string
 }

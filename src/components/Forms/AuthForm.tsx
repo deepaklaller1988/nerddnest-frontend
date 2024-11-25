@@ -21,7 +21,9 @@ const AuthForm = <T extends AuthFormValues>({
   isRegistered,
   isActivated,
   errorMessage,
+  successMsg
 }: AuthFormProps<T>) => {
+  console.log(successMsg,isRegistered,isActivated,"=======================")
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
@@ -52,12 +54,17 @@ const AuthForm = <T extends AuthFormValues>({
             />
           </div>
 
-        {token &&   <Confirmationtext
+       {(successMsg|| errorMessage) &&<Confirmationtext
             heading={"We’re almost there!"}
-            text={errorMessage ? errorMessage : ""}
+            text={successMsg ? successMsg : errorMessage ||""}
           />}
 
-          {!token ? (
+            {(token ) &&<Confirmationtext
+            heading={"We’re almost there!"}
+            text={successMsg ? successMsg : errorMessage ||""}
+          />}
+
+          {!(token || isRegistered) ?  (
             <>
               {type !== "forgot-password" && (
                 <div className="flex justify-between items-center mb-6">

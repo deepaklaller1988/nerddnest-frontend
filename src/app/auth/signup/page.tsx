@@ -24,6 +24,7 @@ const Signup = () => {
   const [isRegistered, setIsRegistered] = useState(false);
   const [isActivated,setIsActivated]=useState(false)
   const [errorMessage,setErrorMessage]=useState("")
+  const [successMsg,setSuccessMsg]=useState("")
 
   const initialValues: SignupFormValues = {
     email: "",
@@ -46,20 +47,24 @@ const Signup = () => {
   
   const handleSubmit = async (values: typeof initialValues) => {
       const { success, data, error } = await API.post('auth/register', values);
+      const errorMessage = getErrorMessage(error?.code);
+      setErrorMessage(errorMessage);
       if (success) {
         dispatch(setAuth({ accessToken: data.accessToken, userId: data.id }));
+        setSuccessMsg(data?.message)
         toasterSuccess("Registration successful", 1000, "id");
         setIsRegistered(true); 
       } else {
         const errorMessage = getErrorMessage(error.code);
         toasterError(errorMessage, 1000, "id"); 
       }
-  
 
   };
 
 const getVerifiedUser = async () => {
     const { success, data, error } = await API.get(`auth/verify-account?type=${type}&token=${token}`);
+    const errorMessage = getErrorMessage(error?.code);
+    setErrorMessage(errorMessage);
     if (success) {
       setIsActivated(true);
     } else {
@@ -74,6 +79,7 @@ const getVerifiedUser = async () => {
       type="signup"
       isLoading={isLoading}
       isActivated={isActivated}
+      successMsg={successMsg}
       errorMessage={errorMessage}
       isRegistered={isRegistered}
       initialValues={initialValues}

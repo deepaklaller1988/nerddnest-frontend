@@ -1,3 +1,4 @@
+import { getErrorMessage } from "@/utils/errorHandler";
 import { useDynamicRequestMutation } from "../redux/services/api";
 
 export const useApi = () => {
@@ -9,6 +10,8 @@ export const useApi = () => {
           const response = await dynamicRequest({ method: 'GET', url, body }).unwrap();
           return { success: true, data: response.data };
         } catch (error: any) {
+          const errorMessage = getErrorMessage(error.code);
+          // toasterError(errorMessage, 1000, "id"); 
           return { success: false, error: error.data?.error || error };
         }
       },
@@ -17,6 +20,8 @@ export const useApi = () => {
           const response = await dynamicRequest({ method: 'POST', url, body }).unwrap();
           return { success: true, data: response.data };
         } catch (error: any) {
+          const errorMessage = getErrorMessage(error.code);
+          // toasterError(errorMessage, 1000, "id"); 
           console.log(error.data?.error,"=============")
           return { success: false, error: error.data?.error || error };
         }
@@ -26,6 +31,7 @@ export const useApi = () => {
           const response = await dynamicRequest({ method: 'PUT', url, body }).unwrap();
           return { success: true, data: response.data };
         } catch (error: any) {
+          const errorMessage = getErrorMessage(error.code);
           return { success: false, error: error.data?.error || error };
         }
       },
@@ -34,6 +40,7 @@ export const useApi = () => {
           const response = await dynamicRequest({ method: 'DELETE', url, body }).unwrap();
           return { success: true, data: response.data };
         } catch (error: any) {
+          const errorMessage = getErrorMessage(error.code);
           return { success: false, error: error.data?.error || error };
         }
       },
