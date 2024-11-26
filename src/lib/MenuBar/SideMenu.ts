@@ -3,6 +3,8 @@ import { CgProfile } from "react-icons/cg";
 import { MdSettingsBrightness } from "react-icons/md";
 import { LiaCcDiscover } from "react-icons/lia";
 import { CgGames } from "react-icons/cg";
+import { IoMdLogOut } from "react-icons/io"; // Add logout icon
+
 
 export default class User {
     static list: MenuItem[] = [
@@ -45,6 +47,12 @@ export default class User {
             { name: "Export Data", href: "/account/export" },
           ],
         },
+        {
+          name: "Logout",
+          icon: IoMdLogOut,
+          links: [],
+        },
+       
       ];
   }
   

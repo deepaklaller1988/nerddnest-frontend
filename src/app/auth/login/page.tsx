@@ -22,10 +22,10 @@ const Login = () => {
   const { API } = useApi();
   const dispatch = useDispatch();
 
-  const initialValues: LoginFormValues = {
+  const [initialValues, setInitialValues] = useState<LoginFormValues>({
     email: "",
     password: "",
-  };
+  });
 
   useEffect(() => {
     setIsClient(true);
@@ -54,11 +54,15 @@ const Login = () => {
           email,
         }
       );
-
       if (success) {
+        setInitialValues({
+          email: "",
+          password: "",
+        });
         setSucessMsg(
           "Activation email resent! Please check your inbox or spam folder."
         );
+
       } else {
         alert(`Failed to resend activation email: ${errorMessage}`);
       }

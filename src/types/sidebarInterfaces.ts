@@ -6,7 +6,8 @@ export interface MenuLink {
   export interface MenuItem {
     name: string;
     icon?: React.ComponentType<React.SVGProps<SVGSVGElement>> | React.ReactNode; 
-        links: MenuLink[];
+        links?: MenuLink[];
+        action?:any
   }
   
   export interface MenuItemsProps {

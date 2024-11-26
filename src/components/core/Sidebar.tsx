@@ -34,6 +34,7 @@ export default function Sidebar({ type }: SidebarProps) {
             </div>
           </section>
           <MenuItems toggleSection={toggleSection} openSections={openSections} />
+         
         </div>
       )}
     </>
