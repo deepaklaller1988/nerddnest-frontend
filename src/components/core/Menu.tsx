@@ -3,13 +3,24 @@ import React, { useState } from 'react';
 
 import { MenuItemProp } from '@/types/sidebarInterfaces';
 import { IoIosArrowDown, IoMdArrowDropright } from 'react-icons/io';
+import { useRouter } from 'next/navigation';
 
 const Menu: React.FC<MenuItemProp> = ({ name, icon, links, isOpen, onToggle }) => {
+  const router=useRouter()
   const [active, setActive] = useState(false); 
+
+  const handleLogout = () => {
+    localStorage.clear()
+    router.push("/auth/login")
+  };
   
   const handleToggle = () => {
+    if (name === 'Logout') {
+      handleLogout(); 
+    } else {
     onToggle();  
     setActive(prev => !prev);  
+    }
   };
 
   return (
@@ -23,7 +34,7 @@ const Menu: React.FC<MenuItemProp> = ({ name, icon, links, isOpen, onToggle }) =
         </span>
         {links && (
           <span className="p-4">
-            <IoIosArrowDown className={`text-[16px] ${isOpen ? 'rotate-180' : ''}`} />
+            {name !=="Logout" ?<IoIosArrowDown className={`text-[16px] ${isOpen ? 'rotate-180' : ''}`}/> :""}
           </span>
         )}
       </section>
@@ -33,7 +44,7 @@ const Menu: React.FC<MenuItemProp> = ({ name, icon, links, isOpen, onToggle }) =
             <div key={idx}>
               <Link className="hover:bg-gray-200" href={link.href} legacyBehavior>
                 <a className="flex items-center gap-2 px-4 py-2 ">
-                  <IoMdArrowDropright /> {link.name}
+                  <IoMdArrowDropright />  {link.name}
                 </a>
               </Link>
             </div>

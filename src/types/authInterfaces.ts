@@ -38,7 +38,7 @@ export interface AuthFormProps<T extends AuthFormValues> {
   initialValues: T;
   validationSchema: Yup.ObjectSchema<T>;
   onSubmit: (values: T) => void | Promise<void>;
-  // isLoading: boolean;
+  isLoading: boolean;
   isRegistered?:boolean
   isActivated?:boolean
   errorMessage?:string

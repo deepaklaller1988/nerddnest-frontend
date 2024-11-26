@@ -17,6 +17,7 @@ const Login = () => {
   const [isClient, setIsClient] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [sucessMesg, setSucessMsg] = useState("");
+  const [isLoading, setLoading] = useState(false);
   const emailRef = useRef<string>("");
   const router = useRouter();
   const { API } = useApi();
@@ -33,7 +34,9 @@ const Login = () => {
 
   const handleSubmit = async (values: typeof initialValues) => {
     emailRef.current = values.email;
+    setLoading(true);
     const { success, data, error } = await API.post("auth/login", values);
+    setLoading(false);
     if (success) {
       dispatch(setAuth({ accessToken: data.accessToken, userId: data.id }));
       toasterSuccess("Login successful", 1000, "id");
@@ -48,13 +51,13 @@ const Login = () => {
   const handleResendActivationEmail = async () => {
     try {
       const email = emailRef.current;
-      const { success, data, error } = await API.post(
-        "auth/resend-activation-mail",
-        {
-          email,
-        }
-      );
+      setLoading(true);
+      const { success } = await API.post("auth/resend-activation-mail", {
+        email,
+      });
+      setLoading(false);
       if (success) {
+        setErrorMessage("");
         setInitialValues({
           email: "",
           password: "",
@@ -62,12 +65,11 @@ const Login = () => {
         setSucessMsg(
           "Activation email resent! Please check your inbox or spam folder."
         );
-
       } else {
         alert(`Failed to resend activation email: ${errorMessage}`);
       }
     } catch (err) {
-      console.error("Error in resending activation email:", err);
+      setLoading(false);
       alert("An error occurred while trying to resend the activation email.");
     }
   };
@@ -84,6 +86,7 @@ const Login = () => {
         validationSchema={loginValidationSchema}
         onSubmit={handleSubmit}
         errorMessage={errorMessage}
+        isLoading={isLoading}
         handleResendActivationEmail={handleResendActivationEmail}
         sucessActivationEmail={sucessMesg}
       />

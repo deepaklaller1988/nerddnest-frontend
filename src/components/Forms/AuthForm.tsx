@@ -21,7 +21,8 @@ const AuthForm = <T extends AuthFormValues>({
   errorMessage,
   successMsg,
   handleResendActivationEmail,
-  sucessActivationEmail
+  sucessActivationEmail,
+  isLoading
 }: AuthFormProps<T>) => {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
@@ -67,15 +68,18 @@ const AuthForm = <T extends AuthFormValues>({
             <div className="p-4 bg-red-500 text-white rounded-xl">
               ERROR: Your account has not been activated. Check your email for
               the activation link.
-              <p className="text-white">
-                If you have not received an email yet,{" "}
-                <span
-                  className="underline cursor-pointer text-white"
-                  onClick={() => handleResendActivationEmail()}
-                >
-                  click here to resend it.
-                </span>
-              </p>
+            {type !=="forgot-password" && 
+             <p className="text-white">
+             If you have not received an email yet,{" "}
+             <span
+               className="underline cursor-pointer text-white"
+               onClick={() => handleResendActivationEmail()}
+             >
+               click here to resend it.
+             </span>
+           </p>
+            } 
+            
             </div>
           )}
 
@@ -113,7 +117,7 @@ const AuthForm = <T extends AuthFormValues>({
                 </div>
               )}
               {type == "forgot-password" && (
-                <p className="mb-10 text-gray-600">
+                <p className="mb-10 text-gray-600 mt-5">
                   Please enter your username or email address. You will receive
                   an email message with instructions on how to reset your
                   password.
@@ -236,13 +240,12 @@ const AuthForm = <T extends AuthFormValues>({
                         </Link>
                       </div>
                     )}
-                    <button
+                     <button
                       type="submit"
-                      // disabled={isLoading}
-                      className="w-full p-3 rounded-lg font-semibold bg-[var(--highlight-blue)] cursor-pointer text-white"
-                      // className={`w-full p-3 rounded-lg font-semibold bg-[var(--highlight-blue)] ${
-                      //   "isLoading" ? "cursor-not-allowed" : "cursor-pointer"
-                      // } text-white`}
+                      disabled={isLoading}
+                      className={`w-full p-3 rounded-lg font-semibold bg-[var(--highlight-blue)] ${
+                        isLoading ? "cursor-not-allowed" : "cursor-pointer"
+                      } text-white`}
                     >
                       {type === "login"
                         ? "Log In"

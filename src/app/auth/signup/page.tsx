@@ -11,6 +11,7 @@ import { useDispatch } from "react-redux";
 import { getErrorMessage } from "@/utils/errorHandler";
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
+import Loader from "@/components/Loaders/Loader";
 
 const Signup = () => {
   useTitle("Register an Account");
@@ -24,6 +25,7 @@ const Signup = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
   const [isClient, setIsClient] = useState(false);
+  const [isLoading, setLoading] = useState(false);
 
   const initialValues: SignupFormValues = {
     email: "",
@@ -46,7 +48,9 @@ const Signup = () => {
   }, [type, token]);
 
   const handleSubmit = async (values: typeof initialValues) => {
-    const { success, data, error } = await API.post("auth/register", values);
+    setLoading(true); 
+    const { success, data, error } = await API.post("auth/register", values);setLoading(false);
+    setLoading(false); 
     const errorMessage = getErrorMessage(error?.code);
     setErrorMessage(errorMessage);
     if (success) {
@@ -60,13 +64,13 @@ const Signup = () => {
   };
 
   const getVerifiedUser = async () => {
+    setLoading(true);
     const { success, error } = await API.get(
       `auth/verify-account?type=${type}&token=${token}`
     );
     const errorMessage = getErrorMessage(error?.code);
     setErrorMessage(error);
-    if(errorMessage=="Token Expired"){
-
+    if (errorMessage == "Token Expired") {
     }
     if (success) {
       setIsActivated(true);
@@ -94,6 +98,7 @@ const Signup = () => {
           initialValues={initialValues}
           validationSchema={signupValidationSchema}
           onSubmit={handleSubmit}
+          isLoading={isLoading}
         />
       ) : (
         ""
@@ -104,7 +109,7 @@ const Signup = () => {
 
 const SignupWithSuspense = () => {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<div><Loader/></div>}>
       <Signup />
     </Suspense>
   );

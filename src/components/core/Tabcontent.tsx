@@ -1,6 +1,7 @@
 import React from 'react';
 import { TabContentProps } from '@/types/sidebarInterfaces';
 import ViewButton from '../Buttons/ViewButtons';
+import Loader from '../Loaders/Loader';
 
 const TabContent = <T extends string, Item>({
   title,
@@ -36,7 +37,7 @@ const TabContent = <T extends string, Item>({
         
         <div>
           {isLoading ? (
-            <p>Loading...</p>
+            <p><Loader/></p>
           ) : items.length === 0 ? (
             <p>{noItemsMessage}</p>
           ) : (

@@ -21,7 +21,7 @@ export default function Sidebar({ type }: SidebarProps) {
           <h2 className="text-[var(--highlight)] font-semibold p-4">
             WELCOME TO ACCOUNT
           </h2>
-          <MenuItems toggleSection={toggleSection} openSections={openSections} />
+          <MenuItems toggleSection={toggleSection} openSections={openSections} type="home"/>
         </div>
       ) : (
         <div className="w-full min-w-[280px] overflow-y-auto overflow-x-hidden rounded-lg bg-white absolute right-0 mt-1 max-h-[500px]">
@@ -33,7 +33,7 @@ export default function Sidebar({ type }: SidebarProps) {
               <b className="text-[var(--highlight)]">Ambros Marcos</b>
             </div>
           </section>
-          <MenuItems toggleSection={toggleSection} openSections={openSections} />
+          <MenuItems toggleSection={toggleSection} openSections={openSections} type="sidebar"/>
          
         </div>
       )}

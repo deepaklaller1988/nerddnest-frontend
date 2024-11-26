@@ -15,6 +15,8 @@ export default function ForgotPassword() {
   const { API } = useApi();
   const dispatch = useDispatch();
   const [isClient, setIsClient] = useState(false);
+  const [isLoading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const [initialValues] = useState<ForgotPasswordFormValues>({
     email: "",
@@ -22,13 +24,17 @@ export default function ForgotPassword() {
   useEffect(() => {
     setIsClient(true);
   }, []);
+
   const handleSubmit = async (values: typeof initialValues) => {
     if (!isClient) return;
+    setLoading(true);
     const { success, data, error } = await API.post(
       "auth/forgot-password",
       values
     );
+    setLoading(false);
     if (success) {
+      setErrorMessage("");
       dispatch(
         setAuth({
           accessToken: data.accessToken,
@@ -39,11 +45,12 @@ export default function ForgotPassword() {
     } else {
       const errorMessage = getErrorMessage(error.code);
       toasterError(errorMessage, 1000, "id");
+      setErrorMessage(errorMessage);
     }
   };
 
   if (!isClient) {
-    return null; // Or a loading spinner, etc.
+    return null;
   }
 
   return (
@@ -53,6 +60,8 @@ export default function ForgotPassword() {
         initialValues={initialValues}
         validationSchema={forgotValidationSchema}
         onSubmit={handleSubmit}
+        isLoading={isLoading}
+        errorMessage={errorMessage}
       />
     </div>
   );
