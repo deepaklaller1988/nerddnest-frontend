@@ -43,4 +43,6 @@ export interface AuthFormProps<T extends AuthFormValues> {
   isActivated?:boolean
   errorMessage?:string
   successMsg?:string
+  handleResendActivationEmail?:any
+  sucessActivationEmail?:any
 }

@@ -6,14 +6,11 @@ import { AuthFormProps, AuthFormValues } from "@/types/authInterfaces";
 import { useState } from "react";
 import TermsOfServicePopup from "../Modals/Terms&Services";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { IoMdInformationCircleOutline } from "react-icons/io";
 
 import InputField from "../core/InputField";
-import { useRouter, useSearchParams } from "next/navigation";
+import {  useSearchParams } from "next/navigation";
 import Confirmationtext from "../Modals/Confirmationtext";
-import { useApi } from "@/hooks/useAPI";
-import { getErrorMessage } from "@/utils/errorHandler";
-import { useDispatch } from "react-redux";
+
 
 const AuthForm = <T extends AuthFormValues>({
   type,
@@ -21,42 +18,18 @@ const AuthForm = <T extends AuthFormValues>({
   validationSchema,
   onSubmit,
   isRegistered,
-  isActivated,
   errorMessage,
   successMsg,
+  handleResendActivationEmail,
+  sucessActivationEmail
 }: AuthFormProps<T>) => {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
   const Type = searchParams.get("type") || "";
-  const { API } = useApi();
   const [isOpen, setIsOpen] = useState(false);
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
 
-  const handleResendActivationEmail = async () => {
-    try {
-      const email = initialValues.email; 
-      if (!email) {
-        alert("Please enter your email to resend the activation link.");
-        return;
-      }
-  
-      const { success, data, error } = await API.post("auth/resend-activation-mail", {
-        email,
-      });
-  
-      if (success) {
-        alert("Activation email has been resent successfully!");
-      } else {
-        const errorMessage = getErrorMessage(error?.code || "unknown_error");
-        alert(`Failed to resend activation email: ${errorMessage}`);
-      }
-    } catch (err) {
-      console.error("Error in resending activation email:", err);
-      alert("An error occurred while trying to resend the activation email.");
-    }
-  };
-  
   return (
     <div className="flex min-h-screen">
       <div className="relative w-1/2 bg-black flex items-center justify-center">
@@ -90,7 +63,7 @@ const AuthForm = <T extends AuthFormValues>({
               error={errorMessage}
             />
           )}
-          {errorMessage == "User not verified Yet" && (
+          {!sucessActivationEmail && errorMessage == "User not verified Yet" && (
             <div className="p-4 bg-red-500 text-white rounded-xl">
               ERROR: Your account has not been activated. Check your email for
               the activation link.
@@ -98,13 +71,20 @@ const AuthForm = <T extends AuthFormValues>({
                 If you have not received an email yet,{" "}
                 <span
                   className="underline cursor-pointer text-white"
-                  onClick={()=>handleResendActivationEmail()}
+                  onClick={() => handleResendActivationEmail()}
                 >
                   click here to resend it.
                 </span>
               </p>
             </div>
           )}
+
+          {sucessActivationEmail &&
+          <Confirmationtext
+          text={sucessActivationEmail || "Activation email resent! Please check your inbox or spam folder." }
+         
+        />
+          }
 
           {!(token || isRegistered) ? (
             <>
