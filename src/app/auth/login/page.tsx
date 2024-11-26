@@ -15,9 +15,8 @@ import { useEffect, useState } from "react";
 const Login = () => {
   useTitle("Login");
 
-  // State to check if the component is mounted on the client side
   const [isClient, setIsClient] = useState(false);
-
+  const [errorMessage, setErrorMessage] = useState("");
   const router = useRouter();
   const { API } = useApi();
   const dispatch = useDispatch();
@@ -39,6 +38,7 @@ const Login = () => {
       router.push("/home");
     } else {
       const errorMessage = getErrorMessage(error.code);
+      setErrorMessage(errorMessage);
       toasterError(errorMessage, 1000, "id");
     }
   };
@@ -53,6 +53,7 @@ const Login = () => {
       initialValues={initialValues}
       validationSchema={loginValidationSchema}
       onSubmit={handleSubmit}
+      errorMessage={errorMessage}
     />
   );
 };

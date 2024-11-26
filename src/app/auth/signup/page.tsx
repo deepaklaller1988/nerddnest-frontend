@@ -64,7 +64,10 @@ const Signup = () => {
       `auth/verify-account?type=${type}&token=${token}`
     );
     const errorMessage = getErrorMessage(error?.code);
-    setErrorMessage(errorMessage);
+    setErrorMessage(error);
+    if(errorMessage=="Token Expired"){
+
+    }
     if (success) {
       setIsActivated(true);
       setSuccessMsg(
