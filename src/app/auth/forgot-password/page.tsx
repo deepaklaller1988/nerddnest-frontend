@@ -35,12 +35,6 @@ export default function ForgotPassword() {
     setLoading(false);
     if (success) {
       setErrorMessage("");
-      dispatch(
-        setAuth({
-          accessToken: data.accessToken,
-          userId: data.id,
-        })
-      );
       toasterSuccess("Please Check Your Register Gmail Id", 1000, "id");
     } else {
       const errorMessage = getErrorMessage(error.code);

@@ -5,7 +5,7 @@ import AuthForm from "@/components/Forms/AuthForm";
 import useTitle from "@/hooks/useTitle";
 import { SignupFormValues } from "@/types/authInterfaces";
 import { signupValidationSchema } from "@/utils/validationSchemas";
-import { setAuth } from "@/redux/slices/auth.slice";
+import { setAuth, setUserId } from "@/redux/slices/auth.slice";
 import { useApi } from "@/hooks/useAPI";
 import { useDispatch } from "react-redux";
 import { getErrorMessage } from "@/utils/errorHandler";
@@ -54,7 +54,6 @@ const Signup = () => {
     const errorMessage = getErrorMessage(error?.code);
     setErrorMessage(errorMessage);
     if (success) {
-      dispatch(setAuth({ accessToken: data.accessToken, userId: data.id }));
       setSuccessMsg(data?.message);
       toasterSuccess("Registration successful", 1000, "id");
       setIsRegistered(true);
@@ -65,7 +64,7 @@ const Signup = () => {
 
   const getVerifiedUser = async () => {
     setLoading(true);
-    const { success, error } = await API.get(
+    const { success, error,data} = await API.get(
       `auth/verify-account?type=${type}&token=${token}`
     );
     const errorMessage = getErrorMessage(error?.code);
@@ -73,6 +72,8 @@ const Signup = () => {
     if (errorMessage == "Token Expired") {
     }
     if (success) {
+      dispatch(setAuth({ accessToken: data.accessToken}));
+      dispatch(setUserId({ id: data.id, userId: data.userId }));
       setIsActivated(true);
       setSuccessMsg(
         "Your Account is Successfully Verified! Click on Ok Button"

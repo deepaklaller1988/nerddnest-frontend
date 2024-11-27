@@ -1,7 +1,8 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MenuItems from "./MenuItems";
 import Image from "next/image";
+import { useApi } from "@/hooks/useAPI";
 
 interface SidebarProps {
   type: string; 
@@ -9,10 +10,19 @@ interface SidebarProps {
 
 export default function Sidebar({ type }: SidebarProps) { 
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
+  const { API } = useApi();
 
   const toggleSection = (section: string) => {
     setOpenSections((prev) => ({ ...prev, [section]: !prev[section] }));
   };
+
+  useEffect(()=>{
+  async function abc(){
+    const data=await API.get("auth/get-users")
+    console.log(data)
+  }
+  abc();
+  },[])
 
   return (
     <>

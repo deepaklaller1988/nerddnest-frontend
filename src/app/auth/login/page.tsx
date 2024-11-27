@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import { useApi } from "@/hooks/useAPI";
 import { useDispatch } from "react-redux";
 import { getErrorMessage } from "@/utils/errorHandler";
-import { setAuth } from "@/redux/slices/auth.slice";
+import { setAuth, setUserId } from "@/redux/slices/auth.slice";
 import { useEffect, useRef, useState } from "react";
 
 const Login = () => {
@@ -38,7 +38,8 @@ const Login = () => {
     const { success, data, error } = await API.post("auth/login", values);
     setLoading(false);
     if (success) {
-      dispatch(setAuth({ accessToken: data.accessToken, userId: data.id }));
+      dispatch(setAuth({ accessToken: data.accessToken}));
+      dispatch(setUserId({ id: data.id, userId: data.userId }));
       toasterSuccess("Login successful", 1000, "id");
       router.push("/home");
     } else {
