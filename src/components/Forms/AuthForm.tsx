@@ -8,7 +8,7 @@ import TermsOfServicePopup from "../Modals/Terms&Services";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 
 import InputField from "../core/InputField";
-import {  useSearchParams } from "next/navigation";
+import {  usePathname, useSearchParams } from "next/navigation";
 import Confirmationtext from "../Modals/Confirmationtext";
 
 
@@ -27,9 +27,12 @@ const AuthForm = <T extends AuthFormValues>({
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
   const Type = searchParams.get("type") || "";
+  const pathname = usePathname()
   const [isOpen, setIsOpen] = useState(false);
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
+console.log(sucessActivationEmail,errorMessage,pathname,"==============")
+
 
   return (
     <div className="flex min-h-screen">
@@ -64,7 +67,7 @@ const AuthForm = <T extends AuthFormValues>({
               error={errorMessage}
             />
           )}
-          {!sucessActivationEmail && errorMessage == "User not verified Yet" && (
+          {!sucessActivationEmail && errorMessage == "User not verified Yet"&& pathname=="/auth/login" &&(
             <div className="p-4 bg-red-500 text-white rounded-xl">
               ERROR: Your account has not been activated. Check your email for
               the activation link.

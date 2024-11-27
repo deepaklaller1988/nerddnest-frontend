@@ -1,19 +1,17 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { toasterError, toasterSuccess } from "@/components/core/Toaster";
+import {  toasterSuccess } from "@/components/core/Toaster";
 import AuthForm from "@/components/Forms/AuthForm";
 import useTitle from "@/hooks/useTitle";
 import { forgotValidationSchema } from "@/utils/validationSchemas";
 import { ForgotPasswordFormValues } from "@/types/authInterfaces";
-import { setAuth } from "@/redux/slices/auth.slice";
-import { getErrorMessage } from "@/utils/errorHandler";
 import { useApi } from "@/hooks/useAPI";
 import { useDispatch } from "react-redux";
+import { getErrorMessage } from "@/utils/errorHandler";
 
 export default function ForgotPassword() {
   useTitle("Lost Password");
   const { API } = useApi();
-  const dispatch = useDispatch();
   const [isClient, setIsClient] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -28,7 +26,7 @@ export default function ForgotPassword() {
   const handleSubmit = async (values: typeof initialValues) => {
     if (!isClient) return;
     setLoading(true);
-    const { success, data, error } = await API.post(
+    const { success ,error} = await API.post(
       "auth/forgot-password",
       values
     );
@@ -36,9 +34,9 @@ export default function ForgotPassword() {
     if (success) {
       setErrorMessage("");
       toasterSuccess("Please Check Your Register Gmail Id", 1000, "id");
-    } else {
+    }
+    else {
       const errorMessage = getErrorMessage(error.code);
-      toasterError(errorMessage, 1000, "id");
       setErrorMessage(errorMessage);
     }
   };
@@ -48,7 +46,6 @@ export default function ForgotPassword() {
   }
 
   return (
-    <div>
       <AuthForm
         type="forgot-password"
         initialValues={initialValues}
@@ -57,6 +54,5 @@ export default function ForgotPassword() {
         isLoading={isLoading}
         errorMessage={errorMessage}
       />
-    </div>
   );
 }

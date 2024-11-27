@@ -1,6 +1,6 @@
 "use client";
 
-import { toasterError, toasterSuccess } from "@/components/core/Toaster";
+import {  toasterSuccess } from "@/components/core/Toaster";
 import AuthForm from "@/components/Forms/AuthForm";
 import useTitle from "@/hooks/useTitle";
 import { resetValidationSchema } from "@/utils/validationSchemas";
@@ -9,7 +9,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useApi } from "@/hooks/useAPI";
 import { useDispatch } from "react-redux";
 import { setAuth, setUserId } from "@/redux/slices/auth.slice";
-import { getErrorMessage } from "@/utils/errorHandler";
 import Loader from "@/components/Loaders/Loader";
 
 export default function ResetPassword() {
@@ -37,21 +36,19 @@ function InnerResetPassword({ route }: { route: ReturnType<typeof useRouter> }) 
 
   const handleSubmit = async (values: typeof initialValues) => {
     setLoading(true);
-    const { success, data, error } = await API.post('auth/reset-password', { ...values, token });
+    const { success, data} = await API.post('auth/reset-password', { ...values, token });
     setLoading(false);
     if (success) {
       dispatch(setAuth({ accessToken: data.accessToken}));
       dispatch(setUserId({ id: data.id, userId: data.userId }));
       toasterSuccess("Password changed successfully", 1000, "id");
       route.push("/home");
-    } else {
-      const errorMessage = getErrorMessage(error.code);
-      toasterError(errorMessage, 1000, "id"); 
     }
+    
+    
 
 };
   return (
-    <div>
       <AuthForm
         type="reset-password"
         initialValues={initialValues}
@@ -60,6 +57,5 @@ function InnerResetPassword({ route }: { route: ReturnType<typeof useRouter> }) 
         isLoading={isLoading}
 
       />
-    </div>
   );
 }

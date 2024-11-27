@@ -1,6 +1,6 @@
 "use client";
 
-import { toasterError, toasterSuccess } from "@/components/core/Toaster";
+import {  toasterSuccess } from "@/components/core/Toaster";
 import AuthForm from "@/components/Forms/AuthForm";
 import useTitle from "@/hooks/useTitle";
 import { SignupFormValues } from "@/types/authInterfaces";
@@ -57,9 +57,7 @@ const Signup = () => {
       setSuccessMsg(data?.message);
       toasterSuccess("Registration successful", 1000, "id");
       setIsRegistered(true);
-    } else {
-      toasterError(errorMessage, 1000, "id");
-    }
+    } 
   };
 
   const getVerifiedUser = async () => {

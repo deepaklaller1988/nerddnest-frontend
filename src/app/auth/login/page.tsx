@@ -1,5 +1,5 @@
 "use client";
-import { toasterError, toasterSuccess } from "@/components/core/Toaster";
+import {  toasterSuccess } from "@/components/core/Toaster";
 import AuthForm from "@/components/Forms/AuthForm";
 import useTitle from "@/hooks/useTitle";
 import { loginValidationSchema } from "@/utils/validationSchemas";
@@ -7,9 +7,9 @@ import { LoginFormValues } from "@/types/authInterfaces";
 import { useRouter } from "next/navigation";
 import { useApi } from "@/hooks/useAPI";
 import { useDispatch } from "react-redux";
-import { getErrorMessage } from "@/utils/errorHandler";
 import { setAuth, setUserId } from "@/redux/slices/auth.slice";
 import { useEffect, useRef, useState } from "react";
+import { getErrorMessage } from "@/utils/errorHandler";
 
 const Login = () => {
   useTitle("Login");
@@ -35,17 +35,17 @@ const Login = () => {
   const handleSubmit = async (values: typeof initialValues) => {
     emailRef.current = values.email;
     setLoading(true);
-    const { success, data, error } = await API.post("auth/login", values);
+    const { success, data ,error} = await API.post("auth/login", values);
     setLoading(false);
     if (success) {
       dispatch(setAuth({ accessToken: data.accessToken}));
       dispatch(setUserId({ id: data.id, userId: data.userId }));
       toasterSuccess("Login successful", 1000, "id");
       router.push("/home");
-    } else {
+    } 
+    else{
       const errorMessage = getErrorMessage(error.code);
       setErrorMessage(errorMessage);
-      toasterError(errorMessage, 1000, "id");
     }
   };
 
@@ -80,7 +80,6 @@ const Login = () => {
   }
 
   return (
-    <>
       <AuthForm
         type="login"
         initialValues={initialValues}
@@ -91,7 +90,6 @@ const Login = () => {
         handleResendActivationEmail={handleResendActivationEmail}
         sucessActivationEmail={sucessMesg}
       />
-    </>
   );
 };
 

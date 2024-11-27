@@ -1,4 +1,3 @@
-import { getErrorMessage } from "@/utils/errorHandler";
 import { useDynamicRequestMutation } from "../redux/services/api";
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query';  
 
@@ -19,7 +18,6 @@ export const useApi = () => {
         const response = await dynamicRequest({ method: 'POST', url, body }).unwrap();
         return { success: true, data: response.data };
       } catch (error: FetchBaseQueryError | Error | any) {
-        console.log(error.data?.error, "=============");
         return { success: false, error: error.data?.error || error };
       }
     },

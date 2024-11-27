@@ -3,15 +3,13 @@ import React, { useState } from 'react';
 
 import { MenuItemProp } from '@/types/sidebarInterfaces';
 import { IoIosArrowDown, IoMdArrowDropright } from 'react-icons/io';
-import { useRouter } from 'next/navigation';
+import { logoutUser } from '@/utils/logout';
 
 const Menu: React.FC<MenuItemProp> = ({ name, icon, links, isOpen, onToggle }) => {
-  const router=useRouter()
   const [active, setActive] = useState(false); 
 
-  const handleLogout = () => {
-    localStorage.clear()
-    router.push("/auth/login")
+  const handleLogout =async () => {
+    logoutUser()
   };
   
   const handleToggle = () => {

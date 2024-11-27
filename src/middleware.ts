@@ -3,19 +3,24 @@ import {  NextRequest, NextResponse } from "next/server";
 export function middleware(request:NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (
-    pathname.startsWith("/_next") || 
-    pathname.startsWith("/static") || 
-    pathname.startsWith("/favicon.ico") ||
-    /\.(ico|png|jpg|jpeg|svg|css|js|woff2|woff|ttf|eot)$/i.test(pathname) 
-  ) {
-    return NextResponse.next();
-  }
+  // if (
+  //   pathname.startsWith("/_next") || 
+  //   pathname.startsWith("/static") || 
+  //   pathname.startsWith("/favicon.ico") ||
+  //   /\.(ico|png|jpg|jpeg|svg|css|js|woff2|woff|ttf|eot)$/i.test(pathname) 
+  // ) {
+  //   return NextResponse.next();
+  // }
 
-  const token = request.cookies.get("RID");
-  if (!token && !pathname.startsWith("/auth")) {
-    return NextResponse.redirect(new URL("/auth/login", request.url));
-  }
+  // const token = request.cookies.get("accessToken");
+
+  // if (!token && !pathname.startsWith("/auth")) {
+  //   return NextResponse.redirect(new URL("/auth/login", request.url));
+  // }
+
+  // if (token && pathname.startsWith("/auth")) {
+  //   return NextResponse.redirect(new URL("/", request.url));
+  // }
 
   return NextResponse.next();
 }
