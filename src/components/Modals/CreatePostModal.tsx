@@ -39,10 +39,9 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
   };
 
   const handleEmojiSelect = (emoji: any) => {
-    // Insert the selected emoji into the Quill editor's content at the cursor position
     const quillEditor = document.querySelector(".ql-editor") as HTMLElement;
     const currentText = quillEditor.innerHTML;
-    setValue(currentText + emoji.emoji);  // Add emoji to the Quill editor value
+    setValue(currentText + emoji.emoji);  
   };
 
   return (
