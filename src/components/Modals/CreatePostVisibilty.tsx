@@ -8,6 +8,7 @@ import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import Image from "next/image";
 import Button from "../Buttons/Button";
 import { BiArrowFromLeft } from "react-icons/bi";
+import PopupHeader from "../Header/PopupHeader";
 
 type VisibilityPopupProps = {
   toggleVisibilityPopup: () => void;
@@ -27,20 +28,9 @@ const VisibilityPopup: React.FC<VisibilityPopupProps> = ({
   );
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
+    <div className="Create a New Group z-50">
       <div className="bg-white w-full max-w-[500px] rounded-[12px] shadow-lg">
-        {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b">
-          <h3 className="text-lg font-semibold text-[var(--highlight)]">
-            Who can see your post?
-          </h3>
-          <button
-            className="bg-gray-200 w-10 h-10 flex items-center justify-center rounded-full text-[30px] text-gray-600 hover:text-gray-800"
-            onClick={toggleVisibilityPopup}
-          >
-            &times;
-          </button>
-        </div>
+        <PopupHeader title={"Who can see your post?"}  onClick={toggleVisibilityPopup}/>
 
         <div className="p-6 ">
           <ul className="space-y-4">
@@ -126,7 +116,6 @@ const VisibilityPopup: React.FC<VisibilityPopupProps> = ({
               </button>
             </div>
 
-            {/* Group Search */}
             <div className="p-4">
               <GroupSearch
                 searchTerm={searchTerm}

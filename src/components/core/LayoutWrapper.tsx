@@ -1,6 +1,6 @@
 "use client";
 import { usePathname } from "next/navigation";
-import Header from "@/components/core/Header";
+import Header from "@/components/Header/Header";
 import Footer from "@/components/core/Footer";
 import { store } from '../../redux/store'
 import { Provider } from 'react-redux'

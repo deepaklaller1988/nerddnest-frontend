@@ -31,7 +31,6 @@ const AuthForm = <T extends AuthFormValues>({
   const [isOpen, setIsOpen] = useState(false);
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
-console.log(sucessActivationEmail,errorMessage,pathname,"==============")
 
 
   return (
