@@ -7,46 +7,77 @@ import { IoDocumentAttachOutline } from "react-icons/io5";
 import { MdOutlineLinkedCamera } from "react-icons/md";
 import { CiFaceSmile } from "react-icons/ci";
 import { IoIosSend } from "react-icons/io";
+import { FaSearch } from "react-icons/fa";
 
 
 const ChatInterface = () => {
   return (
-    <div className="p-10 bg-white-500 border">
-      <div className="message flex h-screen bg-white sm:w-[80%] mx-auto my-14 rounded-2xl overlap-hidden">
+    <div className="messageSetInner">
+      <div className="message flex h-full bg-white overlap-hidden">
         {/* Sidebar */}
-        <div className="w-1/4 bg-white shadow-md p-4 border">
-          <h2 className="text-xl font-semibold text-green-700 mb-4 ">
+        <div className="w-1/4 bg-white border-r">
+          <h2 className="text-xl font-semibold text-green-600 p-4 py-7 pb-8">
             Messages
           </h2>
-          <input
-            type="text"
-            className="border border-gray-300 rounded-lg w-full py-2 placeholder:font-semibold px-3 mb-5"
-            placeholder="Search"
-          />
-          <div className="space-y-2">
-            <div className="flex items-center space-x-2 p-2 bg-gray-200 rounded-lg">
-              <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
-              <div>
-                <p className="font-semibold">Testing</p>
-                <p className="text-xs text-gray-500">You: hii • Tuesday</p>
+          <div className="w-full bg-gray-300/20 px-4 py-2 relative">
+            <input
+              type="text"
+              className="w-full bg-white/0 py-2 placeholder:font-semibold pr-5"
+              placeholder="Search here..."
+            />
+            <button className="absolute right-7 top-5"><FaSearch /></button>
+          </div>
+          <div className="space-y-2 border-b border-r-4 hover:bg-teal-900/20 border-r-[var(--highlght-hover)] bg-teal-900/20 duration-[.3s]">
+            <div className="flex items-center space-x-2 p-4 cursor-pointer">
+              <div className="w-10 h-10 min-w-10 min-h-10 bg-gray-300 rounded-full overflow-hidden border border-white">
+                <img src="dp.jpg" alt="dp" />
+              </div>
+              <div className="w-full relative">
+                <p className="font-semibold text-black">Alvin Marcos</p>
+                <p className=" text-gray-500">You: hii</p>
+                <p className="text-xs absolute bottom-0 right-0">Tuesday</p>
+              </div>
+            </div>
+          </div>
+          <div className="space-y-2 border-b">
+            <div className="flex items-center space-x-2 p-4 cursor-pointer hover:bg-teal-900/20 duration-[.3s]">
+              <div className="w-10 h-10 min-w-10 min-h-10 bg-gray-300 rounded-full overflow-hidden border border-white">
+                <img src="dp.jpg" alt="dp" />
+              </div>
+              <div className="w-full relative">
+                <p className="font-semibold text-black">Rambo</p>
+                <p className=" text-gray-500">You: Hi this is perfect</p>
+                <p className="text-xs absolute bottom-0 right-0">Now</p>
+              </div>
+            </div>
+          </div>
+          <div className="space-y-2 border-b">
+            <div className="flex items-center space-x-2 p-4 cursor-pointer  hover:bg-teal-900/20 duration-[.3s]">
+              <div className="w-10 h-10 min-w-10 min-h-10 bg-gray-300 rounded-full overflow-hidden border border-white">
+                <img src="dp.jpg" alt="dp" />
+              </div>
+              <div className="w-full relative">
+                <p className="font-semibold text-black">Rehan Fullets Amber</p>
+                <p className=" text-gray-500">You: hii</p>
+                <p className="text-xs absolute bottom-0 right-0">Tuesday</p>
               </div>
             </div>
           </div>
         </div>
 
         {/* Chat Window */}
-        <div className="flex-1 flex flex-col">
-          <div className="flex items-center justify-between gap-6 bg-white border-b p-4">
+        <div className="flex-1 flex flex-col bg-gray-500/5">
+          <div className="flex items-center justify-between gap-6 border-b p-4">
             <div className="flex gap-3">
-              <div className="w-14">
+              <div className="w-14 rounded-full overflow-hidden border-2 border-white">
                 <img
                   src="
-           user.png"
+           dp.jpg"
                   alt=""
                 />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-green-600">
+                <h3 className="capitalize text-lg font-semibold text-green-600">
                   testing
                 </h3>
                 <p className="">Started Friday</p>
@@ -57,35 +88,89 @@ const ChatInterface = () => {
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 border">
-            <div className="text-center text-gray-500 text-sm">Friday</div>
-            <div className="flex items-start space-x-2">
-              <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
-              <div>
-                <p className="text-sm">hello</p>
-                <p className="text-xs text-gray-400">4:37 AM</p>
+          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-white">
+            <div className="text-center text-gray-500 text-sm relative border-t my-4 mb-7"><b className="absolute bg-[var(--highlght-hover)] rounded-full top-[-10px] px-3 text-sm text-white">Friday</b></div>
+            <div className="w-full receiver">
+              <div className="inline-flex items-start space-x-3 bg-[var(--highlght-hover)] rounded-xl p-4 max-w-[80%]">
+                <div className="min-w-10 min-h-10 max-w-10 max-h-10 bg-white rounded-full overflow-hidden border border-white">
+                  <img src="dp.jpg" alt="dp" />
+                </div>
+                <div>
+                  <p className="text-white">Hi, i am marcos from Amazon, I want to know that which parcel is pending from your side? Hi, i am marcos from Amazon, I want to know that which parcel is pending from your side? Hi, i am marcos from Amazon, I want to know that which parcel is pending from your side? Hi, i am marcos from Amazon, I want to know that which parcel is pending from your side? </p>
+                  <p className="text-xs text-gray-400 text-right relative top-2">4:37 AM</p>
+                </div>
               </div>
             </div>
-            <div className="text-center text-gray-500 text-sm">Monday</div>
-            <div className="flex items-start space-x-2">
-              <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
-              <div>
-                <p className="text-sm">hii</p>
-                <p className="text-xs text-gray-400">12:25 PM</p>
+            <div className="w-full sender flex justify-end">
+              <div className="inline-flex items-start space-x-3 bg-black/5 rounded-xl p-4 max-w-[80%]">
+                <div>
+                  <p className="">Hi, i am marcos from Amazon, I want to know that which parcel is pending from your side? Hi, i am marcos from Amazon, I want to know that which parcel is pending from your side? Hi, i am marcos from Amazon, I want to know that which parcel is pending from your side? Hi, i am marcos from Amazon, I want to know that which parcel is pending from your side? Hi, i am marcos from Amazon, I want to know that which parcel is pending from your side? </p>
+                  <p className="text-xs text-gray-400 text-right relative top-2">4:37 AM</p>
+                </div>
               </div>
             </div>
-            <div className="text-center text-gray-500 text-sm">Tuesday</div>
-            <div className="flex items-start space-x-2">
-              <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
-              <div>
-                <p className="text-sm">hii</p>
-                <p className="text-xs text-gray-400">4:51 AM</p>
+            <div className="w-full receiver">
+              <div className="inline-flex items-start space-x-3 bg-[var(--highlght-hover)] rounded-xl p-4 max-w-[80%]">
+                <div className="min-w-10 min-h-10 max-w-10 max-h-10 bg-white rounded-full overflow-hidden border border-white">
+                  <img src="dp.jpg" alt="dp" />
+                </div>
+                <div>
+                  <p className="text-white">Hi, i am marcos from Amazon, I want to know that which parcel is pending from your side? Hi, i am marcos from Amazon, I want to know that which parcel is pending from your side? Hi, i am marcos from Amazon, I want to know that which parcel is pending from your side? Hi, i am marcos from Amazon, I want to know that which parcel is pending from your side? </p>
+                  <p className="text-xs text-gray-400 text-right relative top-2">4:37 AM</p>
+                </div>
+              </div>
+            </div>
+            <div className="w-full sender flex justify-end">
+              <div className="inline-flex items-start space-x-3 bg-black/5 rounded-xl p-4 max-w-[80%]">
+                <div>
+                  <p className="">Hi, i am marcos from Amazon, I want to know that which parcel is pending from your side? </p>
+                  <p className="text-xs text-gray-400 text-right relative top-2">4:37 AM</p>
+                </div>
+              </div>
+            </div>
+            <div className="w-full receiver">
+              <div className="inline-flex items-start space-x-3 bg-[var(--highlght-hover)] rounded-xl p-4 max-w-[80%]">
+                <div className="min-w-10 min-h-10 max-w-10 max-h-10 bg-white rounded-full overflow-hidden border border-white">
+                  <img src="dp.jpg" alt="dp" />
+                </div>
+                <div>
+                  <p className="text-white">Hi, i am marcos from Amazon, I want to know that which parcel is pending from your side? Hi, i am marcos from Amazon, I want to know that which parcel is pending from your side? Hi, i am marcos from Amazon, I want to know that which parcel is pending from your side? Hi, i am marcos from Amazon, I want to know that which parcel is pending from your side? </p>
+                  <p className="text-xs text-gray-400 text-right relative top-2">4:37 AM</p>
+                </div>
+              </div>
+            </div>
+            <div className="w-full sender flex justify-end">
+              <div className="inline-flex items-start space-x-3 bg-black/5 rounded-xl p-4 max-w-[80%]">
+                <div>
+                  <p className="">Hi, i am marcos from Amazon, I want to know that which parcel is pending from your side? </p>
+                  <p className="text-xs text-gray-400 text-right relative top-2">4:37 AM</p>
+                </div>
+              </div>
+            </div>
+            <div className="text-center text-gray-500 text-sm relative border-t my-4 mb-7"><b className="absolute bg-[var(--highlght-hover)] rounded-full top-[-10px] px-3 text-sm text-white">Friday</b></div>
+            <div className="w-full receiver">
+              <div className="inline-flex items-start space-x-3 bg-[var(--highlght-hover)] rounded-xl p-4 max-w-[80%]">
+                <div className="min-w-10 min-h-10 max-w-10 max-h-10 bg-white rounded-full overflow-hidden border border-white">
+                  <img src="dp.jpg" alt="dp" />
+                </div>
+                <div>
+                  <p className="text-white">Hi, i am marcos from Amazon, I want to know that which parcel is pending from your side? Hi, i am marcos from Amazon, I want to know that which parcel is pending from your side? Hi, i am marcos from Amazon, I want to know that which parcel is pending from your side? Hi, i am marcos from Amazon, I want to know that which parcel is pending from your side? </p>
+                  <p className="text-xs text-gray-400 text-right relative top-2">4:37 AM</p>
+                </div>
+              </div>
+            </div>
+            <div className="w-full sender flex justify-end">
+              <div className="inline-flex items-start space-x-3 bg-black/5 rounded-xl p-4 max-w-[80%]">
+                <div>
+                  <p className="">Hi, i am marcos from Amazon, I want to know that which parcel is pending from your side? </p>
+                  <p className="text-xs text-gray-400 text-right relative top-2">4:37 AM</p>
+                </div>
               </div>
             </div>
           </div>
 
-        
-          <div className="bg-white rounded-[12px] mt-3">
+
+          <div className="mt-3">
             <div className="w-full">
               <section className="flex gap-4 cursor-pointer p-4">
                 <div
@@ -95,8 +180,8 @@ const ChatInterface = () => {
                   Write a message....
                 </div>
               </section>
-              <div className="flex justify-between items-center">
-                <section className="border-t border-gray-500/10 p-4 flex gap-4">
+              <div className="border-t border-gray-500/10 flex justify-between items-center">
+                <section className="p-4 flex gap-4">
                   <span className="cursor-pointer">
                     <MdOutlineLinkedCamera className="w-6 h-6 fill-green-600" />
                   </span>
@@ -114,14 +199,14 @@ const ChatInterface = () => {
                   </span>
                 </section>
                 <div >
-                <section className="border-t border-gray-500/10 p-4 flex gap-4">
-                <CiFaceSmile className="w-6 h-6 fill-green-800 mt-1"/>
-                <div className="p-1 bg-blue-800 rounded">
+                  <section className="p-4 flex gap-4">
+                    <CiFaceSmile className="w-6 h-6 fill-green-800 mt-1" />
+                    <div className="p-1 bg-blue-800 rounded-full">
 
-                <IoIosSend className="w-6 h-6 fill-white"/>
+                      <IoIosSend className="w-6 h-6 fill-white" />
 
-                </div>
-                </section>
+                    </div>
+                  </section>
                 </div>
               </div>
             </div>
