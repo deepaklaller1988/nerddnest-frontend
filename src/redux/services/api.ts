@@ -47,7 +47,7 @@ const baseQueryWithReauth = async (args: any, api: any, extraOptions: any) => {
 
   if (result.error) {
     const errorData = result.error.data as ApiError;
-    let error = await handleError(errorData);
+    const error = await handleError(errorData);
 
     if(error.toast){
       toasterError(error.toast);

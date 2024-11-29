@@ -28,6 +28,7 @@ export default function PostContent() {
   const handleDeleteClick = () => {
     setIsDeletePopupOpen(true);
   };
+  console.log(isDeletePopupOpen,"isDeletePopupOpen")
 
   const handleClosePopup = () => {
     setIsDeletePopupOpen(false);
@@ -35,18 +36,20 @@ export default function PostContent() {
   const handleToggleCommenting = () => {
     setIsCommentingEnabled(!isCommentingEnabled);
   };
+  const handleConfirmDelete = () => {
+    console.log("Post deleted");
+    setIsDeletePopupOpen(false); 
+  };
   const handleTogglePin = () => setIsPinned((prev) => !prev);
   return (
     <>
       <div className="w-full flex flex-col gap-4 mb-4">
         {isDeletePopupOpen && (
-          <>
             <DeletePopup
-              message={"Are you sure want to Delete"}
-              onDelete={handleDeleteClick}
+              message={"Are you sure want to Delete Post ?"}
+              onDelete={handleConfirmDelete}
               onCancel={handleClosePopup}
             />
-          </>
         )}
         <section className="w-full bg-white rounded-[12px]">
           <section className="cursor-pointer flex items-start justify-between gap-4 p-4">
@@ -123,6 +126,7 @@ export default function PostContent() {
                       togglePin: handleTogglePin,
                       isCommentingEnabled,
                       toggleCommenting: handleToggleCommenting,
+                      deleted:handleDeleteClick
                     }).map(({ icon, label, onClick }, index) => (
                       <button
                         key={index}

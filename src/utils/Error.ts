@@ -56,7 +56,7 @@ async function handle(res: any) {
     return toast(`An Error occurred | Code: ${res.status}`);
   }
 
-  let error: IErrorHandler | undefined = errorCodes[res.error.code];
+  const error: IErrorHandler | undefined = errorCodes[res.error.code];
 
   // Error not defined
   if (!error) {

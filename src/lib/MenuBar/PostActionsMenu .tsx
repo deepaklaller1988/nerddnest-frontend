@@ -4,20 +4,21 @@ import { RiUnpinLine } from "react-icons/ri";
 import { FaRegEdit } from "react-icons/fa";
 import { RiNotificationOffLine } from "react-icons/ri";
 
-// Instead of passing each argument individually, wrap them into an object
 export const PostActionsMenu = ({
   isPinned,
   togglePin,
   isCommentingEnabled,
-  toggleCommenting
+  toggleCommenting,
+  deleted,
 }: {
   isPinned: boolean;
   togglePin: () => void;
   isCommentingEnabled: boolean;
   toggleCommenting: () => void;
+  deleted: () => void;
 }) => [
   { onClick: undefined, icon: <FaRegEdit />, label: "Edit" },
-  { onClick: undefined, icon: <RiDeleteBin7Line />, label: "Delete" },
+  { onClick: deleted, icon: <RiDeleteBin7Line />, label: "Delete" },
   {
     onClick: toggleCommenting,
     icon: isCommentingEnabled ? <MdOutlineComment /> : <MdOutlineCommentsDisabled />,

@@ -49,10 +49,10 @@ export const forgotValidationSchema = Yup.object({
   email: emailValidation,
 });
 
-const validateFileType = (value:any) =>
-  value && typeof value === 'object' && allowedFileTypes.includes(value.type);
-
-
+const validateFileType = (file:any) => {
+  if (!file) return true; // Allow empty value for validation chaining
+  return allowedFileTypes.includes(file.type);
+};
 export const resetValidationSchema =Yup.object({
   password: passwordValidation,
   confirmpassword :confirmPasswordValidation("password")
@@ -60,32 +60,49 @@ export const resetValidationSchema =Yup.object({
 
 export const AddStoryValidationSchema = Yup.object({
   storyCoverImage: Yup.mixed()
-    .required('Story cover image is Required')
+    .required("Story cover image is required")
     .test(
-      'fileType',
-      `Unsupported file format. Allowed formats: ${allowedFileTypes.join(', ')}`,
+      "fileType",
+      `Unsupported file format. Allowed formats: ${allowedFileTypes.join(", ")}`,
       validateFileType
     ),
   storyCoverTitle: Yup.string()
-    .required('Story cover title is Required')
-    .max(100, 'Title must be less than 100 characters'),
-  storyLinkText: Yup.string()
-    .required('Story link text is Required')
-    .max(50, 'Link text must be less than 50 characters'),
-  storyLink: Yup.string()
-    .url('Must be a valid URL')
-    .required('Story link is Required'),
-  storyMedia: Yup.mixed()
-    .required('Story media is Required')
-    .test(
-      'fileType',
-      `Unsupported file format. Allowed formats: ${allowedFileTypes.join(', ')}`,
-      validateFileType
-    ),
-  duration: Yup.number()
-    .required('Duration is Required')
-    .min(1, 'Duration must be at least 1 second'),
-  visibility: Yup.string()
-    .oneOf(['Everyone', 'Onlyme', 'friends'], 'Invalid visibility option')
-    .required('Visibility is Required'),
+    .required("Story cover title is required")
+    .max(100, "Title must be less than 100 characters"),
+  stories: Yup.array()
+    .of(
+      Yup.object({
+        storyLinkText: Yup.string()
+          .required("Story link text is required")
+          .max(50, "Link text must be less than 50 characters"),
+        storyLink: Yup.string()
+          .url("Must be a valid URL")
+          .required("Story link is required"),
+        storyMedia: Yup.mixed()
+          .required("Story media is required")
+          .test(
+            "fileType",
+            `Unsupported file format. Allowed formats: ${allowedFileTypes.join(
+              ", "
+            )}`,
+            validateFileType
+          ),
+        duration: Yup.number()
+          .required("Duration is required")
+          .min(1, "Duration must be at least 1 second"),
+        visibility: Yup.string()
+          .oneOf(["Everyone", "Onlyme", "Friends"], "Invalid visibility option")
+          .required("Visibility is required"),
+      })
+    )
+    .test("validateOrder", "Complete the first story first", function (value) {
+      if (!value) return true; 
+      for (let i = 0; i <=value.length; i++) {
+        const story = value[i];
+        if (!story.storyLinkText || !story.storyLink || !story.storyMedia) {
+          return i === value.length - 1; 
+        }
+      }
+      return true; 
+    }),
 });

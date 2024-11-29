@@ -3,12 +3,37 @@ import React, { useState } from "react";
 import Slider from "react-slick";
 import CreateStoryModal from "../Modals/CreateStoryModal";
 import Image from "next/image";
-import { useRouter } from "next/navigation";  
-
+import { useRouter } from "next/navigation";
 
 export default function AddStory() {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [stories, setStories] = useState<any>([]);
+  const [stories, setStories] = useState<any>([
+    // {
+    //   id: 1,
+    //   title: "Story 1",
+    //   image: "/story1.jpg",
+    //   logo: "/logo1.jpg",
+    // },
+    // {
+    //   id: 2,
+    //   title: "Story 2",
+    //   image: "/story2.jpg",
+    //   logo: "/logo2.jpg",
+    // },
+    // {
+    //   id: 3,
+    //   title: "Story 3",
+    //   image: "/story3.jpg",
+    //   logo: "/logo3.jpg",
+    // },
+    // {
+    //   id: 4,
+    //   title: "Story 4",
+    //   image: "/story4.jpg",
+    //   logo: "/logo4.jpg",
+    // },
+  ]);
+  
   const router = useRouter();
 
   const togglePopup = () => {
@@ -16,7 +41,7 @@ export default function AddStory() {
   };
 
   const handleAddStory = (newStory: any) => {
-    setStories((prevStories:any) => [...prevStories, newStory]);
+    setStories((prevStories: any) => [...prevStories, newStory]);
     togglePopup();
   };
 
@@ -26,7 +51,7 @@ export default function AddStory() {
     speed: 500,
     slidesToShow: 4.5,
     slidesToScroll: 1,
-    arrows:true
+    arrows: true,
   };
 
   const handleStoryClick = (storyId: number) => {
@@ -57,11 +82,11 @@ export default function AddStory() {
               </b>
             </button>
           </div>
-          {stories.map((story:any) => (
+          {stories.map((story: any) => (
             <div
               key={story.id}
               className="relative h-[160px] rounded-[12px] overflow-hidden"
-              onClick={() => handleStoryClick(story.id)} 
+              onClick={() => handleStoryClick(story.id)}
             >
               <Image
                 height={50}

@@ -18,7 +18,7 @@ export default function Upload() {
           the main group page, and in search results. <br />
         </p>
         <p className="font-semibold text-sm mt-2 text-black">
-          To skip the group photo upload process select "Next Step".
+          To skip the group photo upload process select Next Step.
         </p>
 
         <div className="bg-gray-50 mt-6 rounded-xl">
