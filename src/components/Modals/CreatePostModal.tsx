@@ -67,7 +67,7 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
                     <BsEmojiSmile className="w-6 h-6" />
                   </button>
                   {emoji && (
-                    <EmojiPicker className="w-full min-w-full !absolute left-8 top-[50%] translate-y-[-50%]" onEmojiClick={handleEmojiSelect} />
+                    <EmojiPicker className="max-w-[300px] !absolute right-0 top-[50%] translate-y-[-50%]" onEmojiClick={handleEmojiSelect} />
                   )}
                 </div>
               </div>
