@@ -58,16 +58,16 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
               <TiArrowSortedDown onClick={toggleVisibility} />
             </div>
             <div className="w-full">
-              <div className="flex justify-end items-center gap-2">
+              <div className="flex flex-col">
                 <div className="!z-1">
                   <QuillEditor value={value} setValue={setValue} />
                 </div>
-                <div className="my-2">
+                <div className="my-2 relative">
                   <button onClick={handleEmojis}>
                     <BsEmojiSmile className="w-6 h-6" />
                   </button>
                   {emoji && (
-                    <EmojiPicker onEmojiClick={handleEmojiSelect} />
+                    <EmojiPicker className="w-full min-w-full !absolute left-8 top-[50%] translate-y-[-50%]" onEmojiClick={handleEmojiSelect} />
                   )}
                 </div>
               </div>
