@@ -14,7 +14,7 @@
 //     </div>
 //   );
 // }
-"use client"
+"use client";
 import PopupHeader from "@/components/Header/PopupHeader";
 import React, { useState } from "react";
 import Settings from "./settings/page";
@@ -24,7 +24,7 @@ import CoverTab from "./cover-tab/page";
 import Invites from "./invites/page";
 
 const CreateGroupForm = () => {
-  const [activeTab, setActiveTab] = useState(1); 
+  const [activeTab, setActiveTab] = useState(1);
 
   const tabs = [
     { id: 1, label: "1. Details", content: <DetailsTab /> },
@@ -45,9 +45,9 @@ const CreateGroupForm = () => {
 
   return (
     <div className="max-w-2xl mx-auto bg-white shadow-md rounded-lg mt-10">
-       <PopupHeader title={"Create A New Group"}  type="group"/>
-      
-       <div className="flex items-center justify-center border-b bg-gray-100">
+      <PopupHeader title={"Create A New Group"} type="group" />
+
+      <div className="flex items-center justify-center border-b bg-gray-100">
         {tabs.map((tab, index) => (
           <React.Fragment key={tab.id}>
             <button
@@ -76,35 +76,43 @@ const CreateGroupForm = () => {
       </div>
 
       <div>{tabs[activeTab - 1].content}</div>
-
-      <div className="flex justify-between mt-6 p-6">
-        <button
-          className={`rounded-full text-xs transition duration-300 px-2 py-2 bg-blue-800 text-white rounded-md hover:bg-blue-900  ${
-            activeTab === 1 ? "opacity-50 cursor-not-allowed" : ""
-          }`}
-          onClick={handlePrevious}
-          disabled={activeTab === 1}
-        >
-          Previous Step
-        </button>
-        <button
-          className={`rounded-full text-xs transition duration-300 px-2 py-2 bg-blue-800 text-white rounded-md hover:bg-blue-900 ${
-            activeTab === tabs.length ? "opacity-50 cursor-not-allowed" : ""
-          }`}
-          onClick={handleNext}
-          disabled={activeTab === tabs.length}
-        >
-          Next Step
-        </button>
-      </div>
-    
+      {activeTab == 1 && (
+        <>
+          <button className="ounded-full text-xs transition duration-300 px-2 py-2 bg-blue-800 text-white rounded-md hover:bg-blue-900 ">Create Group and Continue</button>
+        </>
+      )}
+      {activeTab !== 1 && (
+        <div className="flex justify-between mt-6 p-6">
+          <button
+            className={`rounded-full text-xs transition duration-300 px-2 py-2 bg-blue-800 text-white rounded-md hover:bg-blue-900 ${
+              activeTab === 1 ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+            onClick={handlePrevious}
+            disabled={activeTab === 1}
+          >
+            Previous Step
+          </button>
+          <button
+            className={`rounded-full text-xs transition duration-300 px-2 py-2 bg-blue-800 text-white rounded-md hover:bg-blue-900 ${
+              activeTab === tabs.length ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+            onClick={handleNext}
+            disabled={activeTab === tabs.length}
+          >
+            Next Step
+          </button>
+        </div>
+      )}
     </div>
   );
 };
 
 const DetailsTab = () => (
   <div className=" p-4">
-    <label className="block mb-2 text-sm text-[var(--highlight)]" htmlFor="groupName">
+    <label
+      className="block mb-2 text-sm text-[var(--highlight)]"
+      htmlFor="groupName"
+    >
       Group Name (required)
     </label>
     <input
@@ -113,7 +121,10 @@ const DetailsTab = () => (
       placeholder="Enter group name"
       className="text-sm text-[var(--highlight)] w-full px-2 py-2 border rounded-md "
     />
-    <label className="block mb-2 text-sm text-[var(--highlight)] mt-4" htmlFor="groupDescription">
+    <label
+      className="block mb-2 text-sm text-[var(--highlight)] mt-4"
+      htmlFor="groupDescription"
+    >
       Group Description
     </label>
     <textarea
@@ -125,10 +136,30 @@ const DetailsTab = () => (
   </div>
 );
 
-const SettingsTab = () => <div><Settings/></div>;
-const ForumTab = () => <div><ForumContent/></div>;
-const PhotoTab = () => <div><Upload/></div>;
-const CoverPhotoTab = () => <div><CoverTab/></div>;
-const InvitesTab = () => <div><Invites/></div>;
+const SettingsTab = () => (
+  <div>
+    <Settings />
+  </div>
+);
+const ForumTab = () => (
+  <div>
+    <ForumContent />
+  </div>
+);
+const PhotoTab = () => (
+  <div>
+    <Upload />
+  </div>
+);
+const CoverPhotoTab = () => (
+  <div>
+    <CoverTab />
+  </div>
+);
+const InvitesTab = () => (
+  <div>
+    <Invites />
+  </div>
+);
 
 export default CreateGroupForm;
