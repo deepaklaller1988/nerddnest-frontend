@@ -3,7 +3,7 @@ import React from "react";
 export default function PopupHeader({ title, onClick, type }: any) {
   return (
     <div className={`flex items-center ${type=="group"?"justify-center":"justify-between"}  p-4 border-b`}>
-      <h2 className={`text-lg font-semibold text-center block text-[var(--highlight)]`}>
+      <h2 className={`text-[20px] uppercase font-semibold text-center block text-[var(--highlight)]`}>
         {title}
       </h2>
       {type !== "group" && (

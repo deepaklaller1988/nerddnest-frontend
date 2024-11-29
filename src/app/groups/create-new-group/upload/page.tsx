@@ -2,8 +2,9 @@ import React from "react";
 import Image from "next/image";
 export default function Upload() {
   return (
-    <div className="">
-      <div className="flex justify-center mt-4">
+    <div className="w-full p-6">
+      <h2 className=" text-[var(--highlight)] mb-4 font-bold text-[20px]">Upload File Information</h2>
+      <div className="flex justify-center mt-4 border rounded-lg">
         <Image
           src="/group-avatar-buddyboss.png"
           width={100}
@@ -11,16 +12,16 @@ export default function Upload() {
           alt="Image"
         />
       </div>
-      <div className="p-5">
-        <p className="flex justify-center text-sm">
+      <div className="py-5">
+        <p className="">
           Upload a photo that represents this group. The image will be shown on
           the main group page, and in search results. <br />
         </p>
-        <p className="flex justify-center text-sm mt-2">
+        <p className="font-semibold text-sm mt-2 text-black">
           To skip the group photo upload process select "Next Step".
         </p>
 
-        <div className="bg-gray-50 p-8 rounded-xl">
+        <div className="bg-gray-50 mt-6 rounded-xl">
           <div className="p-4 bg-gray-200 rounded-xl">
             <label
               htmlFor="file-upload1"

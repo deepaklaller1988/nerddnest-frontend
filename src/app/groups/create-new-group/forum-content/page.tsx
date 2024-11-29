@@ -12,21 +12,20 @@ export default function ForumContent() {
     >
       {() => (
         <Form className="p-6">
-          <h1 className="text-[var(--highlight)]">Group Forum</h1>
-          <p className="text-sm mt-8">
+          <h1 className="text-[var(--highlight)] mb-4 font-bold text-[20px]">Group Forum</h1>
+          <p className="mt-4">
             Create a discussion forum to allow members of this group to
             communicate in a structured, bulletin-board style fashion.
           </p>
-          <label className="flex items-center mt-6">
-            <Field
+          <label className="flex items-center mt-6 customCheckbox">
+            <input
               type="checkbox"
               name="agree"
-              className="h-4 w-4 text-indigo-500 border-gray-300 rounded"
             />
-            <span className="ml-2 text-sm  text-[var(--highlight)]">
-            Yes, I want this group to have a discussion forum.
-              
-            </span>
+            <span></span>
+            <b className="ml-2  text-[var(--highlight)]">
+            Yes, I want this group to have a discussion forum.              
+            </b>
           </label>
          
         </Form>

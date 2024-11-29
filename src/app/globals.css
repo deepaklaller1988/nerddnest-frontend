@@ -279,6 +279,58 @@ label.customRadio input[type="radio"]:checked + span:before {
 .messageSetInner {
   height: calc(100vh - 65px);
 }
+.showLeaveGroup{display: none;}
+.showLeaveGroupMain:hover .showLeaveGroup{display: flex;}
+.listSet {
+  width: 100% !important;
+}
+
+.listSet .showLeaveGroupMain {
+  display: flex;
+  align-items: center;
+}
+
+.listSet .showLeaveGroupMain > span {
+  min-width: 200px;
+  max-width: 200px;
+}
+
+.listSet .showLeaveGroupMain > span div {
+  right: -75px;
+  left: auto;
+  top: 50%;
+  bottom: auto;
+  transform: scale(.7);
+  margin-top: -35px;
+}
+
+.listSet .showLeaveGroupMain > span > img {
+  height: 100%;
+}
+
+.listSet .showLeaveGroupMain > span + section {
+  padding-left: 80px !important;
+  margin-top: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  width: 100%;
+}
+
+.listSet .showLeaveGroupMain > span + section h3 + p {
+  margin-top: -10px;
+}
+
+.listSet .showLeaveGroupMain > span + section + section {
+  margin-right: 15px;
+  border: none;
+  min-width: 200px;
+  max-width: 200px;
+}
+
+.listSet .showLeaveGroupMain > span + section + section .showLeaveGroup {
+  white-space: nowrap;
+  border-radius: 10px;
+}
 /* .slick-arrow {
   display: none !important;
 } */
