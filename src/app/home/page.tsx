@@ -1,8 +1,8 @@
+"use client"
 import Connections from '@/components/core/Connections'
 import Feeds from '@/components/core/Feeds'
 import Groups from '@/components/core/Groups'
 import LatestUpdates from '@/components/core/LatestUpdates'
-import Live from '@/components/core/Live'
 import Sidebar from '@/components/core/Sidebar'
 import AddStory from '@/components/core/AddStory'
 import PostFeed from '@/components/core/PostFeed'
@@ -25,7 +25,7 @@ export default function Home() {
           <section className='flex flex-col gap-5'>
             <Groups />
             <LatestUpdates />
-            <Live />
+            {/* <Live /> */}
           </section>
         </div>
       </div>

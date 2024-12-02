@@ -2,6 +2,7 @@ import React from 'react';
 import { TabContentProps } from '@/types/sidebarInterfaces';
 import ViewButton from '../Buttons/ViewButtons';
 import Loader from '../Loaders/Loader';
+import { useRouter } from 'next/navigation';
 
 const TabContent = <T extends string, Item>({
   title,
@@ -13,8 +14,10 @@ const TabContent = <T extends string, Item>({
   activeTab,
   renderItem,
 }: TabContentProps<T, Item>) => {
+  const router=useRouter()
   
   const handleClick = () => {
+    router.push("/groups")
   };
 
   return (

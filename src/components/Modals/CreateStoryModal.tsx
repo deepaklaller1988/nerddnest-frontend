@@ -6,6 +6,21 @@ import Button from "../Buttons/Button";
 import { IoMdAdd, IoMdSend } from "react-icons/io";
 import { HiOutlineChevronUpDown } from "react-icons/hi2";
 
+
+interface Story {
+  storyLinkText: string;
+  storyLink: string;
+  storyMedia: File | null; // File or null to account for empty values
+  duration: number;
+  visibility: string;
+  isCollapsed: boolean;
+}
+
+interface InitialValues {
+  storyCoverImage: File | null;
+  storyCoverTitle: string;
+  stories: Story[];
+}
 const CreateStoryModal: React.FC<any> = ({ togglePopup, onAddStory }) => {
   const initialValues = {
     storyCoverImage: null,
@@ -28,7 +43,6 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup, onAddStory }) => {
       title: values.storyCoverTitle,
       stories: values.stories,
     };
-console.log(storyData)
     onAddStory(storyData);
     togglePopup();
   };
@@ -204,7 +218,7 @@ console.log(storyData)
                                       e.target.files[0]
                                     )
                                   }
-                                  value={initialValues?.stories?.storyMedia}
+                                  value={initialValues?.stories[index]?.storyMedia }
                                   id={`file-upload-${index}`} // Give the input a unique ID
                                   className="hidden" // The input is hidden, but the label will open the file dialog
                                 />

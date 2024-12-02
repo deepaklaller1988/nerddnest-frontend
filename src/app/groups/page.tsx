@@ -1,6 +1,5 @@
 "use client"
 import React from 'react'
-import CreateGroupForm from './create-new-group/page'
 import { FiSearch } from "react-icons/fi";
 import { MdClose } from "react-icons/md";
 import { BiGridAlt } from "react-icons/bi";
@@ -8,13 +7,15 @@ import { BiListUl } from "react-icons/bi";
 import { IoIosCheckmarkCircle } from "react-icons/io";
 import { MdOutlineExitToApp } from "react-icons/md";
 import Select from 'react-select'
+import { useRouter } from 'next/navigation';
 
 const options = [
   { value: 'Recently Active', label: 'Recently Active' },
   { value: 'Recently Active1', label: 'Recently Active1' },
   { value: 'Recently Active2', label: 'Recently Active2' }
 ]
-export default function page() {
+export default function Page() {
+  const route=useRouter()
   return (
     // <CreateGroupForm/>
     <div className='w-full pt-8'>
@@ -38,7 +39,7 @@ export default function page() {
             <section className='w-full flex gap-8'>
               <button className='flex items-center gap-2 text-[var(--highlight)] font-semibold hover:text-[var(--highlight)]'>All Groups <b className='bg-[var(--highlight)] text-white rounded-full px-2 font-semibold'>5</b></button>
               <button className='flex items-center gap-2 hover:text-[var(--highlight)]'>My Groups <b className='bg-[var(--highlight)] text-white rounded-full px-2 font-semibold'>5</b></button>
-              <button className='hover:text-[var(--highlight)]'>Create Group</button>
+              <button className='hover:text-[var(--highlight)]' onClick={()=>route.push("/groups/create-new-group")}>Create Group</button>
             </section>
             <section className='flex gap-2'>
               <Select className='w-[180px]' options={options} />

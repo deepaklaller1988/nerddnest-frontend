@@ -12,6 +12,8 @@ import EmojiPicker from "emoji-picker-react";
 import { BsEmojiSmile } from "react-icons/bs";
 import { GoGlobe } from "react-icons/go";
 import PopupHeader from "../Header/PopupHeader";
+import { PiClockFill } from "react-icons/pi";
+import { FaCaretDown } from "react-icons/fa6";
 
 interface CreatePostPopupProps {
   setIsPopupOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -23,8 +25,7 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
   const [toggleVisibilityPopup, setToggleVisibilityPopup] = useState(false);
   const [isSchedulePopupOpen, setSchedulePopupOpen] = useState(false);
   const [emoji, setEmoji] = useState(false);
-  const [quill, setQuill] = useState(false);
-  const [value, setValue] = useState<any>('');  // Value for Quill editor
+  const [value, setValue] = useState<any>('');
 
   const closePopup = () => {
     setIsPopupOpen(false);
@@ -38,11 +39,21 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
     setEmoji((prev) => !prev);
   };
 
+  // const handleEmojiSelect = (emoji: any) => {
+  //   const quillEditor :any= typeof window !== 'undefined' && document.querySelector(".ql-editor") as HTMLElement;
+  //   const currentText = quillEditor.innerHTML;
+  //   setValue(currentText + emoji.emoji);  
+  // };
   const handleEmojiSelect = (emoji: any) => {
-    const quillEditor = document.querySelector(".ql-editor") as HTMLElement;
-    const currentText = quillEditor.innerHTML;
-    setValue(currentText + emoji.emoji);  
+    if (typeof window !== 'undefined') {
+      const quillEditor = document.querySelector(".ql-editor") as HTMLElement;
+      if (quillEditor) {
+        const currentText = quillEditor.innerHTML;
+        setValue(currentText + emoji.emoji);
+      }
+    }
   };
+  
 
   return (
     <>
@@ -64,15 +75,20 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
                 </div>
                 <div className="my-2 relative">
                   <button onClick={handleEmojis}>
-                    <BsEmojiSmile className="w-6 h-6" />
+                    <BsEmojiSmile className="w-6 h-6"  />
                   </button>
                   {emoji && (
-                    <EmojiPicker className="max-w-[300px] max-h-[350px] !absolute right-0 top-[50%] translate-y-[-50%]" onEmojiClick={handleEmojiSelect} />
+                    <EmojiPicker className="max-w-[300px] max-h-[350px] !absolute right-0 top-[50%] translate-y-[-50%]" onEmojiClick={handleEmojiSelect}
+                    searchDisabled
+                    autoFocusSearch
+                     />
                   )}
                 </div>
               </div>
             </div>
-            <section className="border-t border-gray-500/10 p-4 flex gap-4 mt-4">
+            <div className="flex justify-between">
+            <div>
+            <section className="border-t border-gray-500/10 p-4 flex gap-4 ">
               <span className="cursor-pointer">
                 <MdOutlineLinkedCamera className="w-6 h-6 fill-green-600" />
               </span>
@@ -89,17 +105,20 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
                 <BiBarChartSquare className="w-6 h-6 fill-black" />
               </span>
             </section>
-            <button
+            </div>         
+          <div className="flex items-center gap-1">
+          <button
               onClick={() => setSchedulePopupOpen(true)}
-              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md"
-            >
-              Open Schedule Post Popup
+              className="bg-slate-300 hover:bg-blue-200 text-white px-2 py-2 rounded-md flex items-center gap-1">
+              {/* Open Schedule Post Popup */}
+              <span><PiClockFill size={20} /></span><span><FaCaretDown size={15} /></span>
             </button>{" "}
-            <button className="w-full mt-4 bg-[var(--highlght-hover)] text-white rounded-[8px] px-4 py-1 h-[36px]">
+            <button className="bg-[var(--highlght-hover)] text-white rounded-md  px-3 py-2 ">
               Post
             </button>
           </div>
-
+           </div>
+          </div>
           <SchedulePostPopup
             isOpen={isSchedulePopupOpen}
             onClose={() => setSchedulePopupOpen(false)}

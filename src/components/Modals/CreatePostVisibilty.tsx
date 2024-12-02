@@ -50,7 +50,7 @@ const VisibilityPopup: React.FC<VisibilityPopupProps> = ({
               {
                 id: "my-connections",
                 icon: <HiOutlineUsers />,
-                title: "My Connections",
+                title: "Friends",
                 description: "Visible only to your connections",
               },
               {

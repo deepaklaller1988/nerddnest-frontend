@@ -1,11 +1,15 @@
 "use client";
+import dynamic from 'next/dynamic';
+
 import React, { useRef, useState } from "react";
 import { MdOutlineLinkedCamera } from "react-icons/md";
 import { HiOutlineVideoCamera } from "react-icons/hi2";
 import { IoDocumentAttachOutline } from "react-icons/io5";
 import { HiOutlineGif } from "react-icons/hi2";
 import { BiBarChartSquare } from "react-icons/bi";
-import CreatePostPopup from "../Modals/CreatePostModal";
+// import CreatePostPopup from "../Modals/CreatePostModal";
+const CreatePostPopup = dynamic(() => import('../Modals/CreatePostModal'), { ssr: false });
+
 import Image from "next/image";
 
 export default function PostFeed() {

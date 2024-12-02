@@ -3,7 +3,7 @@ import { RootState } from "../store";
 import Error from "@/utils/Error";
 import { toasterError } from "@/components/core/Toaster";
 import { clearAuth, setAuth } from "../slices/auth.slice";
-import { logoutUser } from "@/utils/logout";
+import { LogoutUser } from "@/utils/logout";
 
 interface ApiError {
   error: {
@@ -54,7 +54,7 @@ const baseQueryWithReauth = async (args: any, api: any, extraOptions: any) => {
     }
 
     if(error.signOut){
-      logoutUser()
+      LogoutUser()
     }
 
     if(error.refresh){

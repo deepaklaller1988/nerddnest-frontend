@@ -2,7 +2,7 @@ export default class Header {
   static title = "";
 
   static async setHeader(title: string) {
-    const headerTitleElement = document.getElementById('header-title');
+    const headerTitleElement =typeof window !== 'undefined' && document.getElementById('header-title');
         if (headerTitleElement) {
           headerTitleElement.innerHTML = title;
         }

@@ -28,8 +28,15 @@ export default function HeaderButtons() {
       }
     };
 
-    document.addEventListener("click", handleClickOutside);
-    return () => document.removeEventListener("click", handleClickOutside);
+    if (typeof window !== 'undefined') {
+      document.addEventListener("click", handleClickOutside);
+    }
+    return () => {
+      if (typeof window !== 'undefined') {
+        document.removeEventListener("click", handleClickOutside);
+      }
+    };
+    
   }, [currentPopup]);
 
   const closePopup = () => {

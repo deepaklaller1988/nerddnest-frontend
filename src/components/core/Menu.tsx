@@ -3,13 +3,13 @@ import React, { useState } from 'react';
 
 import { MenuItemProp } from '@/types/sidebarInterfaces';
 import { IoIosArrowDown, IoMdArrowDropright } from 'react-icons/io';
-import { logoutUser } from '@/utils/logout';
+import { LogoutUser } from '@/utils/logout';
 
 const Menu: React.FC<MenuItemProp> = ({ name, icon, links, isOpen, onToggle }) => {
   const [active, setActive] = useState(false); 
 
   const handleLogout =async () => {
-    logoutUser()
+    LogoutUser()
   };
   
   const handleToggle = () => {
