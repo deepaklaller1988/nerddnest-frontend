@@ -8,8 +8,11 @@ import { FeedVisiblityMenu } from "@/lib/MenuBar/FeedVisibiltyMenu";
 import { PostActionsMenu } from "@/lib/MenuBar/PostActionsMenu ";
 import CommentSection from "./CommentSection";
 import DeletePopup from "../Modals/DeleteConfirmation";
+import { useApi } from "@/hooks/useAPI";
+import { toasterError, toasterSuccess } from "./Toaster";
 
 export default function PostContent() {
+  const { API } = useApi()
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenOptions, setIsOpenOptions] = useState(false);
   const [selectedItem, setSelectedItem] = useState(FeedVisiblityMenu[0]);
@@ -19,7 +22,7 @@ export default function PostContent() {
   const handleMouseEnter = (index: number) => setHoveredIndex(index);
   const handleMouseLeave = () => setHoveredIndex(null);
   const [isCommentingEnabled, setIsCommentingEnabled] = useState(true);
-
+  const [deleteItemId, setDeleteItemId] = useState<number | null>(null);
   const handleItemClick = (item: (typeof FeedVisiblityMenu)[number]) => {
     setSelectedItem(item);
     setIsOpen(false);
@@ -28,7 +31,6 @@ export default function PostContent() {
   const handleDeleteClick = () => {
     setIsDeletePopupOpen(true);
   };
-  console.log(isDeletePopupOpen,"isDeletePopupOpen")
 
   const handleClosePopup = () => {
     setIsDeletePopupOpen(false);
@@ -38,19 +40,42 @@ export default function PostContent() {
   };
   const handleConfirmDelete = () => {
     console.log("Post deleted");
-    setIsDeletePopupOpen(false); 
+    setIsDeletePopupOpen(false);
   };
   const handleTogglePin = () => setIsPinned((prev) => !prev);
   return (
     <>
       <div className="w-full flex flex-col gap-4 mb-4">
         {isDeletePopupOpen && (
-            <DeletePopup
-              message={"Are you sure want to Delete Post ?"}
-              onDelete={handleConfirmDelete}
-              onCancel={handleClosePopup}
-            />
+          <DeletePopup
+            message="Are you sure you want to delete this?"
+            onDelete={async () => {
+              if (deleteItemId !== null) {
+                const url = "posts/delete";
+                try {
+                  const response = await API.delete(url, {
+                    id: deleteItemId,
+                  });
+                  if (response.success) {
+                    toasterSuccess(
+                      "Post has been deleted successfully"
+                    );
+                    // getDataList();
+                  } else {
+                    toasterError("Failed to delete record");
+                  }
+                } catch (error) {
+                  console.log(error, "error");
+                  toasterError("An error occurred");
+                }
+                setIsDeletePopupOpen(false);
+                setDeleteItemId(null);
+              }
+            }}
+            onCancel={handleClosePopup}
+          />
         )}
+
         <section className="w-full bg-white rounded-[12px]">
           <section className="cursor-pointer flex items-start justify-between gap-4 p-4">
             <div className="flex items-start gap-2">
@@ -83,11 +108,10 @@ export default function PostContent() {
                             <button
                               key={item.label}
                               onClick={() => handleItemClick(item)}
-                              className={`${
-                                selectedItem.label == item.label
+                              className={`${selectedItem.label == item.label
                                   ? "drop bg-gray-500/10"
                                   : ""
-                              } hover:bg-gray-500/10 flex gap-2 items-center px-4 p-2 w-full text-left`}
+                                } hover:bg-gray-500/10 flex gap-2 items-center px-4 p-2 w-full text-left`}
                             >
                               <item.Icon /> {item.label}
                             </button>
@@ -126,13 +150,12 @@ export default function PostContent() {
                       togglePin: handleTogglePin,
                       isCommentingEnabled,
                       toggleCommenting: handleToggleCommenting,
-                      deleted:handleDeleteClick
+                      deleted: handleDeleteClick
                     }).map(({ icon, label, onClick }, index) => (
                       <button
                         key={index}
-                        className={`flex gap-2 items-center px-4 py-2 w-full text-left hover:bg-gray-500/10 focus:outline-none ${
-                          hoveredIndex === index ? "drop" : ""
-                        }`}
+                        className={`flex gap-2 items-center px-4 py-2 w-full text-left hover:bg-gray-500/10 focus:outline-none ${hoveredIndex === index ? "drop" : ""
+                          }`}
                         aria-label={label}
                         onMouseEnter={() => handleMouseEnter(index)}
                         onMouseLeave={handleMouseLeave}

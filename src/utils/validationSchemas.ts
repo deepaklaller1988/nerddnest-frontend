@@ -121,11 +121,56 @@ export const AddStoryValidationSchema = Yup.object({
     }),
 });
 
-export const validationPostSchema = Yup.object().shape({
-  content: Yup.string()
-    .required("Content is required")
-    .min(5, "Content must be at least 5 characters"),
-  images: Yup.array()
-    .max(10, "You can only upload up to 10 images")
-    .required("At least one image is required"),
-});
+
+// export const validationPostSchema = Yup.object().shape({
+//   content: Yup.string()
+//     .required("Content is required")
+//     .min(5, "Content must be at least 5 characters"),
+
+//   images: Yup.array()
+//     .max(10, "You can only upload up to 10 images")
+//     .when('type', {
+//       is: (type: string) => type === 'image',  // Check 'type' field
+//       then: Yup.array().required("At least one image is required"),
+//       otherwise: Yup.array().notRequired(),
+//     }),
+
+//   video: Yup.array()
+//     .max(10, "You can only upload up to 10 videos")
+//     .when('type', {
+//       is: (type: string) => type === 'video',
+//       then: Yup.array().required("At least one video is required"),
+//       otherwise: Yup.array().notRequired(),
+//     }),
+
+//   document: Yup.array()
+//     .max(10, "You can only upload up to 10 documents")
+//     .when('type', {
+//       is: (type: string) => type === 'document',
+//       then: Yup.array().required("At least one document is required"),
+//       otherwise: Yup.array().notRequired(),
+//     }),
+
+//   gif: Yup.array()
+//     .when('type', {
+//       is: (type: string) => type === 'gif',
+//       then: Yup.array().required("At least one gif is required"),
+//       otherwise: Yup.array().notRequired(),
+//     }),
+// });
+
+
+// export const validationPostSchema = Yup.object().shape({
+//   mediaUrl: Yup.array()
+//     .test('images-required', 'At least one image is required', function (value) {
+//       const { type } = this.parent;
+//       if (type === 'image' && (!value || value.length === 0)) {
+//         return false;
+//       }
+//       return true;
+//     })
+//     .nullable(),
+//   content: Yup.string()
+//     .required('Write Something is required') // Basic required validation
+//     .test('not-empty', 'Write Something is required', (value:any) => value && value.trim() !== ''), // No whitespace-only values
+// });

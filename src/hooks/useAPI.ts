@@ -38,11 +38,8 @@ export const useApi = () => {
       }
     },
     postFile: async (url: string, file: File) => {  
-      const formData = new FormData();
-      formData.append("file", file);  
-
       try {
-        const response = await dynamicRequest({ method: 'POST', url, body: formData }).unwrap();
+        const response = await dynamicRequest({ method: 'POST', url, body: file }).unwrap();
         return { success: true, data: response.data }; 
       } catch (error: FetchBaseQueryError | Error | any) {
         return { success: false, error: error.data?.error || error };

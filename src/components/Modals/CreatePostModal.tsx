@@ -18,9 +18,8 @@ import Image from "next/image";
 import { CiCamera } from "react-icons/ci";
 import { CiVideoOn } from "react-icons/ci";
 import GifSearch from "../core/GifSearch";
-import { ErrorMessage, Field, Form, Formik } from "formik";
-import { validationPostSchema } from "@/utils/validationSchemas";
-import { toasterInfo } from "../core/Toaster";
+import { Field, Form, Formik } from "formik";
+import { toasterInfo, toasterSuccess } from "../core/Toaster";
 import { RxCross2 } from "react-icons/rx";
 import { FaCamera } from "react-icons/fa";
 import { FaVideo } from "react-icons/fa";
@@ -28,32 +27,108 @@ import { PiGifFill } from "react-icons/pi";
 import { MdInsertChart } from "react-icons/md";
 
 import { IoDocumentAttach } from "react-icons/io5";
+import { uploadFile, uploadMultiFile } from "../core/UploadFile";
+import { useApi } from "@/hooks/useAPI";
+import { useRouter } from "next/navigation";
+import { getErrorMessage } from "@/utils/errorHandler";
+import { useSelector } from "react-redux";
 
 interface CreatePostPopupProps {
   setIsPopupOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  type: any
+  setPopupType: any
 }
 
 const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
   setIsPopupOpen,
+  type,
+  setPopupType
 }) => {
+  const { API } = useApi();
+  const router = useRouter()
   const ImageInputRef = useRef<HTMLInputElement>(null);
+  const VideoInputRef = useRef<HTMLInputElement>(null);
   const emojiPickerRef = useRef<HTMLDivElement>(null);
-
+  const userId = useSelector((state: any) => state.auth.id);
   const [toggleVisibilityPopup, setToggleVisibilityPopup] = useState(false);
   const [selectedIcon, setSelectedIcon] = useState<React.ReactNode | null>(
     null
   );
   const [selectedName, setSelectedName] = useState("");
-
+  const [isLoading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<any>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSchedulePopupOpen, setSchedulePopupOpen] = useState(false);
   const [emoji, setEmoji] = useState(false);
   const [images, setImages] = useState<File[]>([]);
+  const [videos, setVideos] = useState<File[]>([]);
+  const [files, setFiles] = useState<File[]>([]);
   const [value, setValue] = useState<any>("");
+  const [initialValues, setInitialValues] = useState<any>({
+    userId: userId,
+    postType: "",
+    content: "",
+    mediaUrl: [],
+    sharedLink: "",
+    type: ""
+  });
+
+  const iconMapping = [
+    {
+      name: "image",
+      activeIcon: <FaCamera className="w-6 h-6 fill-green-600" />,
+      inactiveIcon: (
+        <MdOutlineLinkedCamera
+          className="w-6 h-6 fill-green-600"
+          onClick={(e) => handleOnClick(e, "image")}
+        />
+      ),
+    },
+    {
+      name: "video",
+      activeIcon: <FaVideo className="w-6 h-6 fill-yellow-600" />,
+      inactiveIcon: (
+        <HiOutlineVideoCamera
+          className="w-6 h-6 stroke-yellow-500"
+          onClick={(e) => handleOnClick(e, "video")}
+        />
+      ),
+    },
+    {
+      name: "document",
+      activeIcon: <IoDocumentAttach className="w-6 h-6 fill-rose-600" />,
+      inactiveIcon: (
+        <IoDocumentAttachOutline
+          className="w-6 h-6 stroke-rose-500"
+          onClick={(e) => handleOnClick(e, "document")}
+        />
+      ),
+    },
+    {
+      name: "gif",
+      activeIcon: <PiGifFill className="w-6 h-6 fill-purple-600" />,
+      inactiveIcon: (
+        <HiOutlineGif
+          className="w-6 h-6 stroke-purple-700"
+          onClick={(e) => handleOnClick(e, "gif")}
+        />
+      ),
+    },
+    {
+      name: "poll",
+      activeIcon: <MdInsertChart className="w-6 h-6 fill-black-600" />,
+      inactiveIcon: (
+        <BiBarChartSquare
+          className="w-6 h-6 fill-black"
+          onClick={(e) => handleOnClick(e, "poll")}
+        />
+      ),
+    },
+  ];
 
   const closePopup = () => {
     setIsPopupOpen(false);
   };
-  console.log(selectedName, "selectedName")
   const toggleVisibility = () => {
     setToggleVisibilityPopup((prev) => !prev);
   };
@@ -71,6 +146,7 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
         const currentText = quillEditor.innerHTML;
         setValue(currentText + emoji.emoji);
       }
+
     }
   };
 
@@ -93,70 +169,115 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
     };
   }, [emoji]);
 
-  const handleOnClick = (e: React.MouseEvent<SVGElement, MouseEvent>) => {
-    const name = e.currentTarget.getAttribute("name");
+  const handleOnClick = (e: React.MouseEvent<SVGElement, MouseEvent>, name: any) => {
     if (name) {
       setSelectedName(name);
+      setPopupType(name)
     }
-    // if (name === "camera") {
-    //   ImageInputRef.current?.click();
-    // }
   };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+console.log(initialValues,"initialValues")
+  const IconSection = ({ selectedName, type }: any) => (
+    <div>
+      <section className="border-t border-gray-500/10 p-4 flex gap-4">
+        {iconMapping.map(({ name, activeIcon, inactiveIcon }) => (
+          <span key={name} className="cursor-pointer">
+            {selectedName === name || type === name ? activeIcon : inactiveIcon}
+          </span>
+        ))}
+      </section>
+    </div>
+  );
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name } = e.target
     if (e.target.files) {
       const newFiles = Array.from(e.target.files);
 
       if (images.length + newFiles.length <= 10) {
-        setImages((prevFiles) => [...prevFiles, ...newFiles]);
+        const fileTypeMapping: any = {
+          images: setImages,
+          video: setVideos,
+          document: setFiles
+        };
+
+        const setFileHandler = fileTypeMapping[name];
+
+        if (setFileHandler) {
+          setFileHandler((prevFiles: any) => [...prevFiles, ...newFiles]);
+        }
+
+        try {
+          let uploadData;
+
+          if (newFiles.length === 1) {
+            uploadData = await uploadFile(newFiles[0], API);
+          } else {
+            uploadData = await uploadMultiFile(newFiles, API);
+          }
+
+          setInitialValues((prevValues: any) => ({
+            ...prevValues,
+            mediaUrl: uploadData,
+          }));
+        } catch (error) {
+          console.error("Error uploading file:", error);
+        }
+
       } else {
-        toasterInfo(
-          "Unable to upload the file. You are allowed to upload only 10 photos at a time."
-        );
+        toasterInfo("Unable to upload the file. You are allowed to upload only 10 photos at a time.");
       }
     }
   };
-
-  // const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   if (e.target.files) {
-  //     const newFiles = Array.from(e.target.files);
-
-  //     if (images.length + newFiles.length <= 10) {
-  //       try {
-  //         const uploadedFileUrls = await Promise.all(
-  //           newFiles.map((file) => uploadFile(file))
-  //         );
-
-  //         setImages((prevFiles) => [
-  //           ...prevFiles,
-  //           ...uploadedFileUrls, // Store the uploaded file URLs
-  //         ]);
-  //       } catch (error) {
-  //         toasterInfo("Failed to upload some files.");
-  //       }
-  //     } else {
-  //       toasterInfo("You are allowed to upload only 10 photos at a time.");
-  //     }
-  //   }
-  // };
-
-  const handleImageDelete = (index: number) => {
-    setImages((prevFiles) => prevFiles.filter((_, i) => i !== index));
+  const handleFileDelete = (index: number, type: 'images' | 'video' | 'document') => {
+    if (type === 'images') {
+      setImages((prevFiles) => prevFiles.filter((_, i) => i !== index));
+    } else if (type === 'video') {
+      setVideos((prevFiles) => prevFiles.filter((_, i) => i !== index));
+    } else if (type === 'document') {
+      setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
+    }
   };
+  const validateFields = () => {
+    const newErrors: any = {};
 
-  const handleSubmit = () => { };
+    if (!value || value.trim() === "") {
+      newErrors.content = "Content is required.";
+    }
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
+  };
+  const handleSubmit = async (values: typeof initialValues) => {
+    setIsSubmitting(true);
+    if (validateFields()) {
+
+      try {
+        const { success, data, error } = await API.post("posts/create", initialValues);
+        if (success) {
+          toasterSuccess("Post created successfully!", 1000, "id");
+          router.push("/home");
+        } else {
+          toasterInfo(getErrorMessage(error.code));
+        }
+      } catch (error) {
+        toasterInfo("Error creating post. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
   return (
     <>
       <Formik
-        initialValues={{
-          content: value,
-          images: images,
-          visibility: selectedIcon,
+        initialValues={initialValues}
+        // validationSchema={validationPostSchema}
+        onSubmit={(values, { setSubmitting }) => {
+          setSubmitting(true);
+          handleSubmit(values);
+          setSubmitting(false);
         }}
-        validationSchema={validationPostSchema}
-        onSubmit={handleSubmit}
       >
-        {({ errors, touched }) => (
+        {({ isSubmitting }: any) => (
+
           <Form>
             <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
               <div className="bg-white w-full max-w-[800px] rounded-[12px] shadow-lg">
@@ -177,7 +298,7 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
                       <div className="text-[13px] text-gray-500/50 flex items-center gap-2">
                         <div className="border p-2 rounded">
                           {selectedIcon || <GoGlobe />}
-                        </div>{" "}
+                        </div>
                         <TiArrowSortedDown onClick={toggleVisibility} />
                       </div>
                     </div>
@@ -185,8 +306,13 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
                   <div className="w-full">
                     <div className="flex flex-col">
                       <div className="!z-1">
-                        <QuillEditor value={value} setValue={setValue} />
+                        <QuillEditor value={value} setValue={setValue}
+                        />
+
                       </div>
+                      {errors.content && (
+                        <div className="text-red-500 text-sm mt-2">{errors.content}</div>
+                      )}
                       <div className="my-2 relative">
                         <button onClick={handleEmojis}>
                           <BsEmojiSmile className="w-6 h-6" />
@@ -204,28 +330,32 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
                       </div>
                     </div>
                   </div>
-                  {(selectedName == "camera" ||
-                    selectedName == "video" ||
-                    selectedName == "document") && (
+                  {((selectedName == "image" || type == "image") ||
+                    (selectedName == "video" || type == "video") ||
+                    (selectedName == "document" || type == "document")) && (
                       <>
-                        <div className="border p-2 text-center flex flex-col justify-center items-center">
-                          {selectedName === "camera" && (
+                        <div className="border p-2 text-center flex flex-col justify-center items-center bg-gray-100">
+                          {(selectedName === "image" || type == "image") && (
                             <div className="mt-4">
-                              <div className="bg-gray-50 p-8 rounded-xl shadow-md">
-                                <div className="p-6 bg-gray-100 rounded-xl border-dashed border-2 border-gray-300">
+                              <div className="">
+                                <div className="">
                                   <label
                                     htmlFor="file-upload"
-                                    className="cursor-pointer text-[var(--highlight-blue)] py-4 px-6 rounded-md mt-4 block text-center transition-all "
+                                    className="cursor-pointer text-[var(--highlight-blue)]  mt-4 block text-center transition-all"
                                   >
-                                    <span className="text-sm text-[var(--highlight)]">
-                                      Drag & Drop your file here or
-                                    </span>
-                                    <span className="text-sm mt-2 ml-1 text-[var(--highlight)] underline">
-                                      Browse
-                                    </span>
+                                    <div className="flex flex-col items-center justify-center p-2">
+                                      <div className="bg-gray-200 rounded-full p-4">
+                                        <CiCamera size={30} />
+                                      </div>
+                                      <span className="text-lg text-[var(--highlight)]">Add Photos</span>
+                                      <span className="text-md mt-1 text-[var(--highlight)]">
+                                        or Drag and Drop File
+                                      </span>
+                                    </div>
                                   </label>
                                 </div>
                               </div>
+
                               <Field
                                 type="file"
                                 name="images"
@@ -247,50 +377,50 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
                                         className="object-cover rounded-lg w-40 h-30"
                                       />
                                       <RxCross2
-                                        onClick={() => handleImageDelete(index)}
+                                        onClick={() => handleFileDelete(index, "images")}
                                         className="absolute top-0 right-0 text-red-500 cursor-pointer w-6 h-6 bg-white rounded-full z-10"  // Adjust z-index here
                                       />
                                     </div>
                                   ))}
                                 </div>
                               )}
-                              <ErrorMessage
-                                name="images"
-                                component="div"
-                                className="text-red-500 text-sm mt-2"
-                              />
+
                             </div>
                           )}
 
-                          {selectedName === "video" && (
+                          {(selectedName === "video" || type == "video") && (
                             <div className="mt-4">
-                              <div className="bg-gray-50 p-8 rounded-xl shadow-md">
-                                <div className="p-6 bg-gray-100 rounded-xl border-dashed border-2 border-gray-300">
+                              <div className="">
+                                <div className="">
                                   <label
-                                    htmlFor="file-upload"
-                                    className="cursor-pointer text-[var(--highlight-blue)] py-4 px-6 rounded-md mt-4 block text-center transition-all "
+                                    htmlFor="file-upload1"
+                                    className="cursor-pointer text-[var(--highlight-blue)]  mt-4 block text-center transition-all"
                                   >
-                                    <span className="text-sm text-[var(--highlight)]">
-                                      Drag & Drop your file here or
-                                    </span>
-                                    <span className="text-sm mt-2 ml-1 text-[var(--highlight)] underline">
-                                      Browse
-                                    </span>
+                                    <div className="flex flex-col items-center justify-center p-2">
+                                      <div className="bg-gray-200 rounded-full p-4">
+                                        <CiVideoOn size={30} />
+                                      </div>
+                                      <span className="text-lg text-[var(--highlight)]">Add Videos</span>
+                                      <span className="text-md mt-1 text-[var(--highlight)]">
+                                        or Drag and Drop File
+                                      </span>
+                                    </div>
                                   </label>
                                 </div>
                               </div>
                               <Field
                                 type="file"
-                                name="images"
+                                name="video"
                                 onChange={handleFileChange}
-                                ref={ImageInputRef}
-                                id="file-upload"
+                                ref={VideoInputRef}
+                                id="file-upload1"
                                 className="hidden"
+                                accept="video/*"
                                 multiple
                               />
-                              {images.length > 0 && (
+                              {videos.length > 0 && (
                                 <div className="relative mt-4 grid grid-cols-4 gap-4">
-                                  {images.map((file, index) => (
+                                  {videos.map((file, index) => (
                                     <div key={index} className="relative">
                                       <Image
                                         src={URL.createObjectURL(file)}
@@ -300,50 +430,54 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
                                         className="object-cover rounded-lg w-40 h-30"
                                       />
                                       <RxCross2
-                                        onClick={() => handleImageDelete(index)}
+                                        onClick={() => handleFileDelete(index, "video")}
                                         className="absolute top-0 right-0 text-red-500 cursor-pointer w-6 h-6 bg-white rounded-full z-10"  // Adjust z-index here
                                       />
                                     </div>
                                   ))}
                                 </div>
                               )}
-                              <ErrorMessage
-                                name="images"
+                              {/* <ErrorMessage
+                                name="video"
                                 component="div"
                                 className="text-red-500 text-sm mt-2"
-                              />
+                              /> */}
                             </div>
                           )}
 
-                          {selectedName === "document" && (
+                          {(selectedName === "document" || type == "document") && (
                             <div className="mt-4">
-                              <div className="bg-gray-50 p-8 rounded-xl shadow-md">
-                                <div className="p-6 bg-gray-100 rounded-xl border-dashed border-2 border-gray-300">
+                              <div className="">
+                                <div className="">
                                   <label
-                                    htmlFor="file-upload"
-                                    className="cursor-pointer text-[var(--highlight-blue)] py-4 px-6 rounded-md mt-4 block text-center transition-all "
+                                    htmlFor="file-upload3"
+                                    className="cursor-pointer text-[var(--highlight-blue)]  mt-4 block text-center transition-all"
                                   >
-                                    <span className="text-sm text-[var(--highlight)]">
-                                      Drag & Drop your file here or
-                                    </span>
-                                    <span className="text-sm mt-2 ml-1 text-[var(--highlight)] underline">
-                                      Browse
-                                    </span>
+                                    <div className="flex flex-col items-center justify-center p-2">
+                                      <div className="bg-gray-200 rounded-full p-4">
+                                        <IoDocumentAttachOutline size={30} />
+                                      </div>
+                                      <span className="text-lg text-[var(--highlight)]">Add Files</span>
+                                      <span className="text-md mt-1 text-[var(--highlight)]">
+                                        or Drag and Drop File
+                                      </span>
+                                    </div>
                                   </label>
                                 </div>
                               </div>
                               <Field
                                 type="file"
-                                name="images"
+                                name="document"
                                 onChange={handleFileChange}
+                                accept=".pdf,.doc,.docx,.txt,.xlsx"
                                 ref={ImageInputRef}
-                                id="file-upload"
+                                id="file-upload3"
                                 className="hidden"
                                 multiple
                               />
-                              {images.length > 0 && (
+                              {files.length > 0 && (
                                 <div className="relative mt-4 grid grid-cols-4 gap-4">
-                                  {images.map((file, index) => (
+                                  {files.map((file, index) => (
                                     <div key={index} className="relative">
                                       <Image
                                         src={URL.createObjectURL(file)}
@@ -353,80 +487,34 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
                                         className="object-cover rounded-lg w-40 h-30"
                                       />
                                       <RxCross2
-                                        onClick={() => handleImageDelete(index)}
+                                        onClick={() => handleFileDelete(index, "document")}
                                         className="absolute top-0 right-0 text-red-500 cursor-pointer w-6 h-6 bg-white rounded-full z-10"  // Adjust z-index here
                                       />
                                     </div>
                                   ))}
                                 </div>
                               )}
-                              <ErrorMessage
-                                name="images"
+                              {/* <ErrorMessage
+                                name="document"
                                 component="div"
                                 className="text-red-500 text-sm mt-2"
-                              />
+                              /> */}
                             </div>
                           )}
 
                         </div>
                       </>
                     )}
+
+
                   {selectedName == "gif" && <GifSearch />}
                   <div className="flex justify-between">
-                    <div>
-                      <section className="border-t border-gray-500/10 p-4 flex gap-4 ">
-                        <span className="cursor-pointer">
-                          {selectedName == "camera" ?
-                            <FaCamera className="w-6 h-6 fill-green-600" />
-                            : <MdOutlineLinkedCamera
-                              name="camera"
-                              className={`w-6 h-6 fill-green-600`}
-                              onClick={handleOnClick}
-                            />
-                          }
-                        </span>
-                        <span className="cursor-pointer">
-                          {selectedName == "video" ?
-                            <FaVideo className="w-6 h-6 fill-yellow-600" />
-                            : <HiOutlineVideoCamera
-                              name="video"
-                              className="w-6 h-6 stroke-yellow-500"
-                              onClick={handleOnClick}
-                            />}
-                        </span>
-                        <span className="cursor-pointer">
-                          {selectedName == "document" ?
-                            <IoDocumentAttach className="w-6 h-6 fill-rose-600" /> :
-                            <IoDocumentAttachOutline
-                              name="document"
-                              className="w-6 h-6 stroke-rose-500"
-                              onClick={handleOnClick}
-                            />}
-                        </span>
-                        <span className="cursor-pointer">
-                        {selectedName == "gif" ? <PiGifFill className="w-6 h-6 fill-purple-600" />:
-                          <HiOutlineGif
-                            name="gif"
-                            className="w-6 h-6 stroke-purple-700"
-                            onClick={handleOnClick}
-                          />}
-                        </span>
-                        <span className="cursor-pointer">
-                        {selectedName == "poll" ? <MdInsertChart className="w-6 h-6 fill-black-600" />:
-                          <BiBarChartSquare
-                            name="poll"
-                            className="w-6 h-6 fill-black"
-                            onClick={handleOnClick}
-                          />}
-                        </span>
-                      </section>
-                    </div>
+                    <IconSection selectedName={selectedName} type={type} />
                     <div className="flex items-center gap-1">
                       <button
                         onClick={() => setSchedulePopupOpen(true)}
                         className="bg-slate-300 hover:bg-blue-200 text-white px-2 py-2 rounded-md flex items-center gap-1"
                       >
-                        {/* Open Schedule Post Popup */}
                         <span>
                           <PiClockFill size={20} />
                         </span>
@@ -434,7 +522,14 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
                           <FaCaretDown size={15} />
                         </span>
                       </button>{" "}
-                      <button className="bg-[var(--highlght-hover)] text-white rounded-md  px-3 py-2 ">
+                      <button
+                        type="submit"
+                        disabled={isSubmitting || Object.keys(errors).length > 0}
+                        className={`${isSubmitting || Object.keys(errors).length > 0
+                          ? "bg-gray-400"
+                          : "bg-[var(--highlght-hover)]"
+                          } text-white rounded-md px-3 py-2`}
+                      >
                         Post
                       </button>
                     </div>

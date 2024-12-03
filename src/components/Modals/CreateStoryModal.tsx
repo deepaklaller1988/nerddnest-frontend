@@ -55,7 +55,6 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup, onAddStory }) => {
 
   const handleChange=async(e:any ,setname:any,name:any)=>{
     const file = e.target.files?.[0];
-    console.log(file)
     if (file) {
         try {
             const uploadedUrl = await uploadFile(file,API);

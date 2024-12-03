@@ -19,8 +19,11 @@ const baseQuery = fetchBaseQuery({
   baseUrl,
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).auth.accessToken;
-    if (process.env.NEXT_PUBLIC_API_URL + "file") {
+    if (process.env.NEXT_PUBLIC_API_URL + "file/upload") {
       headers.delete("Content-Type");
+      
+    } else if (process.env.NEXT_PUBLIC_API_URL + "file/multi-uploads") {
+      headers.set("Content-Type", "multipart/form-data")
     } else {
       headers.set("Content-Type", "application/json");
     }

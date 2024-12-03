@@ -15,6 +15,10 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ value, setValue }) => {
     ['blockquote', 'code-block'],
     ['link'],
   ];
+  const handleEditorChange = (content: string) => {
+    const plainText = content.replace(/<[^>]+>/g, '').trim(); 
+    setValue(plainText);
+  };
 
   const modules = {
     toolbar: toolbarOptions,
@@ -24,7 +28,7 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ value, setValue }) => {
     <ReactQuill
       theme="snow"
       value={value}
-      onChange={setValue}
+      onChange={handleEditorChange}
       modules={modules}
     />
   );

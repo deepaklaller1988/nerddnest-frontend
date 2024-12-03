@@ -35,7 +35,7 @@ export const toasterInfo = (message: string, time: number = 3000, customId?: str
   toast(message, {
     type: "info",
     toastId: customId,
-    position: "bottom-right",
+    position: "top-center",
     autoClose: time,
     hideProgressBar: false,
     closeOnClick: true,

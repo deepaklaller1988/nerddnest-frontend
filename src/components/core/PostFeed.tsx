@@ -7,16 +7,17 @@ import { HiOutlineVideoCamera } from "react-icons/hi2";
 import { IoDocumentAttachOutline } from "react-icons/io5";
 import { HiOutlineGif } from "react-icons/hi2";
 import { BiBarChartSquare } from "react-icons/bi";
-// import CreatePostPopup from "../Modals/CreatePostModal";
 const CreatePostPopup = dynamic(() => import('../Modals/CreatePostModal'), { ssr: false });
 
 import Image from "next/image";
 
 export default function PostFeed() {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [popupType, setPopupType] = useState<string | null>(null);
   const popupRef = useRef<HTMLDivElement>(null);
 
-  const handleClick = () => {
+  const handleClick = (type: string) => {
+    setPopupType(type);
     setIsPopupOpen(true);
   };
 
@@ -27,7 +28,7 @@ export default function PostFeed() {
           ref={popupRef}
           className="fixed inset-0 flex items-center justify-center z-50 bg-gray-800 bg-opacity-50"
         >
-          <CreatePostPopup setIsPopupOpen={setIsPopupOpen}/>
+          <CreatePostPopup setIsPopupOpen={setIsPopupOpen} type={popupType} setPopupType={setPopupType}/>
         </div>
       )}
 
@@ -45,26 +46,26 @@ export default function PostFeed() {
               />
             </span>
             <div
-              onClick={handleClick}
+              onClick={() => handleClick("text")}
               className="w-full bg-gray-200 p-2 px-5 rounded-full flex items-center text-gray-500/70"
             >
               Share whats on your mind, Alvin Marcos...
             </div>
           </section>
           <section className="border-t border-gray-500/10 p-4 flex gap-4">
-            <span className="cursor-pointer">
+            <span className="cursor-pointer" onClick={() => handleClick('camera')}>
               <MdOutlineLinkedCamera className="w-6 h-6 fill-green-600" />
             </span>
-            <span className="cursor-pointer">
+            <span className="cursor-pointer" onClick={() => handleClick('video')}>
               <HiOutlineVideoCamera className="w-6 h-6 stroke-yellow-500" />
             </span>
-            <span className="cursor-pointer">
+            <span className="cursor-pointer" onClick={() => handleClick('document')}>
               <IoDocumentAttachOutline className="w-6 h-6 stroke-rose-500" />
             </span>
-            <span className="cursor-pointer">
+            <span className="cursor-pointer" onClick={() => handleClick('gif')}>
               <HiOutlineGif className="w-6 h-6 stroke-purple-700" />
             </span>
-            <span className="cursor-pointer">
+            <span className="cursor-pointer" onClick={() => handleClick('poll')}>
               <BiBarChartSquare className="w-6 h-6 fill-black" />
             </span>
           </section>
