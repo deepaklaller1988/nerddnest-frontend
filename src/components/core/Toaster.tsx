@@ -40,7 +40,7 @@ export const toasterInfo = (message: string, time: number = 3000, customId?: str
     hideProgressBar: false,
     closeOnClick: true,
     draggable: true,
-    className: 'text-sm p-2 toaster-white'
+    className: 'text-sm p-2 toaster-black'
   });
 };
 

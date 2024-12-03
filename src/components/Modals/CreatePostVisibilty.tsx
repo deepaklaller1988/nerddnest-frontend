@@ -1,77 +1,104 @@
 import React, { useState } from "react";
 import { GoGlobe } from "react-icons/go";
 import { HiOutlineUserGroup, HiOutlineUsers } from "react-icons/hi2";
-import { MdLockOutline, } from "react-icons/md";
-import GroupSearch from "../SearchBar/GroupSearch";
+import { MdLockOutline } from "react-icons/md";
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
-
-import Image from "next/image";
+import GroupSearch from "../SearchBar/GroupSearch";
 import Button from "../Buttons/Button";
-import { BiArrowFromLeft } from "react-icons/bi";
 import PopupHeader from "../Header/PopupHeader";
+import Image from "next/image";
 
 type VisibilityPopupProps = {
   toggleVisibilityPopup: () => void;
   groups: string[];
+  setSelectedVisibility: (option: any) => void; 
+  sendSelectedIcon:any
 };
 
 const VisibilityPopup: React.FC<VisibilityPopupProps> = ({
   toggleVisibilityPopup,
   groups,
+  setSelectedVisibility,
+  sendSelectedIcon,
 }) => {
   const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
   const [showGroupPopup, setShowGroupPopup] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedIcon, setSelectedIcon] = useState<React.ReactNode | null>(null);
 
   const filteredGroups = groups.filter((group) =>
     group.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  return (
-    <div className="Create a New Group z-50">
-      <div className="bg-white w-full max-w-[500px] rounded-[12px] shadow-lg">
-        <PopupHeader title={"Who can see your post?"}  onClick={toggleVisibilityPopup}/>
+  console.log(selectedIcon,selectedGroup,"=======================")
 
-        <div className="p-6 ">
+  const visibilityOptions = [
+    {
+      id: "public",
+      icon: <GoGlobe className="text-blue-500" />,
+      name:"Globe",
+      title: "Public",
+      description: "Visible to anyone, on or off this site",
+    },
+    {
+      id: "all-members",
+      icon: <HiOutlineUserGroup />,
+      name:"Member",
+      title: "All Members",
+      description: "Visible to all members on this site",
+    },
+    {
+      id: "my-connections",
+      icon: <HiOutlineUsers />,
+      name:"Connections",
+      title: "Friends",
+      description: "Visible only to your connections",
+    },
+    {
+      id: "only-me",
+      icon: <MdLockOutline />,
+      name:"OnlyMe",
+      title: "Only Me",
+      description: "Visible only to you",
+    },
+    {
+      id: "post-in-group",
+      icon: <HiOutlineUsers />,
+      name:"Group",
+      title: (
+        <div className="flex mt-1 ml-1">
+          Post in Group <MdOutlineKeyboardArrowRight className="ml-1 mt-0.5" size={16} />
+        </div>
+      ),
+      description: "Visible to members of a group",
+    },
+  ];
+
+  const handleVisibilitySelect = (option: any) => {
+    setSelectedIcon(option.name);
+    setSelectedVisibility(option.icon);
+    sendSelectedIcon(option.icon); 
+    if (option.id !== "post-in-group") {
+      toggleVisibilityPopup(); 
+    }    if (option.id === "post-in-group") {
+      setShowGroupPopup(true);
+    } else {
+      setShowGroupPopup(false);
+    }
+  };
+
+  return (
+    <div className="z-50 w-[800px]">
+      <div className="bg-white w-full w-[800px] h-[450px] rounded-[12px] shadow-lg">
+        <PopupHeader title={"Who can see your post?"} onClick={toggleVisibilityPopup} />
+
+        <div className="p-6">
           <ul className="space-y-4">
-            {[
-              {
-                id: "public",
-                icon: <GoGlobe className="text-blue-500" />,
-                title: "Public",
-                description: "Visible to anyone, on or off this site",
-              },
-              {
-                id: "all-members",
-                icon: <HiOutlineUserGroup />,
-                title: "All Members",
-                description: "Visible to all members on this site",
-              },
-              {
-                id: "my-connections",
-                icon: <HiOutlineUsers />,
-                title: "Friends",
-                description: "Visible only to your connections",
-              },
-              {
-                id: "only-me",
-                icon: <MdLockOutline />,
-                title: "Only Me",
-                description: "Visible only to you",
-              },
-              {
-                id: "post-in-group",
-                icon: <HiOutlineUsers />,
-                title: (
-                  <div className="flex mt-1 ml-1">
-                    Post in Group <MdOutlineKeyboardArrowRight className="ml-1 mt-0.5" size={16} />
-                  </div>
-                ),
-                description: "Visible to members of a group",
-              },
-            ].map((option) => (
-              <li key={option.id} className="rounded-lg hover:bg-gray-200 transition-colors duration-200"
->
+            {visibilityOptions.map((option) => (
+              <li
+                key={option.id}
+                className="rounded-lg hover:bg-gray-200 transition-colors duration-200"
+              >
                 <label className="flex items-center space-x-4">
                   <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
                     {option.icon}
@@ -80,19 +107,13 @@ const VisibilityPopup: React.FC<VisibilityPopupProps> = ({
                     <span className="font-medium text-[var(--highlight)]">
                       {option.title}
                     </span>
-                    <p className="text-sm text-gray-500">
-                      {option.description}
-                    </p>
+                    <p className="text-sm text-gray-500">{option.description}</p>
                   </div>
                   <input
                     type="radio"
                     name="visibility"
                     className="w-6 h-6 text-teal-500 focus:ring-teal-500"
-                    onChange={() =>
-                      option.id === "post-in-group"
-                        ? setShowGroupPopup(true)
-                        : setShowGroupPopup(false)
-                    }
+                    onChange={() => handleVisibilitySelect(option)}
                   />
                 </label>
               </li>
@@ -103,7 +124,7 @@ const VisibilityPopup: React.FC<VisibilityPopupProps> = ({
 
       {showGroupPopup && (
         <div className="fixed inset-0 mb-4 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
-          <div className="bg-white w-full max-w-[500px] rounded-[12px] shadow-lg">
+          <div className="bg-white w-[800px] h-[360px] rounded-[12px] shadow-lg">
             <div className="flex items-center justify-between p-4 border-b">
               <h3 className="text-lg font-semibold text-[var(--highlight)]">
                 Select a Group
@@ -133,21 +154,12 @@ const VisibilityPopup: React.FC<VisibilityPopupProps> = ({
                         setShowGroupPopup(false);
                       }}
                     >
-                      <Image
-                        src="/logo.png"
-                        height={30}
-                        width={30}
-                        alt="Group Icon"
-                      />
-                      <span className="text-[var(--highlight)] font-medium">
-                        {group}
-                      </span>
+                      <Image src="/logo.png" height={30} width={30} alt="Group Icon" />
+                      <span className="text-[var(--highlight)] font-medium">{group}</span>
                     </li>
                   ))
                 ) : (
-                  <li className="text-gray-500 text-center">
-                    No groups found.
-                  </li>
+                  <li className="text-gray-500 text-center">No groups found.</li>
                 )}
               </ul>
             </div>
