@@ -19,13 +19,17 @@ const baseQuery = fetchBaseQuery({
   baseUrl,
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).auth.accessToken;
+    if (process.env.NEXT_PUBLIC_API_URL + "file") {
+      headers.delete("Content-Type");
+    } else {
+      headers.set("Content-Type", "application/json");
+    }
     if (token) {
       headers.set("Authorization", `Bearer ${token}`);
     }
     else if(localStorage.getItem("accessToken")){
         headers.set("Authorization", `Bearer ${localStorage.getItem("accessToken")}`);
     }
-    headers.set("Content-Type", "application/json");
     return headers;
   },
   credentials: "include",
@@ -47,38 +51,45 @@ const baseQueryWithReauth = async (args: any, api: any, extraOptions: any) => {
 
   if (result.error) {
     const errorData = result.error.data as ApiError;
-    const error = await handleError(errorData);
+    
+    if (errorData) {
+      const error = await handleError(errorData);
 
-    if(error.toast){
-      toasterError(error.toast);
-    }
-
-    if(error.signOut){
-      LogoutUser()
-    }
-
-    if(error.refresh){
-      const refreshResult = await baseQuery(
-        {
-          url: "auth/refresh-access",
-          method: "GET"
-        },
-        api,
-        extraOptions
-      );
-
-      if (refreshResult.data) {
-        const { data: {accessToken} }: any = refreshResult.data;
-        api.dispatch(setAuth({ accessToken }));
-        localStorage.setItem("accessToken", accessToken);
-        result = await baseQuery(args, api, extraOptions);
-      } else {
-        api.dispatch(clearAuth());
+      if (error.toast) {
+        toasterError(error.toast);
       }
+
+      if (error.signOut) {
+        LogoutUser();
+      }
+
+      if (error.refresh) {
+        const refreshResult = await baseQuery(
+          {
+            url: "auth/refresh-access",
+            method: "GET"
+          },
+          api,
+          extraOptions
+        );
+
+        if (refreshResult.data) {
+          const { data: { accessToken } }: any = refreshResult.data;
+          api.dispatch(setAuth({ accessToken }));
+          localStorage.setItem("accessToken", accessToken);
+          result = await baseQuery(args, api, extraOptions);
+        } else {
+          api.dispatch(clearAuth());
+        }
+      }
+    } else {
+      toasterError("An unexpected error occurred", 10000, "id");
     }
   }
+
   return result;
 };
+
 
 export const apiSlice = createApi({
   reducerPath: "api",

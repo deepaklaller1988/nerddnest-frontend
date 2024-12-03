@@ -5,7 +5,9 @@ import { RxCross2 } from "react-icons/rx";
 import Button from "../Buttons/Button";
 import { IoMdAdd, IoMdSend } from "react-icons/io";
 import { HiOutlineChevronUpDown } from "react-icons/hi2";
-
+import { toasterInfo } from "../core/Toaster";
+import { useApi } from "@/hooks/useAPI";
+import { uploadFile } from "../core/UploadFile";
 
 interface Story {
   storyLinkText: string;
@@ -22,6 +24,7 @@ interface InitialValues {
   stories: Story[];
 }
 const CreateStoryModal: React.FC<any> = ({ togglePopup, onAddStory }) => {
+  const { API } = useApi();
   const initialValues = {
     storyCoverImage: null,
     storyCoverTitle: "",
@@ -38,15 +41,31 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup, onAddStory }) => {
   };
 
   const handleAddStory = (values: any) => {
+
     const storyData = {
-      cover: values.storyCoverImage,
-      title: values.storyCoverTitle,
-      stories: values.stories,
+      cover: initialValues.storyCoverImage,
+      title: initialValues.storyCoverTitle,
+      stories: initialValues.stories,
     };
+    console.log(storyData)
     onAddStory(storyData);
     togglePopup();
   };
 
+
+  const handleChange=async(e:any ,setname:any,name:any)=>{
+    const file = e.target.files?.[0];
+    console.log(file)
+    if (file) {
+        try {
+            const uploadedUrl = await uploadFile(file,API);
+            setname(name, uploadedUrl);
+            toasterInfo("File uploaded successfully");
+        } catch (error) {
+            console.error("Error uploading file:", error);
+        }
+    }
+  }
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-gray-200 w-full max-w-[600px] h-[90%] rounded-[12px] shadow-2xl overflow-y-auto">
@@ -92,9 +111,10 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup, onAddStory }) => {
                         name="storyCoverImage"
                         id="storyCoverImage"
                         className="hidden"
-                        onChange={(e: any) =>
-                          setFieldValue("storyCoverImage", e.target.files[0])
-                        }
+                        // onChange={(e: any) =>
+                        //   setFieldValue("storyCoverImage", e.target.files[0])
+                        // }
+                        onChange={(e:any)=>handleChange(e,setFieldValue,"storyCoverImage")}
                         value={initialValues.storyCoverImage}
                       />
                     </label>
@@ -181,7 +201,6 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup, onAddStory }) => {
                                   placeholder="Enter the story link"
                                 />
                               </div>
-                    
 
                               <div className="mt-4">
                                 <label
@@ -193,7 +212,7 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup, onAddStory }) => {
                                 <div className="bg-gray-50 p-8 rounded-xl shadow-md">
                                   <div className="p-6 bg-gray-100 rounded-xl border-dashed border-2 border-gray-300">
                                     <label
-                                      htmlFor={`file-upload-${index}`} 
+                                      htmlFor={`file-upload-${index}`}
                                       className="cursor-pointer text-[var(--highlight-blue)] py-4 px-6 rounded-md mt-4 block text-center transition-all "
                                     >
                                       <span className="text-sm text-[var(--highlight)]">
@@ -218,7 +237,9 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup, onAddStory }) => {
                                       e.target.files[0]
                                     )
                                   }
-                                  value={initialValues?.stories[index]?.storyMedia }
+                                  value={
+                                    initialValues?.stories[index]?.storyMedia
+                                  }
                                   id={`file-upload-${index}`} // Give the input a unique ID
                                   className="hidden" // The input is hidden, but the label will open the file dialog
                                 />
@@ -261,8 +282,7 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup, onAddStory }) => {
                         </div>
                       ))}
 
-               <div className="flex flex-row items-center gap-2">
-    
+                      <div className="flex flex-row items-center gap-2">
                         <Button
                           type="button"
                           label="Add Another Story"
@@ -274,24 +294,21 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup, onAddStory }) => {
                               storyMedia: null,
                               duration: 6,
                               visibility: "Everyone",
-                              isCollapsed: false, 
+                              isCollapsed: false,
                             });
                           }}
                         />
 
-                    
-                  <Button
-                    type="submit"
-                    label={"Publish"}
-                    icon={<IoMdSend className="fill-white" />}
-                    variant="default"
-                  />
-                </div>
-               </div>
+                        <Button
+                          type="submit"
+                          label={"Publish"}
+                          icon={<IoMdSend className="fill-white" />}
+                          variant="default"
+                        />
+                      </div>
+                    </div>
                   )}
                 </FieldArray>
-
-             
               </Form>
             )
           )}
@@ -302,3 +319,5 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup, onAddStory }) => {
 };
 
 export default CreateStoryModal;
+
+

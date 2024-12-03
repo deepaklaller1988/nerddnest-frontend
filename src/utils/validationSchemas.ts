@@ -1,28 +1,37 @@
 import * as Yup from "yup";
 
-const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+const passwordRegex =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
 
-const emailValidation = Yup.string().email("Invalid email format").required("Email is Required");
+const emailValidation = Yup.string()
+  .email("Invalid email format")
+  .required("Email is Required");
 
-const passwordValidation = Yup.string().min(8, "Password must be at least 8 characters").matches(passwordRegex,
-    "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character")
+const passwordValidation = Yup.string()
+  .min(8, "Password must be at least 8 characters")
+  .matches(
+    passwordRegex,
+    "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
+  )
   .required("Password is Required");
 
-  const allowedFileTypes = [
-    'image/jpeg',
-    'image/png',
-    'image/jpg',
-    'image/gif',
-    'video/mp4',
-    'video/mov',
-    'video/wmv',
-    'video/avi',
-    'video/mpeg',
-    'video/3gpp',
-  ];
+const allowedFileTypes = [
+  "image/jpeg",
+  "image/png",
+  "image/jpg",
+  "image/gif",
+  "video/mp4",
+  "video/mov",
+  "video/wmv",
+  "video/avi",
+  "video/mpeg",
+  "video/3gpp",
+];
 
 const confirmPasswordValidation = (fieldName: string) =>
-  Yup.string().oneOf([Yup.ref(fieldName)], "Passwords must match").required("Confirm Password is Required");
+  Yup.string()
+    .oneOf([Yup.ref(fieldName)], "Passwords must match")
+    .required("Confirm Password is Required");
 
 export const signupValidationSchema = Yup.object({
   email: emailValidation,
@@ -33,12 +42,15 @@ export const signupValidationSchema = Yup.object({
   confirmpassword: confirmPasswordValidation("password"),
   firstname: Yup.string().required("First Name is Required"),
   lastname: Yup.string().required("Last Name is Required"),
-  handle: Yup.string().min(3,"Handle must be at least 3 characters").required("Handle is Required"),
+  handle: Yup.string()
+    .min(3, "Handle must be at least 3 characters")
+    .required("Handle is Required"),
   dob: Yup.string().required("Date of birth is Required"),
-  location: Yup.string().notRequired(), 
-  agree: Yup.bool().oneOf([true], "You must agree to the Terms of Service").required("Required"),
+  location: Yup.string().notRequired(),
+  agree: Yup.bool()
+    .oneOf([true], "You must agree to the Terms of Service")
+    .required("Required"),
 });
-
 
 export const loginValidationSchema = Yup.object({
   email: emailValidation,
@@ -49,21 +61,23 @@ export const forgotValidationSchema = Yup.object({
   email: emailValidation,
 });
 
-const validateFileType = (file:any) => {
-  if (!file) return true; // Allow empty value for validation chaining
+const validateFileType = (file: any) => {
+  if (!file) return true;
   return allowedFileTypes.includes(file.type);
 };
-export const resetValidationSchema =Yup.object({
+export const resetValidationSchema = Yup.object({
   password: passwordValidation,
-  confirmpassword :confirmPasswordValidation("password")
-})
+  confirmpassword: confirmPasswordValidation("password"),
+});
 
 export const AddStoryValidationSchema = Yup.object({
   storyCoverImage: Yup.mixed()
     .required("Story cover image is required")
     .test(
       "fileType",
-      `Unsupported file format. Allowed formats: ${allowedFileTypes.join(", ")}`,
+      `Unsupported file format. Allowed formats: ${allowedFileTypes.join(
+        ", "
+      )}`,
       validateFileType
     ),
   storyCoverTitle: Yup.string()
@@ -96,13 +110,22 @@ export const AddStoryValidationSchema = Yup.object({
       })
     )
     .test("validateOrder", "Complete the first story first", function (value) {
-      if (!value) return true; 
-      for (let i = 0; i <=value.length; i++) {
+      if (!value) return true;
+      for (let i = 0; i <= value.length; i++) {
         const story = value[i];
         if (!story.storyLinkText || !story.storyLink || !story.storyMedia) {
-          return i === value.length - 1; 
+          return i === value.length - 1;
         }
       }
-      return true; 
+      return true;
     }),
+});
+
+export const validationPostSchema = Yup.object().shape({
+  content: Yup.string()
+    .required("Content is required")
+    .min(5, "Content must be at least 5 characters"),
+  images: Yup.array()
+    .max(10, "You can only upload up to 10 images")
+    .required("At least one image is required"),
 });

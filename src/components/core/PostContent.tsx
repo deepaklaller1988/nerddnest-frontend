@@ -69,9 +69,9 @@ export default function PostContent() {
                   Posted an update
                 </p>
                 <div className="flex items-center gap-2">
-                  <p className="text-[13px] text-gray-500/50 flex items-center gap-2">
+                  <div className="text-[13px] text-gray-500/50 flex items-center gap-2">
                     3 days ago <selectedItem.Icon />
-                  </p>
+                  </div>
                   <section className="relative">
                     <TiArrowSortedDown
                       onClick={() => setIsOpen((prev) => !prev)}
