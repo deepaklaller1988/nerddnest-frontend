@@ -22,6 +22,12 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import { validationPostSchema } from "@/utils/validationSchemas";
 import { toasterInfo } from "../core/Toaster";
 import { RxCross2 } from "react-icons/rx";
+import { FaCamera } from "react-icons/fa";
+import { FaVideo } from "react-icons/fa";
+import { PiGifFill } from "react-icons/pi";
+import { MdInsertChart } from "react-icons/md";
+
+import { IoDocumentAttach } from "react-icons/io5";
 
 interface CreatePostPopupProps {
   setIsPopupOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -47,7 +53,7 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
   const closePopup = () => {
     setIsPopupOpen(false);
   };
-
+  console.log(selectedName, "selectedName")
   const toggleVisibility = () => {
     setToggleVisibilityPopup((prev) => !prev);
   };
@@ -92,9 +98,9 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
     if (name) {
       setSelectedName(name);
     }
-    if (name === "camera") {
-      ImageInputRef.current?.click();
-    }
+    // if (name === "camera") {
+    //   ImageInputRef.current?.click();
+    // }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -114,13 +120,13 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
   // const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
   //   if (e.target.files) {
   //     const newFiles = Array.from(e.target.files);
-  
+
   //     if (images.length + newFiles.length <= 10) {
   //       try {
   //         const uploadedFileUrls = await Promise.all(
   //           newFiles.map((file) => uploadFile(file))
   //         );
-  
+
   //         setImages((prevFiles) => [
   //           ...prevFiles,
   //           ...uploadedFileUrls, // Store the uploaded file URLs
@@ -255,6 +261,113 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
                               />
                             </div>
                           )}
+
+                          {selectedName === "video" && (
+                            <div className="mt-4">
+                              <div className="bg-gray-50 p-8 rounded-xl shadow-md">
+                                <div className="p-6 bg-gray-100 rounded-xl border-dashed border-2 border-gray-300">
+                                  <label
+                                    htmlFor="file-upload"
+                                    className="cursor-pointer text-[var(--highlight-blue)] py-4 px-6 rounded-md mt-4 block text-center transition-all "
+                                  >
+                                    <span className="text-sm text-[var(--highlight)]">
+                                      Drag & Drop your file here or
+                                    </span>
+                                    <span className="text-sm mt-2 ml-1 text-[var(--highlight)] underline">
+                                      Browse
+                                    </span>
+                                  </label>
+                                </div>
+                              </div>
+                              <Field
+                                type="file"
+                                name="images"
+                                onChange={handleFileChange}
+                                ref={ImageInputRef}
+                                id="file-upload"
+                                className="hidden"
+                                multiple
+                              />
+                              {images.length > 0 && (
+                                <div className="relative mt-4 grid grid-cols-4 gap-4">
+                                  {images.map((file, index) => (
+                                    <div key={index} className="relative">
+                                      <Image
+                                        src={URL.createObjectURL(file)}
+                                        alt="uploaded"
+                                        height={70}
+                                        width={100}
+                                        className="object-cover rounded-lg w-40 h-30"
+                                      />
+                                      <RxCross2
+                                        onClick={() => handleImageDelete(index)}
+                                        className="absolute top-0 right-0 text-red-500 cursor-pointer w-6 h-6 bg-white rounded-full z-10"  // Adjust z-index here
+                                      />
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                              <ErrorMessage
+                                name="images"
+                                component="div"
+                                className="text-red-500 text-sm mt-2"
+                              />
+                            </div>
+                          )}
+
+                          {selectedName === "document" && (
+                            <div className="mt-4">
+                              <div className="bg-gray-50 p-8 rounded-xl shadow-md">
+                                <div className="p-6 bg-gray-100 rounded-xl border-dashed border-2 border-gray-300">
+                                  <label
+                                    htmlFor="file-upload"
+                                    className="cursor-pointer text-[var(--highlight-blue)] py-4 px-6 rounded-md mt-4 block text-center transition-all "
+                                  >
+                                    <span className="text-sm text-[var(--highlight)]">
+                                      Drag & Drop your file here or
+                                    </span>
+                                    <span className="text-sm mt-2 ml-1 text-[var(--highlight)] underline">
+                                      Browse
+                                    </span>
+                                  </label>
+                                </div>
+                              </div>
+                              <Field
+                                type="file"
+                                name="images"
+                                onChange={handleFileChange}
+                                ref={ImageInputRef}
+                                id="file-upload"
+                                className="hidden"
+                                multiple
+                              />
+                              {images.length > 0 && (
+                                <div className="relative mt-4 grid grid-cols-4 gap-4">
+                                  {images.map((file, index) => (
+                                    <div key={index} className="relative">
+                                      <Image
+                                        src={URL.createObjectURL(file)}
+                                        alt="uploaded"
+                                        height={70}
+                                        width={100}
+                                        className="object-cover rounded-lg w-40 h-30"
+                                      />
+                                      <RxCross2
+                                        onClick={() => handleImageDelete(index)}
+                                        className="absolute top-0 right-0 text-red-500 cursor-pointer w-6 h-6 bg-white rounded-full z-10"  // Adjust z-index here
+                                      />
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                              <ErrorMessage
+                                name="images"
+                                component="div"
+                                className="text-red-500 text-sm mt-2"
+                              />
+                            </div>
+                          )}
+
                         </div>
                       </>
                     )}
@@ -263,39 +376,48 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
                     <div>
                       <section className="border-t border-gray-500/10 p-4 flex gap-4 ">
                         <span className="cursor-pointer">
-                          <MdOutlineLinkedCamera
-                            name="camera"
-                            className="w-6 h-6 fill-green-600"
-                            onClick={handleOnClick}
-                          />
+                          {selectedName == "camera" ?
+                            <FaCamera className="w-6 h-6 fill-green-600" />
+                            : <MdOutlineLinkedCamera
+                              name="camera"
+                              className={`w-6 h-6 fill-green-600`}
+                              onClick={handleOnClick}
+                            />
+                          }
                         </span>
                         <span className="cursor-pointer">
-                          <HiOutlineVideoCamera
-                            name="video"
-                            className="w-6 h-6 stroke-yellow-500"
-                            onClick={handleOnClick}
-                          />
+                          {selectedName == "video" ?
+                            <FaVideo className="w-6 h-6 fill-yellow-600" />
+                            : <HiOutlineVideoCamera
+                              name="video"
+                              className="w-6 h-6 stroke-yellow-500"
+                              onClick={handleOnClick}
+                            />}
                         </span>
                         <span className="cursor-pointer">
-                          <IoDocumentAttachOutline
-                            name="document"
-                            className="w-6 h-6 stroke-rose-500"
-                            onClick={handleOnClick}
-                          />
+                          {selectedName == "document" ?
+                            <IoDocumentAttach className="w-6 h-6 fill-rose-600" /> :
+                            <IoDocumentAttachOutline
+                              name="document"
+                              className="w-6 h-6 stroke-rose-500"
+                              onClick={handleOnClick}
+                            />}
                         </span>
                         <span className="cursor-pointer">
+                        {selectedName == "gif" ? <PiGifFill className="w-6 h-6 fill-purple-600" />:
                           <HiOutlineGif
                             name="gif"
                             className="w-6 h-6 stroke-purple-700"
                             onClick={handleOnClick}
-                          />
+                          />}
                         </span>
                         <span className="cursor-pointer">
+                        {selectedName == "poll" ? <MdInsertChart className="w-6 h-6 fill-black-600" />:
                           <BiBarChartSquare
                             name="poll"
                             className="w-6 h-6 fill-black"
                             onClick={handleOnClick}
-                          />
+                          />}
                         </span>
                       </section>
                     </div>
