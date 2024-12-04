@@ -2,8 +2,8 @@ import React from 'react'
 
 export default function LatestUpdates() {
     return (
-        <div className='min-w-[280px] max-w-[280px] rounded-[12px] bg-white p-4'>
-            <h2 className='text-[var(--highlight)] font-semibold pb-4'>LATEST UPDATES</h2>
+        <div className='min-w-[280px] max-w-[280px] rounded-[12px] bg-[var(--sections)] border border-white/5 p-4'>
+            <h2 className='text-white font-semibold pb-4'>LATEST UPDATES</h2>
             <div className='w-full'>
 
                 <div className='w-full flex flex-col gap-3 pt-3'>
@@ -12,8 +12,8 @@ export default function LatestUpdates() {
                             <img className='w-full block h-full bg-cover bg-center overflow-hidden rounded-full' src='/logo.png' alt="logo" />
                         </span>
                         <span className='w-full'>
-                            <p><b className='text-[var(--highlight)] font-semibold'>Preety Marcos</b> Posted an update</p>
-                            <p className='text-[13px] text-gray-500/50'>active 3 days ago</p>
+                            <p className='text-[12px]'><b className='text-white font-semibold'>Preety Marcos</b> Posted an update</p>
+                            <p className='text-[12px] text-gray-500/50'>active 3 days ago</p>
                         </span>
                     </section>
                     <section className='cursor-pointer flex items-start gap-2'>
@@ -21,8 +21,8 @@ export default function LatestUpdates() {
                             <img className='w-full block h-full bg-cover bg-center overflow-hidden rounded-full' src='/logo.png' alt="logo" />
                         </span>
                         <span className='w-full'>
-                            <p><b className='text-[var(--highlight)] font-semibold'>Preety Marcos</b> Posted an update</p>
-                            <p className='text-[13px] text-gray-500/50'>active 3 days ago</p>
+                            <p><b className='text-white font-semibold'>Preety Marcos</b> Posted an update</p>
+                            <p className='text-[12px] text-gray-500/50'>active 3 days ago</p>
                         </span>
                     </section>
                     <section className='cursor-pointer flex items-start gap-2'>
@@ -30,8 +30,8 @@ export default function LatestUpdates() {
                             <img className='w-full block h-full bg-cover bg-center overflow-hidden rounded-full' src='/logo.png' alt="logo" />
                         </span>
                         <span className='w-full'>
-                            <p><b className='text-[var(--highlight)] font-semibold'>Preety Marcos</b> Posted an update</p>
-                            <p className='text-[13px] text-gray-500/50'>active 3 days ago</p>
+                            <p><b className='text-white font-semibold'>Preety Marcos</b> Posted an update</p>
+                            <p className='text-[12px] text-gray-500/50'>active 3 days ago</p>
                         </span>
                     </section>
                     <section className='cursor-pointer flex items-start gap-2'>
@@ -39,8 +39,8 @@ export default function LatestUpdates() {
                             <img className='w-full block h-full bg-cover bg-center overflow-hidden rounded-full' src='/logo.png' alt="logo" />
                         </span>
                         <span className='w-full'>
-                            <p><b className='text-[var(--highlight)] font-semibold'>Preety Marcos</b> Posted an update</p>
-                            <p className='text-[13px] text-gray-500/50'>active 3 days ago</p>
+                            <p><b className='text-white font-semibold'>Preety Marcos</b> Posted an update</p>
+                            <p className='text-[12px] text-gray-500/50'>active 3 days ago</p>
                         </span>
                     </section>
                     <section className='cursor-pointer flex items-start gap-2'>
@@ -48,8 +48,8 @@ export default function LatestUpdates() {
                             <img className='w-full block h-full bg-cover bg-center overflow-hidden rounded-full' src='/logo.png' alt="logo" />
                         </span>
                         <span className='w-full'>
-                            <p><b className='text-[var(--highlight)] font-semibold'>Preety Marcos</b> Posted an update</p>
-                            <p className='text-[13px] text-gray-500/50'>active 3 days ago</p>
+                            <p><b className='text-white font-semibold'>Preety Marcos</b> Posted an update</p>
+                            <p className='text-[12px] text-gray-500/50'>active 3 days ago</p>
                         </span>
                     </section>
                 </div>

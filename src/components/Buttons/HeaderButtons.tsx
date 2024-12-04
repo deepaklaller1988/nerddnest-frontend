@@ -50,7 +50,7 @@ export default function HeaderButtons() {
           <IconButton
             onClick={() => togglePopup("message")}
             icon={<RiMessage2Line className="text-[18px]" />}
-            className="bg-white rounded-full w-10 h-10 flex items-center justify-center"
+            className="bg-white/10 hover:bg-white/20 rounded-full w-10 h-10 flex items-center justify-center"
           />
           {currentPopup == "message" && (
             <HeaderModal type={currentPopup} closePopup={closePopup} />
@@ -60,7 +60,7 @@ export default function HeaderButtons() {
           <IconButton
             onClick={() => togglePopup("notification")}
             icon={<IoMdNotificationsOutline className="text-[20px]" />}
-            className="bg-white rounded-full w-10 h-10 flex items-center justify-center"
+            className="bg-white/10 hover:bg-white/20 rounded-full w-10 h-10 flex items-center justify-center"
           />
           {currentPopup == "notification" && (
             <HeaderModal type={currentPopup} closePopup={closePopup} />

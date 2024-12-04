@@ -17,9 +17,9 @@ export default function HeaderModal({ type, closePopup }: HeaderModalProps) {
   };
   return (
     <>
-      <div className="w-full min-w-[280px] overflow-y-auto overflow-x-hidden rounded-lg bg-white absolute right-0 mt-1 max-h-[500px]">
-        <section className="bg-white sticky top-0 p-4 border-b border-b-1 border-black/10 hover:bg-gray-400/10">
-          <h6 className="text-[var(--highlight)] text-[16px] font-semibold">
+      <div className="w-full min-w-[280px] overflow-y-auto overflow-x-hidden rounded-lg bg-[var(--bgh)] absolute right-0 mt-1 max-h-[500px]">
+        <section className="bg-black/20 sticky top-0 p-4 border-b border-b-1 border-black/10 hover:bg-gray-400/10">
+          <h6 className="text-white text-[16px] font-semibold">
             {type == "message" ? "Messages" : "Notifications"}
           </h6>
         </section>
@@ -32,7 +32,7 @@ export default function HeaderModal({ type, closePopup }: HeaderModalProps) {
             <img className="w-full block h-full" src="/logo.png" alt="logo" />
           </span>
           <div className="w-full">
-            <b className="text-[var(--highlight)]">Ambros Marcos</b>
+            <b className="text-white">Ambros Marcos</b>
             <p>
               Need help or have questions? Our Support team at Nerdd Nest is
               here for you! Reach out anytime.
@@ -42,7 +42,7 @@ export default function HeaderModal({ type, closePopup }: HeaderModalProps) {
 
         <ViewButton
           onClick={handleRoute}
-          className="sticky bottom-0 bg-white font-semibold w-full p-4 text-center flex gap-2 items-center justify-center text-[var(--highlight-blue)] hover:text-[--highlight] buttonSet"
+          className="sticky bottom-0 bg-black/20 font-semibold w-full p-4 text-center flex gap-2 items-center justify-center text-[var(--highlight-blue)] hover:text-[--highlight] buttonSet"
           name={type == "message" ? "View Inbox" : "View Notifications"}
         />
       </div>

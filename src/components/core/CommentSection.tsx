@@ -102,7 +102,7 @@ const CommentSection = () => {
                       <div className="max-w-full mainReply">
                         <span className="inline-block min-w-[200px] max-w-full bg-gray-500/5 p-4 rounded-[12px]">
                           <p>
-                            <b className="text-[var(--highlight)] font-[600]">
+                            <b className="text-white font-[600]">
                               {comment.userName}
                             </b>
                           </p>
@@ -115,7 +115,7 @@ const CommentSection = () => {
                           <span className="cursor-pointer hover:underline">
                             Reply
                           </span>
-                          <span className="text-sm text-black/30">
+                          <span className="text-sm text-gray-500/50">
                             {comment.timeAgo}
                           </span>
                           <span className="bg-blue-500 p-1 rounded-full">
@@ -141,7 +141,7 @@ const CommentSection = () => {
                               <div className="max-w-full">
                                 <span className="inline-block min-w-[200px] max-w-full bg-gray-500/5 p-4 rounded-[12px]">
                                   <p>
-                                    <b className="text-[var(--highlight)] font-[600]">
+                                    <b className="text-white font-[600]">
                                       {reply.userName}
                                     </b>
                                   </p>
@@ -154,7 +154,7 @@ const CommentSection = () => {
                                   <span className="cursor-pointer hover:underline">
                                     Reply
                                   </span>
-                                  <span className="text-sm text-black/30">
+                                  <span className="text-sm text-gray-500/50">
                                     {reply.timeAgo}
                                   </span>
                                   <span className="bg-blue-500 p-1 rounded-full">
@@ -164,7 +164,7 @@ const CommentSection = () => {
                               </div>
                             </div>
 
-                            <span className="hover:bg-gray-500/5 relative min-h-10 min-w-10 max-w-10 flex items-center justify-center rounded-lg cursor-pointer block border border-2 border-black/5 border-white">
+                            <span className="hover:bg-gray-500/5 relative min-h-10 min-w-10 max-w-10 flex items-center justify-center rounded-lg cursor-pointer block">
                               <MdMoreHoriz className="w-6 h-6" />
                             </span>
                           </div>
@@ -179,7 +179,7 @@ const CommentSection = () => {
                               alt="user"
                             />
                           </span>
-                          <section className="bg-black/5 rounded-[12px] w-full pt-2 relative">
+                          <section className="bg-black/30 rounded-[12px] w-full pt-2 relative">
                             <textarea
                               className="text-black resize-none bg-transparent w-full p-2 px-5 flex items-center text-gray-500/70"
                               placeholder="Write a comment..."
@@ -201,7 +201,7 @@ const CommentSection = () => {
                                 <HiOutlineGif className="w-6 h-6 stroke-purple-700" />
                               </span>
                               <span className="cursor-pointer">
-                                <BiBarChartSquare className="w-6 h-6 fill-black" />
+                                <BiBarChartSquare className="w-6 h-6 fill-white" />
                               </span>
                             </section>
                           </section>
@@ -209,7 +209,7 @@ const CommentSection = () => {
                       </div>
                     </div>
 
-                    <span className="hover:bg-gray-500/5 relative min-h-10 min-w-10 max-w-10 flex items-center justify-center rounded-lg cursor-pointer block border border-2 border-black/5 border-white">
+                    <span className="hover:bg-gray-500/5 relative min-h-10 min-w-10 max-w-10 flex items-center justify-center rounded-lg cursor-pointer block">
                       <MdMoreHoriz className="w-6 h-6" />
                     </span>
                   </div>
@@ -224,7 +224,7 @@ const CommentSection = () => {
                       alt="user"
                     />
                   </span>
-                  <section className="bg-black/5 rounded-[12px] w-full pt-2 relative">
+                  <section className="bg-black/30 rounded-[12px] w-full pt-2 relative">
                     <textarea
                       className="text-black resize-none bg-transparent w-full p-2 px-5 flex items-center text-gray-500/70"
                       placeholder="Write a comment..."
@@ -246,7 +246,7 @@ const CommentSection = () => {
                         <HiOutlineGif className="w-6 h-6 stroke-purple-700" />
                       </span>
                       <span className="cursor-pointer">
-                        <BiBarChartSquare className="w-6 h-6 fill-black" />
+                        <BiBarChartSquare className="w-6 h-6 fill-white" />
                       </span>
                     </section>
                   </section>

@@ -1,3 +1,4 @@
+import { MenuHTMLAttributes } from "react";
 import * as Yup from "yup";
 
 const passwordRegex =
@@ -174,28 +175,40 @@ export const AddStoryValidationSchema = Yup.object({
 //     .required('Write Something is required') // Basic required validation
 //     .test('not-empty', 'Write Something is required', (value:any) => value && value.trim() !== ''), // No whitespace-only values
 // });
+
 export const validationPostSchema = Yup.object({
-  content: Yup.string().test(
-    'content-required',
-    'Content is required if no media URL is selected.',
-    function (value) {
-      const { mediaUrl } = this.parent;
-      if (!mediaUrl && !value) {
-        return false;
-      }
-      return true;
-    }
-  ),
-  mediaUrl: Yup.array().nullable().test(
-    'media-url-required',
-    'Upload MediaUrl (Photo and Video) is required if no content is selected.',
-    function (value) {
-      const { content } = this.parent; // Access content
-      // If content is not provided, mediaUrl must have a value
-      if (!content && (!value || value.length === 0)) {
-        return false; // Validation fails if mediaUrl is empty when content is not provided
-      }
-      return true; // Validation passes if mediaUrl is provided or content exists
-    }
-  ),
+  // content: Yup.string().when('mediaUrl', {
+  //   is: (mediaUrl: any) => !mediaUrl || mediaUrl.length === 0,
+  //   then: Yup.string().required('Content is required if no media URL is provided.'),
+  //   otherwise: Yup.string().nullable(),
+  // }),
+  // mediaUrl: Yup.array().nullable().when('content', {
+  //   is: (content: any) => !content || content.length === 0,
+  //   then: Yup.array()
+  //     .min(1, 'Media URL is required if no content is provided.')
+  //     .nullable(),
+  //   otherwise: Yup.array().nullable(),
+  // }),
 });
+
+  
+// export const validationPostSchema = Yup.object({
+//   content: Yup.string().test(
+//     'content-required-if-no-mediaUrl',
+//     'Content is required if no media URL is provided.',
+//     function (value) {
+//       const { mediaUrl } = this.parent;
+//       return !!value || (Array.isArray(mediaUrl) && mediaUrl.length > 0);
+//     }
+//   ),
+//   mediaUrl: Yup.array()
+//     .nullable()
+//     .test(
+//       'mediaUrl-required-if-no-content',
+//       'Media URL is required if no content is provided.',
+//       function (value) {
+//         const { content } = this.parent;
+//         return (Array.isArray(value) && value.length > 0) || !!content;
+//       }
+//     ),
+// });

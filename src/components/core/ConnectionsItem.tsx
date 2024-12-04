@@ -21,8 +21,8 @@ const ConnectionItem = ({ name, status, imageUrl }: ConnectionItemProps) => {
         />
       </span>
       <span>
-        <h6 className="text-[var(--highlight)]">{name}</h6>
-        <p className="text-[13px] text-gray-500/50">{status}</p>
+        <h6 className="text-white">{name}</h6>
+        <p className="text-[13px]">{status}</p>
       </span>
     </section>
   );

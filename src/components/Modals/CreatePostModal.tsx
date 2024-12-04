@@ -1,39 +1,39 @@
 import React, { useEffect, useRef, useState } from "react";
 import { MdOutlineLinkedCamera } from "react-icons/md";
 import { HiOutlineVideoCamera } from "react-icons/hi2";
-import { IoDocumentAttachOutline } from "react-icons/io5";
+import { IoDocumentAttachOutline, IoDocumentTextSharp } from "react-icons/io5";
 import { HiOutlineGif } from "react-icons/hi2";
 import { BiBarChartSquare } from "react-icons/bi";
 import { TiArrowSortedDown } from "react-icons/ti";
-import VisibilityPopup from "./CreatePostVisibilty";
-import SchedulePostPopup from "./SchedulePostModal";
-import QuillEditor from "../core/QuillEditor";
-import EmojiPicker from "emoji-picker-react";
 import { BsEmojiSmile } from "react-icons/bs";
 import { GoGlobe } from "react-icons/go";
 import PopupHeader from "../Header/PopupHeader";
 import { PiClockFill } from "react-icons/pi";
 import { FaCaretDown } from "react-icons/fa6";
-import Image from "next/image";
 import { CiCamera } from "react-icons/ci";
 import { CiVideoOn } from "react-icons/ci";
-import GifSearch from "../core/GifSearch";
-import { ErrorMessage, Field, Form, Formik, useFormik } from "formik";
+import { Field, Form, Formik } from "formik";
 import { toasterInfo, toasterSuccess } from "../core/Toaster";
 import { RxCross2 } from "react-icons/rx";
-import { FaCamera } from "react-icons/fa";
+import { FaCamera, FaFileExcel } from "react-icons/fa";
 import { FaVideo } from "react-icons/fa";
 import { PiGifFill } from "react-icons/pi";
 import { MdInsertChart } from "react-icons/md";
 
 import { IoDocumentAttach } from "react-icons/io5";
-import { uploadFile, uploadMultiFile } from "../core/UploadFile";
+import { uploadMultiFile } from "../core/UploadFile";
 import { useApi } from "@/hooks/useAPI";
-import { useRouter } from "next/navigation";
-import { getErrorMessage } from "@/utils/errorHandler";
 import { useSelector } from "react-redux";
-import { validationPostSchema } from "@/utils/validationSchemas";
-import { useFormikContext } from 'formik';
+
+import Image from "next/image";
+import VisibilityPopup from "./CreatePostVisibilty";
+import SchedulePostPopup from "./SchedulePostModal";
+import QuillEditor from "../core/QuillEditor";
+import EmojiPicker from "emoji-picker-react";
+import GifSearch from "../core/GifSearch";
+import MiniLoader from "../Loaders/Miniloader";
+import { FiFile } from "react-icons/fi";
+import { TbFileTypeXls } from "react-icons/tb";
 
 interface CreatePostPopupProps {
   setIsPopupOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -47,24 +47,22 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
   setPopupType
 }) => {
   const { API } = useApi();
-  const router = useRouter()
-  const ImageInputRef = useRef<HTMLInputElement>(null);
-  const VideoInputRef = useRef<HTMLInputElement>(null);
   const emojiPickerRef = useRef<HTMLDivElement>(null);
   const userId = useSelector((state: any) => state.auth.id);
-  const [toggleVisibilityPopup, setToggleVisibilityPopup] = useState(false);
-  const [selectedIcon, setSelectedIcon] = useState<React.ReactNode | null>(
-    null
-  );
+
+  const [value, setValue] = useState<any>("");
   const [selectedName, setSelectedName] = useState("");
-  const [isLoading, setLoading] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSchedulePopupOpen, setSchedulePopupOpen] = useState(false);
   const [emoji, setEmoji] = useState(false);
+  const [toggleVisibilityPopup, setToggleVisibilityPopup] = useState(false);
+  const [selectedIcon, setSelectedIcon] = useState<React.ReactNode | null>(null);
+  const [isSchedulePopupOpen, setSchedulePopupOpen] = useState(false);
+  const [isUploadLoading, setIsUploadLoading] = useState(false);
+
+
   const [images, setImages] = useState<File[]>([]);
   const [videos, setVideos] = useState<File[]>([]);
   const [files, setFiles] = useState<File[]>([]);
-  const [value, setValue] = useState<any>("");
+console.log(images,videos,"======images")
   const [initialValues, setInitialValues] = useState<any>({
     userId: userId,
     postType: "",
@@ -73,30 +71,44 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
     sharedLink: "",
     type: ""
   });
-  const { values, setFieldValue, errors, setFieldError, setErrors } = useFormik({
-    initialValues: { mediaUrl: [] },
-    validationSchema: validationPostSchema,
-    onSubmit: (values) => {
-      // Your submit logic
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        emojiPickerRef.current &&
+        !emojiPickerRef.current.contains(event.target as Node)
+      ) {
+        setEmoji(false);
+      }
+    };
+
+    if (emoji) {
+      document.addEventListener("mousedown", handleClickOutside);
     }
-  });
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [emoji]);
+
   const iconMapping = [
     {
       name: "image",
       activeIcon: <FaCamera className="w-6 h-6 fill-green-600" />,
       inactiveIcon: (
         <MdOutlineLinkedCamera
-          className="w-6 h-6 fill-green-600"
+        className={`w-6 h-6 fill-green-600 ${videos.length ? 'pointer-events-none opacity-50' : ''}`}
           onClick={(e) => handleOnClick(e, "image")}
         />
       ),
+     
     },
     {
       name: "video",
       activeIcon: <FaVideo className="w-6 h-6 fill-yellow-600" />,
       inactiveIcon: (
         <HiOutlineVideoCamera
-          className="w-6 h-6 stroke-yellow-500"
+        className={`w-6 h-6 stroke-yellow-500 ${images.length ? 'pointer-events-none opacity-50' : ''}`}
           onClick={(e) => handleOnClick(e, "video")}
         />
       ),
@@ -106,7 +118,7 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
       activeIcon: <IoDocumentAttach className="w-6 h-6 fill-rose-600" />,
       inactiveIcon: (
         <IoDocumentAttachOutline
-          className="w-6 h-6 stroke-rose-500"
+        className={`w-6 h-6 stroke-rose-500 ${(images.length || videos.length)? 'pointer-events-none opacity-50' : ''}`}
           onClick={(e) => handleOnClick(e, "document")}
         />
       ),
@@ -136,12 +148,15 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
   const closePopup = () => {
     setIsPopupOpen(false);
   };
+
   const toggleVisibility = () => {
     setToggleVisibilityPopup((prev) => !prev);
   };
+
   const handleSelectedIcon = (icon: React.ReactNode) => {
     setSelectedIcon(icon);
   };
+
   const handleEmojis = () => {
     setEmoji((prev) => !prev);
   };
@@ -152,36 +167,27 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
       if (quillEditor) {
         const currentText = quillEditor.innerHTML;
         setValue(currentText + emoji.emoji);
-      }
-
+        setInitialValues((prevValues: any) => ({
+          ...prevValues,
+          content: currentText + emoji.emoji,
+        }));      }
     }
   };
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        emojiPickerRef.current &&
-        !emojiPickerRef.current.contains(event.target as Node)
-      ) {
-        setEmoji(false);
-      }
-    };
-
-    if (emoji) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [emoji]);
-
   const handleOnClick = (e: React.MouseEvent<SVGElement, MouseEvent>, name: any) => {
-    if (name) {
+
+    if (name === "image" && !images) {
+      setSelectedName("image");
+      setPopupType("image");
+    } else if (name === "video" && !videos) {
+      setSelectedName("video");
+      setPopupType("video");
+    }else{
       setSelectedName(name);
       setPopupType(name)
     }
   };
+
   const IconSection = ({ selectedName, type }: any) => (
     <div>
       <section className="border-t border-gray-500/10 p-4 flex gap-4">
@@ -193,6 +199,7 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
       </section>
     </div>
   );
+
   const getFileCount = (name: string): number => {
     switch (name) {
       case 'images':
@@ -205,45 +212,48 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
         return 0;
     }
   };
+
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name } = e.target;
     if (e.target.files) {
       const newFiles = Array.from(e.target.files);
-  
-      if (newFiles.length + getFileCount(name) <= 10) { // Validate the total files count for each type
+
+      if (newFiles.length + getFileCount(name) <= 10) {
         const fileTypeMapping: { [key: string]: React.Dispatch<React.SetStateAction<File[]>> } = {
           images: setImages,
           video: setVideos,
           document: setFiles,
         };
-  
-        const setFileHandler = fileTypeMapping[name];
-  
-        if (setFileHandler) {
-          setFileHandler((prevFiles) => [...prevFiles, ...newFiles]);
-        }
-  
-        try {
-          let uploadData;
 
-            uploadData = await uploadMultiFile(newFiles, API); // Upload multiple files
-  
+        const setFileHandler = fileTypeMapping[name];
+
+        try {
+          setIsUploadLoading(true);
+          const uploadData = await uploadMultiFile(newFiles, API);
+          setIsUploadLoading(false);
+
+          if (setFileHandler) {
+            setFileHandler((prevFiles) => [...prevFiles, ...newFiles]);
+          }
+
           setInitialValues((prevValues: any) => ({
             ...prevValues,
             mediaUrl: uploadData,
           }));
-          setFieldError("mediaUrl", undefined);
 
         } catch (error) {
+          setIsUploadLoading(false);
           console.error("Error uploading file:", error);
           toasterInfo("An error occurred while uploading the file. Please try again.");
         }
+
       } else {
+        setIsUploadLoading(false);
         toasterInfo("Unable to upload the file. You are allowed to upload only 10 files at a time.");
       }
     }
   };
-  
+
   const handleFileDelete = (index: number, type: 'images' | 'video' | 'document') => {
     if (type === 'images') {
       setImages((prevFiles) => prevFiles.filter((_, i) => i !== index));
@@ -253,9 +263,29 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
       setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
     }
   };
-  const renderFileUploadSection = (fieldName: any, icon: JSX.Element, label: string, acceptedFiles: string, fileType: string, filesList: any[]) => {
-  
-  return (
+
+  const renderFilePreview = (file: File) => {
+    const fileExtension = file.name.split('.').pop()?.toLowerCase();
+    
+    if (fileExtension === 'pdf') {
+      return <IoDocumentTextSharp  className="w-6 h-6 text-gray-600" />;
+    }
+    
+    if (fileExtension === 'xls' || fileExtension === 'xlsx') {
+      return <TbFileTypeXls  className="w-6 h-6 text-green-600" />;
+    }
+    
+    return <FiFile className="w-6 h-6 text-gray-600" />;
+  };
+  const renderFileUploadSection = (
+    fieldName: any, 
+    icon: JSX.Element, 
+    label: string, 
+    acceptedFiles: string, 
+    fileType: string, 
+    filesList: any[]
+  ) => {
+    return (
       <div className="mt-4">
         <label
           htmlFor={`file-upload-${fieldName}`}
@@ -278,17 +308,39 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
           accept={acceptedFiles}
           multiple
         />
-        {filesList.length > 0 && (
+        {isUploadLoading ? (
+          <MiniLoader />
+        ) : filesList.length > 0 ? (
           <div className="relative mt-4 grid grid-cols-4 gap-4">
             {filesList.map((file, index) => (
+              console.log(file,"========="),
               <div key={index} className="relative">
-                <Image
-                  src={URL.createObjectURL(file)}
-                  alt="uploaded"
-                  height={70}
-                  width={100}
-                  className="object-cover rounded-lg w-40 h-30"
-                />
+                {fileType === "image" ? (
+                  <Image
+                    src={URL.createObjectURL(file)}
+                    alt="uploaded"
+                    height={70}
+                    width={100}
+                    className="object-cover rounded-lg w-40 h-30"
+                  />
+                ) : null}
+  
+                {fileType === "video" ? (
+                  <video
+                    controls
+                    className="object-cover rounded-lg w-40 h-30"
+                  >
+                    <source src={URL.createObjectURL(file)} type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                ) : null}
+                 {fileType === "document" ? (
+                    <div className="flex items-center justify-center w-full h-30">
+                    {renderFilePreview(file)}
+                    <span className="ml-2 text-sm text-gray-600">{file.name}</span>
+                  </div>
+                ) : null}
+  
                 <RxCross2
                   onClick={() => handleFileDelete(index, fieldName)}
                   className="absolute top-0 right-0 text-red-500 cursor-pointer w-6 h-6 bg-white rounded-full z-10"
@@ -296,36 +348,46 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
               </div>
             ))}
           </div>
-        )}
-       
+        ) : null}
       </div>
     );
   };
+  
+console.log(initialValues.content,"initialValues.content")
+  const handleSubmit = async () => {
+    console.log("first")
+    if (!(value|| initialValues.mediaUrl && initialValues.mediaUrl.length > 0)) {
+      toasterInfo("Please add some content or upload media before posting.");
+      return;
+    }
 
-
-  const handleSubmit = async (values: any) => {
     try {
-      setIsSubmitting(true);
-      console.log('Submitted values:', values);
-      toasterSuccess("Post created successfully!");
+      const payload = {
+        userId: userId,
+        postType: type,
+        content: value,
+        mediaUrl: initialValues.mediaUrl,
+        sharedLink: initialValues.sharedLink || "",
+      };
+      const response = await API.post("posts/create", payload);
+      if (response.success) {
+        toasterSuccess("Post created successfully!", 2000,);
+        closePopup()
+
+      }
     } catch (error) {
       toasterInfo("There was an issue submitting your post.");
     } finally {
-      setIsSubmitting(false);
     }
   };
-  
-
 
   return (
     <>
       <Formik
-      initialValues={{ userId, postType: "", content: "", mediaUrl: [], sharedLink: "", type: "" }}
-      validationSchema={validationPostSchema}
-        onSubmit={handleSubmit}
-      >
-        {({ values, setFieldValue,errors ,setErrors,isSubmitting}: any) => (
-          console.log(errors),
+        initialValues={{ userId, postType: "", content: "", mediaUrl: [], sharedLink: "", type: "" }}
+        // validationSchema={validationPostSchema}
+        onSubmit={handleSubmit}      >
+        {({ errors, isSubmitting }: any) => (
           <Form>
             <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
               <div className="bg-white w-full max-w-[800px] rounded-[12px] shadow-lg">
@@ -356,9 +418,8 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
                       <div className="!z-1">
                         <QuillEditor value={value} setValue={setValue}
                         />
-{errors.mediaUrl && (
-            <div className="text-red-500 text-sm">{errors.mediaUrl}</div>
-          )}                      </div>
+
+                      </div>
 
                       <div className="my-2 relative">
                         <button onClick={handleEmojis}>
@@ -377,42 +438,39 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
                       </div>
                     </div>
                   </div>
-             
 
-<>
-      {((selectedName === "image" || type === "image") ||
-        (selectedName === "video" || type === "video") ||
-        (selectedName === "document" || type === "document")) && (
-        <div className="border p-2 text-center flex flex-col justify-center items-center bg-gray-100">
-          {selectedName === "image" || type === "image" ? renderFileUploadSection(
-            'images',
-            <CiCamera size={30} />,
-            'Add Photos',
-            'image/*',
-            'image',
-            images
-          ) : null}
+                  {((selectedName === "image" || type === "image") ||
+                    (selectedName === "video" || type === "video") ||
+                    (selectedName === "document" || type === "document")) && (
+                      <div className="border p-2 text-center flex flex-col justify-center items-center bg-gray-100">
+                        {selectedName === "image" || type === "image" ? renderFileUploadSection(
+                          'images',
+                          <CiCamera size={30} />,
+                          'Add Photos',
+                          'image/*',
+                          'image',
+                          images
+                        ) : null}
 
-          {selectedName === "video" || type === "video" ? renderFileUploadSection(
-            'video',
-            <CiVideoOn size={30} />,
-            'Add Videos',
-            'video/*',
-            'video',
-            videos
-          ) : null}
+                        {selectedName === "video" || type === "video" ? renderFileUploadSection(
+                          'video',
+                          <CiVideoOn size={30} />,
+                          'Add Videos',
+                          'video/*',
+                          'video',
+                          videos
+                        ) : null}
 
-          {selectedName === "document" || type === "document" ? renderFileUploadSection(
-            'document',
-            <IoDocumentAttachOutline size={30} />,
-            'Add Files',
-            '.pdf,.doc,.docx,.txt,.xlsx',
-            'document',
-            files
-          ) : null}
-        </div>
-      )}
-    </>
+                        {selectedName === "document" || type === "document" ? renderFileUploadSection(
+                          'document',
+                          <IoDocumentAttachOutline size={30} />,
+                          'Add Files',
+                          '.pdf,.doc,.docx,.txt,.xlsx',
+                          'document',
+                          files
+                        ) : null}
+                      </div>
+                    )}
                   {selectedName == "gif" && <GifSearch />}
                   <div className="flex justify-between">
                     <IconSection selectedName={selectedName} type={type} />
