@@ -427,3 +427,57 @@ label.customRadio input[type="radio"]:checked + span:before {
   max-height: 200px;
   border-radius: 10px;
 }
+section.stack section img, section.stack section video {
+  aspect-ratio: 1/.8;
+  object-fit: cover;
+  height: 100%;
+}
+section.stack section:first-child video, section.stack section:first-child img {
+  aspect-ratio: unset;
+}
+section.stack.stack2 section {
+  min-width: 50%;
+}
+section.stack.stack2 {
+  display: flex;
+  gap: 2px;
+}
+section.stack.stack3 {
+  display: flex;
+  gap: 2px;
+  flex-wrap: wrap;
+}
+
+section.stack.stack3 section:first-child {
+  min-width: 100%;
+}
+
+section.stack.stack3 section {
+  max-width: calc(50% - 1px);
+}
+section.stack.stack4 {
+  display: flex;
+  gap: 2px;
+  flex-wrap: wrap;
+}
+
+section.stack.stack4 section {
+  max-width: calc(50% - 1px);
+  position: relative;
+}
+
+section.stack.stack4 section span {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  color: white;
+  background: #0000008a;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  border-radius: 8px;
+}

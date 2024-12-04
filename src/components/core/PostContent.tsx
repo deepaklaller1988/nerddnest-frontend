@@ -245,52 +245,52 @@ export default function PostContent() {
                     ))}
                   </div>
                 )}
-             {data?.post_type === "document" && data?.media_url?.length > 0 && (
-  <div className="flex flex-wrap gap-4">
-   {data?.post_type === "document" && data?.media_url?.length > 0 && (
-  <div className="flex flex-wrap gap-4">
-    {data.media_url.map((url: any, index: any) => {
-      const fileExtension = url.split('.').pop()?.toLowerCase();
-      const fileName = url.split('/').pop();
-      
-      // Function to format the file size to KB or MB
-      const formatFileSize = (sizeInBytes: number) => {
-        const sizeInKB = sizeInBytes / 1024;
-        if (sizeInKB < 1024) {
-          return `${sizeInKB.toFixed(2)} KB`;
-        } else {
-          const sizeInMB = sizeInKB / 1024;
-          return `${sizeInMB.toFixed(2)} MB`;
-        }
-      };
+                {data?.post_type === "document" && data?.media_url?.length > 0 && (
+                  <div className="flex flex-wrap gap-4">
+                    {data?.post_type === "document" && data?.media_url?.length > 0 && (
+                      <div className="flex flex-wrap gap-4">
+                        {data.media_url.map((url: any, index: any) => {
+                          const fileExtension = url.split('.').pop()?.toLowerCase();
+                          const fileName = url.split('/').pop();
 
-      // Fetch file size (You may need to use an API or get the size from a server response)
-      const fileSize = 15360; // For demonstration (15 KB)
+                          // Function to format the file size to KB or MB
+                          const formatFileSize = (sizeInBytes: number) => {
+                            const sizeInKB = sizeInBytes / 1024;
+                            if (sizeInKB < 1024) {
+                              return `${sizeInKB.toFixed(2)} KB`;
+                            } else {
+                              const sizeInMB = sizeInKB / 1024;
+                              return `${sizeInMB.toFixed(2)} MB`;
+                            }
+                          };
 
-      return (
-        <div key={index} className="w-full flex items-center gap-2 border p-2 rounded-lg">
-          {/* File Icon */}
-          <span className="text-gray-500">
-            <IoDocumentTextOutline size={20} />
-          </span>
-          {/* File Name */}
-          <span className="text-sm text-gray-800">{fileName}</span>
-          {/* File Size */}
-          <span className="text-xs text-gray-500">{formatFileSize(fileSize)}</span>
-          {/* PDF Link */}
-          {fileExtension === 'pdf' && (
-            <a href={url} className="text-blue-500 underline ml-2" target="_blank" rel="noopener noreferrer">
-              View PDF
-            </a>
-          )}
-        </div>
-      );
-    })}
-  </div>
-)}
+                          // Fetch file size (You may need to use an API or get the size from a server response)
+                          const fileSize = 15360; // For demonstration (15 KB)
 
-  </div>
-)}
+                          return (
+                            <div key={index} className="w-full flex items-center gap-2 border p-2 rounded-lg">
+                              {/* File Icon */}
+                              <span className="text-gray-500">
+                                <IoDocumentTextOutline size={20} />
+                              </span>
+                              {/* File Name */}
+                              <span className="text-sm text-gray-800">{fileName}</span>
+                              {/* File Size */}
+                              <span className="text-xs text-gray-500">{formatFileSize(fileSize)}</span>
+                              {/* PDF Link */}
+                              {fileExtension === 'pdf' && (
+                                <a href={url} className="text-blue-500 underline ml-2" target="_blank" rel="noopener noreferrer">
+                                  View PDF
+                                </a>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+
+                  </div>
+                )}
 
 
                 <div className="w-full mt-2 flex items-center justify-between gap-2">
