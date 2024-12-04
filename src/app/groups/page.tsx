@@ -15,7 +15,7 @@ const options = [
   { value: 'Recently Active2', label: 'Recently Active2' }
 ]
 export default function Page() {
-  const route=useRouter()
+  const route = useRouter()
   return (
     // <CreateGroupForm/>
     <div className='w-full pt-8'>
@@ -39,7 +39,7 @@ export default function Page() {
             <section className='w-full flex gap-8'>
               <button className='flex items-center gap-2 text-[var(--highlight)] font-semibold hover:text-[var(--highlight)]'>All Groups <b className='bg-[var(--highlight)] text-white rounded-full px-2 font-semibold'>5</b></button>
               <button className='flex items-center gap-2 hover:text-[var(--highlight)]'>My Groups <b className='bg-[var(--highlight)] text-white rounded-full px-2 font-semibold'>5</b></button>
-              <button className='hover:text-[var(--highlight)]' onClick={()=>route.push("/groups/create-new-group")}>Create Group</button>
+              <button className='hover:text-[var(--highlight)]' onClick={() => route.push("/groups/create-new-group")}>Create Group</button>
             </section>
             <section className='flex gap-2'>
               <Select className='w-[180px]' options={options} />
@@ -52,7 +52,7 @@ export default function Page() {
           <div className='w-full border-t-2 bg-black/10 rounded-[12px]'>
             <section className='flex p-2 flex-wrap'>
               <div className='p-2 w-1/1 md:w-1/2 lg:w-1/3 xl:w-1/4'>
-              {/* add listSet class on above div if user click on list icon */}
+                {/* add listSet class on above div if user click on list icon */}
                 <div className='w-full rounded-lg overflow-hidden bg-white showLeaveGroupMain'>
                   <span className='w-full relative'>
                     <img className='w-full min-h-[100px] object-cover' src='banner1.jpg' alt="banner" />
@@ -77,7 +77,7 @@ export default function Page() {
                 </div>
               </div>
               <div className='p-2 w-1/1 md:w-1/2 lg:w-1/3 xl:w-1/4'>
-              {/* add listSet class on above div if user click on list icon */}
+                {/* add listSet class on above div if user click on list icon */}
                 <div className='w-full rounded-lg overflow-hidden bg-white showLeaveGroupMain'>
                   <span className='w-full relative'>
                     <img className='w-full min-h-[100px] object-cover' src='banner1.jpg' alt="banner" />
@@ -102,7 +102,7 @@ export default function Page() {
                 </div>
               </div>
               <div className='p-2 w-1/1 md:w-1/2 lg:w-1/3 xl:w-1/4'>
-              {/* add listSet class on above div if user click on list icon */}
+                {/* add listSet class on above div if user click on list icon */}
                 <div className='w-full rounded-lg overflow-hidden bg-white showLeaveGroupMain'>
                   <span className='w-full relative'>
                     <img className='w-full min-h-[100px] object-cover' src='banner1.jpg' alt="banner" />
@@ -127,7 +127,7 @@ export default function Page() {
                 </div>
               </div>
               <div className='p-2 w-1/1 md:w-1/2 lg:w-1/3 xl:w-1/4'>
-              {/* add listSet class on above div if user click on list icon */}
+                {/* add listSet class on above div if user click on list icon */}
                 <div className='w-full rounded-lg overflow-hidden bg-white showLeaveGroupMain'>
                   <span className='w-full relative'>
                     <img className='w-full min-h-[100px] object-cover' src='banner1.jpg' alt="banner" />
@@ -152,7 +152,7 @@ export default function Page() {
                 </div>
               </div>
               <div className='p-2 w-1/1 md:w-1/2 lg:w-1/3 xl:w-1/4'>
-              {/* add listSet class on above div if user click on list icon */}
+                {/* add listSet class on above div if user click on list icon */}
                 <div className='w-full rounded-lg overflow-hidden bg-white showLeaveGroupMain'>
                   <span className='w-full relative'>
                     <img className='w-full min-h-[100px] object-cover' src='banner1.jpg' alt="banner" />
@@ -177,7 +177,7 @@ export default function Page() {
                 </div>
               </div>
               <div className='p-2 w-1/1 md:w-1/2 lg:w-1/3 xl:w-1/4'>
-              {/* add listSet class on above div if user click on list icon */}
+                {/* add listSet class on above div if user click on list icon */}
                 <div className='w-full rounded-lg overflow-hidden bg-white showLeaveGroupMain'>
                   <span className='w-full relative'>
                     <img className='w-full min-h-[100px] object-cover' src='banner1.jpg' alt="banner" />
@@ -202,7 +202,7 @@ export default function Page() {
                 </div>
               </div>
               <div className='p-2 w-1/1 md:w-1/2 lg:w-1/3 xl:w-1/4'>
-              {/* add listSet class on above div if user click on list icon */}
+                {/* add listSet class on above div if user click on list icon */}
                 <div className='w-full rounded-lg overflow-hidden bg-white showLeaveGroupMain'>
                   <span className='w-full relative'>
                     <img className='w-full min-h-[100px] object-cover' src='banner1.jpg' alt="banner" />
@@ -227,7 +227,7 @@ export default function Page() {
                 </div>
               </div>
               <div className='p-2 w-1/1 md:w-1/2 lg:w-1/3 xl:w-1/4'>
-              {/* add listSet class on above div if user click on list icon */}
+                {/* add listSet class on above div if user click on list icon */}
                 <div className='w-full rounded-lg overflow-hidden bg-white showLeaveGroupMain'>
                   <span className='w-full relative'>
                     <img className='w-full min-h-[100px] object-cover' src='banner1.jpg' alt="banner" />

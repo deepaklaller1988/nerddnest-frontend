@@ -7,9 +7,9 @@
   --background: #ffffff;
   --foreground: #5a5a5a;
   --lightgrey: #9b9c9f;
-  --highlight: #3a7722;
-  --highlght-hover: #013b41;
-  --highlight-blue: #003068;
+  --highlight: #3e3976;
+  --highlght-hover: #7c71eb;
+  --highlight-blue: #3e3976;
 }
 .namellipse {
   white-space: nowrap;
@@ -51,7 +51,7 @@ body {
   max-width: 100vw;
   overflow-x: hidden;
   min-height: 100vh;
-  /* background-image: url(/gaming.jpeg); */
+  background-image: url(/bg.jpg);
   background-color: #f0f2f5;
   background-position: center;
   background-size: cover;
