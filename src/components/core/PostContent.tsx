@@ -183,7 +183,10 @@ export default function PostContent() {
               <Link href="" className="text-[var(--highlight-blue)]">
                 Read More
               </Link>
-              <img src="/newBack.jpg" className="block w-full rounded-lg" alt="" />
+              <section className="stack stack2">
+                <section><img src="/gaming.jpeg" className="block w-full rounded-lg" alt="" /></section>
+                <section><img src="/bg.jpg" className="block w-full rounded-lg" alt="" /></section>
+              </section>
               <div className="w-full mt-2 flex items-center justify-between gap-2">
                 <span className="inline-flex items-center gap-2 cursor-pointer">
                   <span className="bg-blue-500 p-1 rounded-full">
