@@ -174,3 +174,28 @@ export const AddStoryValidationSchema = Yup.object({
 //     .required('Write Something is required') // Basic required validation
 //     .test('not-empty', 'Write Something is required', (value:any) => value && value.trim() !== ''), // No whitespace-only values
 // });
+export const validationPostSchema = Yup.object({
+  content: Yup.string().test(
+    'content-required',
+    'Content is required if no media URL is selected.',
+    function (value) {
+      const { mediaUrl } = this.parent;
+      if (!mediaUrl && !value) {
+        return false;
+      }
+      return true;
+    }
+  ),
+  mediaUrl: Yup.array().nullable().test(
+    'media-url-required',
+    'Upload MediaUrl (Photo and Video) is required if no content is selected.',
+    function (value) {
+      const { content } = this.parent; // Access content
+      // If content is not provided, mediaUrl must have a value
+      if (!content && (!value || value.length === 0)) {
+        return false; // Validation fails if mediaUrl is empty when content is not provided
+      }
+      return true; // Validation passes if mediaUrl is provided or content exists
+    }
+  ),
+});

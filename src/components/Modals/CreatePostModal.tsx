@@ -18,7 +18,7 @@ import Image from "next/image";
 import { CiCamera } from "react-icons/ci";
 import { CiVideoOn } from "react-icons/ci";
 import GifSearch from "../core/GifSearch";
-import { Field, Form, Formik } from "formik";
+import { ErrorMessage, Field, Form, Formik, useFormik } from "formik";
 import { toasterInfo, toasterSuccess } from "../core/Toaster";
 import { RxCross2 } from "react-icons/rx";
 import { FaCamera } from "react-icons/fa";
@@ -32,6 +32,8 @@ import { useApi } from "@/hooks/useAPI";
 import { useRouter } from "next/navigation";
 import { getErrorMessage } from "@/utils/errorHandler";
 import { useSelector } from "react-redux";
+import { validationPostSchema } from "@/utils/validationSchemas";
+import { useFormikContext } from 'formik';
 
 interface CreatePostPopupProps {
   setIsPopupOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -56,7 +58,6 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
   );
   const [selectedName, setSelectedName] = useState("");
   const [isLoading, setLoading] = useState(false);
-  const [errors, setErrors] = useState<any>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSchedulePopupOpen, setSchedulePopupOpen] = useState(false);
   const [emoji, setEmoji] = useState(false);
@@ -72,7 +73,13 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
     sharedLink: "",
     type: ""
   });
-
+  const { values, setFieldValue, errors, setFieldError, setErrors } = useFormik({
+    initialValues: { mediaUrl: [] },
+    validationSchema: validationPostSchema,
+    onSubmit: (values) => {
+      // Your submit logic
+    }
+  });
   const iconMapping = [
     {
       name: "image",
@@ -175,7 +182,6 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
       setPopupType(name)
     }
   };
-console.log(initialValues,"initialValues")
   const IconSection = ({ selectedName, type }: any) => (
     <div>
       <section className="border-t border-gray-500/10 p-4 flex gap-4">
@@ -187,46 +193,57 @@ console.log(initialValues,"initialValues")
       </section>
     </div>
   );
+  const getFileCount = (name: string): number => {
+    switch (name) {
+      case 'images':
+        return images.length;
+      case 'video':
+        return videos.length;
+      case 'document':
+        return files.length;
+      default:
+        return 0;
+    }
+  };
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name } = e.target
+    const { name } = e.target;
     if (e.target.files) {
       const newFiles = Array.from(e.target.files);
-
-      if (images.length + newFiles.length <= 10) {
-        const fileTypeMapping: any = {
+  
+      if (newFiles.length + getFileCount(name) <= 10) { // Validate the total files count for each type
+        const fileTypeMapping: { [key: string]: React.Dispatch<React.SetStateAction<File[]>> } = {
           images: setImages,
           video: setVideos,
-          document: setFiles
+          document: setFiles,
         };
-
+  
         const setFileHandler = fileTypeMapping[name];
-
+  
         if (setFileHandler) {
-          setFileHandler((prevFiles: any) => [...prevFiles, ...newFiles]);
+          setFileHandler((prevFiles) => [...prevFiles, ...newFiles]);
         }
-
+  
         try {
           let uploadData;
 
-          if (newFiles.length === 1) {
-            uploadData = await uploadFile(newFiles[0], API);
-          } else {
-            uploadData = await uploadMultiFile(newFiles, API);
-          }
-
+            uploadData = await uploadMultiFile(newFiles, API); // Upload multiple files
+  
           setInitialValues((prevValues: any) => ({
             ...prevValues,
             mediaUrl: uploadData,
           }));
+          setFieldError("mediaUrl", undefined);
+
         } catch (error) {
           console.error("Error uploading file:", error);
+          toasterInfo("An error occurred while uploading the file. Please try again.");
         }
-
       } else {
-        toasterInfo("Unable to upload the file. You are allowed to upload only 10 photos at a time.");
+        toasterInfo("Unable to upload the file. You are allowed to upload only 10 files at a time.");
       }
     }
   };
+  
   const handleFileDelete = (index: number, type: 'images' | 'video' | 'document') => {
     if (type === 'images') {
       setImages((prevFiles) => prevFiles.filter((_, i) => i !== index));
@@ -236,48 +253,79 @@ console.log(initialValues,"initialValues")
       setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
     }
   };
-  const validateFields = () => {
-    const newErrors: any = {};
-
-    if (!value || value.trim() === "") {
-      newErrors.content = "Content is required.";
-    }
-    setErrors(newErrors);
-
-    return Object.keys(newErrors).length === 0;
+  const renderFileUploadSection = (fieldName: any, icon: JSX.Element, label: string, acceptedFiles: string, fileType: string, filesList: any[]) => {
+  
+  return (
+      <div className="mt-4">
+        <label
+          htmlFor={`file-upload-${fieldName}`}
+          className="cursor-pointer text-[var(--highlight-blue)] mt-4 block text-center transition-all"
+        >
+          <div className="flex flex-col items-center justify-center p-2">
+            <div className="bg-gray-200 rounded-full p-4">
+              {icon}
+            </div>
+            <span className="text-lg text-[var(--highlight)]">{label}</span>
+            <span className="text-md mt-1 text-[var(--highlight)]">or Drag and Drop File</span>
+          </div>
+        </label>
+        <Field
+          type="file"
+          name={fieldName}
+          onChange={handleFileChange}
+          id={`file-upload-${fieldName}`}
+          className="hidden"
+          accept={acceptedFiles}
+          multiple
+        />
+        {filesList.length > 0 && (
+          <div className="relative mt-4 grid grid-cols-4 gap-4">
+            {filesList.map((file, index) => (
+              <div key={index} className="relative">
+                <Image
+                  src={URL.createObjectURL(file)}
+                  alt="uploaded"
+                  height={70}
+                  width={100}
+                  className="object-cover rounded-lg w-40 h-30"
+                />
+                <RxCross2
+                  onClick={() => handleFileDelete(index, fieldName)}
+                  className="absolute top-0 right-0 text-red-500 cursor-pointer w-6 h-6 bg-white rounded-full z-10"
+                />
+              </div>
+            ))}
+          </div>
+        )}
+       
+      </div>
+    );
   };
-  const handleSubmit = async (values: typeof initialValues) => {
-    setIsSubmitting(true);
-    if (validateFields()) {
 
-      try {
-        const { success, data, error } = await API.post("posts/create", initialValues);
-        if (success) {
-          toasterSuccess("Post created successfully!", 1000, "id");
-          router.push("/home");
-        } else {
-          toasterInfo(getErrorMessage(error.code));
-        }
-      } catch (error) {
-        toasterInfo("Error creating post. Please try again.");
-      } finally {
-        setLoading(false);
-      }
+
+  const handleSubmit = async (values: any) => {
+    try {
+      setIsSubmitting(true);
+      console.log('Submitted values:', values);
+      toasterSuccess("Post created successfully!");
+    } catch (error) {
+      toasterInfo("There was an issue submitting your post.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
+  
+
+
   return (
     <>
       <Formik
-        initialValues={initialValues}
-        // validationSchema={validationPostSchema}
-        onSubmit={(values, { setSubmitting }) => {
-          setSubmitting(true);
-          handleSubmit(values);
-          setSubmitting(false);
-        }}
+      initialValues={{ userId, postType: "", content: "", mediaUrl: [], sharedLink: "", type: "" }}
+      validationSchema={validationPostSchema}
+        onSubmit={handleSubmit}
       >
-        {({ isSubmitting }: any) => (
-
+        {({ values, setFieldValue,errors ,setErrors,isSubmitting}: any) => (
+          console.log(errors),
           <Form>
             <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
               <div className="bg-white w-full max-w-[800px] rounded-[12px] shadow-lg">
@@ -308,11 +356,10 @@ console.log(initialValues,"initialValues")
                       <div className="!z-1">
                         <QuillEditor value={value} setValue={setValue}
                         />
+{errors.mediaUrl && (
+            <div className="text-red-500 text-sm">{errors.mediaUrl}</div>
+          )}                      </div>
 
-                      </div>
-                      {errors.content && (
-                        <div className="text-red-500 text-sm mt-2">{errors.content}</div>
-                      )}
                       <div className="my-2 relative">
                         <button onClick={handleEmojis}>
                           <BsEmojiSmile className="w-6 h-6" />
@@ -330,183 +377,42 @@ console.log(initialValues,"initialValues")
                       </div>
                     </div>
                   </div>
-                  {((selectedName == "image" || type == "image") ||
-                    (selectedName == "video" || type == "video") ||
-                    (selectedName == "document" || type == "document")) && (
-                      <>
-                        <div className="border p-2 text-center flex flex-col justify-center items-center bg-gray-100">
-                          {(selectedName === "image" || type == "image") && (
-                            <div className="mt-4">
-                              <div className="">
-                                <div className="">
-                                  <label
-                                    htmlFor="file-upload"
-                                    className="cursor-pointer text-[var(--highlight-blue)]  mt-4 block text-center transition-all"
-                                  >
-                                    <div className="flex flex-col items-center justify-center p-2">
-                                      <div className="bg-gray-200 rounded-full p-4">
-                                        <CiCamera size={30} />
-                                      </div>
-                                      <span className="text-lg text-[var(--highlight)]">Add Photos</span>
-                                      <span className="text-md mt-1 text-[var(--highlight)]">
-                                        or Drag and Drop File
-                                      </span>
-                                    </div>
-                                  </label>
-                                </div>
-                              </div>
+             
 
-                              <Field
-                                type="file"
-                                name="images"
-                                onChange={handleFileChange}
-                                ref={ImageInputRef}
-                                id="file-upload"
-                                className="hidden"
-                                multiple
-                              />
-                              {images.length > 0 && (
-                                <div className="relative mt-4 grid grid-cols-4 gap-4">
-                                  {images.map((file, index) => (
-                                    <div key={index} className="relative">
-                                      <Image
-                                        src={URL.createObjectURL(file)}
-                                        alt="uploaded"
-                                        height={70}
-                                        width={100}
-                                        className="object-cover rounded-lg w-40 h-30"
-                                      />
-                                      <RxCross2
-                                        onClick={() => handleFileDelete(index, "images")}
-                                        className="absolute top-0 right-0 text-red-500 cursor-pointer w-6 h-6 bg-white rounded-full z-10"  // Adjust z-index here
-                                      />
-                                    </div>
-                                  ))}
-                                </div>
-                              )}
+<>
+      {((selectedName === "image" || type === "image") ||
+        (selectedName === "video" || type === "video") ||
+        (selectedName === "document" || type === "document")) && (
+        <div className="border p-2 text-center flex flex-col justify-center items-center bg-gray-100">
+          {selectedName === "image" || type === "image" ? renderFileUploadSection(
+            'images',
+            <CiCamera size={30} />,
+            'Add Photos',
+            'image/*',
+            'image',
+            images
+          ) : null}
 
-                            </div>
-                          )}
+          {selectedName === "video" || type === "video" ? renderFileUploadSection(
+            'video',
+            <CiVideoOn size={30} />,
+            'Add Videos',
+            'video/*',
+            'video',
+            videos
+          ) : null}
 
-                          {(selectedName === "video" || type == "video") && (
-                            <div className="mt-4">
-                              <div className="">
-                                <div className="">
-                                  <label
-                                    htmlFor="file-upload1"
-                                    className="cursor-pointer text-[var(--highlight-blue)]  mt-4 block text-center transition-all"
-                                  >
-                                    <div className="flex flex-col items-center justify-center p-2">
-                                      <div className="bg-gray-200 rounded-full p-4">
-                                        <CiVideoOn size={30} />
-                                      </div>
-                                      <span className="text-lg text-[var(--highlight)]">Add Videos</span>
-                                      <span className="text-md mt-1 text-[var(--highlight)]">
-                                        or Drag and Drop File
-                                      </span>
-                                    </div>
-                                  </label>
-                                </div>
-                              </div>
-                              <Field
-                                type="file"
-                                name="video"
-                                onChange={handleFileChange}
-                                ref={VideoInputRef}
-                                id="file-upload1"
-                                className="hidden"
-                                accept="video/*"
-                                multiple
-                              />
-                              {videos.length > 0 && (
-                                <div className="relative mt-4 grid grid-cols-4 gap-4">
-                                  {videos.map((file, index) => (
-                                    <div key={index} className="relative">
-                                      <Image
-                                        src={URL.createObjectURL(file)}
-                                        alt="uploaded"
-                                        height={70}
-                                        width={100}
-                                        className="object-cover rounded-lg w-40 h-30"
-                                      />
-                                      <RxCross2
-                                        onClick={() => handleFileDelete(index, "video")}
-                                        className="absolute top-0 right-0 text-red-500 cursor-pointer w-6 h-6 bg-white rounded-full z-10"  // Adjust z-index here
-                                      />
-                                    </div>
-                                  ))}
-                                </div>
-                              )}
-                              {/* <ErrorMessage
-                                name="video"
-                                component="div"
-                                className="text-red-500 text-sm mt-2"
-                              /> */}
-                            </div>
-                          )}
-
-                          {(selectedName === "document" || type == "document") && (
-                            <div className="mt-4">
-                              <div className="">
-                                <div className="">
-                                  <label
-                                    htmlFor="file-upload3"
-                                    className="cursor-pointer text-[var(--highlight-blue)]  mt-4 block text-center transition-all"
-                                  >
-                                    <div className="flex flex-col items-center justify-center p-2">
-                                      <div className="bg-gray-200 rounded-full p-4">
-                                        <IoDocumentAttachOutline size={30} />
-                                      </div>
-                                      <span className="text-lg text-[var(--highlight)]">Add Files</span>
-                                      <span className="text-md mt-1 text-[var(--highlight)]">
-                                        or Drag and Drop File
-                                      </span>
-                                    </div>
-                                  </label>
-                                </div>
-                              </div>
-                              <Field
-                                type="file"
-                                name="document"
-                                onChange={handleFileChange}
-                                accept=".pdf,.doc,.docx,.txt,.xlsx"
-                                ref={ImageInputRef}
-                                id="file-upload3"
-                                className="hidden"
-                                multiple
-                              />
-                              {files.length > 0 && (
-                                <div className="relative mt-4 grid grid-cols-4 gap-4">
-                                  {files.map((file, index) => (
-                                    <div key={index} className="relative">
-                                      <Image
-                                        src={URL.createObjectURL(file)}
-                                        alt="uploaded"
-                                        height={70}
-                                        width={100}
-                                        className="object-cover rounded-lg w-40 h-30"
-                                      />
-                                      <RxCross2
-                                        onClick={() => handleFileDelete(index, "document")}
-                                        className="absolute top-0 right-0 text-red-500 cursor-pointer w-6 h-6 bg-white rounded-full z-10"  // Adjust z-index here
-                                      />
-                                    </div>
-                                  ))}
-                                </div>
-                              )}
-                              {/* <ErrorMessage
-                                name="document"
-                                component="div"
-                                className="text-red-500 text-sm mt-2"
-                              /> */}
-                            </div>
-                          )}
-
-                        </div>
-                      </>
-                    )}
-
-
+          {selectedName === "document" || type === "document" ? renderFileUploadSection(
+            'document',
+            <IoDocumentAttachOutline size={30} />,
+            'Add Files',
+            '.pdf,.doc,.docx,.txt,.xlsx',
+            'document',
+            files
+          ) : null}
+        </div>
+      )}
+    </>
                   {selectedName == "gif" && <GifSearch />}
                   <div className="flex justify-between">
                     <IconSection selectedName={selectedName} type={type} />
