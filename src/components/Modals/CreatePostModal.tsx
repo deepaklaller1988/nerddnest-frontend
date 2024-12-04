@@ -1,39 +1,41 @@
 import React, { useEffect, useRef, useState } from "react";
-import { MdOutlineLinkedCamera } from "react-icons/md";
-import { HiOutlineVideoCamera } from "react-icons/hi2";
-import { IoDocumentAttachOutline, IoDocumentTextSharp } from "react-icons/io5";
+
+import { CiCamera } from "react-icons/ci";
+import { FiFile } from "react-icons/fi";
+import { CiVideoOn } from "react-icons/ci";
+import { RxCross2 } from "react-icons/rx";
+import { FaCamera } from "react-icons/fa";
+import { FaVideo } from "react-icons/fa";
+import { GoGlobe } from "react-icons/go";
+import { PiGifFill } from "react-icons/pi";
+import { BsEmojiSmile } from "react-icons/bs";
+import { PiClockFill } from "react-icons/pi";
+import { FaCaretDown } from "react-icons/fa6";
+import { MdInsertChart } from "react-icons/md";
+import { TbFileTypeXls } from "react-icons/tb";
 import { HiOutlineGif } from "react-icons/hi2";
 import { BiBarChartSquare } from "react-icons/bi";
 import { TiArrowSortedDown } from "react-icons/ti";
-import { BsEmojiSmile } from "react-icons/bs";
-import { GoGlobe } from "react-icons/go";
-import PopupHeader from "../Header/PopupHeader";
-import { PiClockFill } from "react-icons/pi";
-import { FaCaretDown } from "react-icons/fa6";
-import { CiCamera } from "react-icons/ci";
-import { CiVideoOn } from "react-icons/ci";
-import { Field, Form, Formik } from "formik";
-import { toasterInfo, toasterSuccess } from "../core/Toaster";
-import { RxCross2 } from "react-icons/rx";
-import { FaCamera, FaFileExcel } from "react-icons/fa";
-import { FaVideo } from "react-icons/fa";
-import { PiGifFill } from "react-icons/pi";
-import { MdInsertChart } from "react-icons/md";
-
 import { IoDocumentAttach } from "react-icons/io5";
 import { uploadMultiFile } from "../core/UploadFile";
-import { useApi } from "@/hooks/useAPI";
-import { useSelector } from "react-redux";
+import { MdOutlineLinkedCamera } from "react-icons/md";
+import { HiOutlineVideoCamera } from "react-icons/hi2";
+import { IoDocumentAttachOutline, IoDocumentTextSharp } from "react-icons/io5";
 
 import Image from "next/image";
+import dynamic from "next/dynamic";
+import { useApi } from "@/hooks/useAPI";
+import GifSearch from "../core/GifSearch";
+import { useSelector } from "react-redux";
+import { Field, Form, Formik } from "formik";
+import QuillEditor from "../core/QuillEditor";
+import MiniLoader from "../Loaders/Miniloader";
+
+import PopupHeader from "../Header/PopupHeader";
 import VisibilityPopup from "./CreatePostVisibilty";
 import SchedulePostPopup from "./SchedulePostModal";
-import QuillEditor from "../core/QuillEditor";
-import EmojiPicker from "emoji-picker-react";
-import GifSearch from "../core/GifSearch";
-import MiniLoader from "../Loaders/Miniloader";
-import { FiFile } from "react-icons/fi";
-import { TbFileTypeXls } from "react-icons/tb";
+import { toasterInfo, toasterSuccess } from "../core/Toaster";
+const EmojiPicker = dynamic(() => import('emoji-picker-react'), { ssr: false });
 
 interface CreatePostPopupProps {
   setIsPopupOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -58,11 +60,10 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
   const [isSchedulePopupOpen, setSchedulePopupOpen] = useState(false);
   const [isUploadLoading, setIsUploadLoading] = useState(false);
 
-
   const [images, setImages] = useState<File[]>([]);
   const [videos, setVideos] = useState<File[]>([]);
   const [files, setFiles] = useState<File[]>([]);
-console.log(images,videos,"======images")
+
   const [initialValues, setInitialValues] = useState<any>({
     userId: userId,
     postType: "",
@@ -97,18 +98,18 @@ console.log(images,videos,"======images")
       activeIcon: <FaCamera className="w-6 h-6 fill-green-600" />,
       inactiveIcon: (
         <MdOutlineLinkedCamera
-        className={`w-6 h-6 fill-green-600 ${videos.length ? 'pointer-events-none opacity-50' : ''}`}
+          className={`w-6 h-6 fill-green-600 ${videos.length ? 'pointer-events-none opacity-50' : ''}`}
           onClick={(e) => handleOnClick(e, "image")}
         />
       ),
-     
+
     },
     {
       name: "video",
       activeIcon: <FaVideo className="w-6 h-6 fill-yellow-600" />,
       inactiveIcon: (
         <HiOutlineVideoCamera
-        className={`w-6 h-6 stroke-yellow-500 ${images.length ? 'pointer-events-none opacity-50' : ''}`}
+          className={`w-6 h-6 stroke-yellow-500 ${images.length ? 'pointer-events-none opacity-50' : ''}`}
           onClick={(e) => handleOnClick(e, "video")}
         />
       ),
@@ -118,7 +119,7 @@ console.log(images,videos,"======images")
       activeIcon: <IoDocumentAttach className="w-6 h-6 fill-rose-600" />,
       inactiveIcon: (
         <IoDocumentAttachOutline
-        className={`w-6 h-6 stroke-rose-500 ${(images.length || videos.length)? 'pointer-events-none opacity-50' : ''}`}
+          className={`w-6 h-6 stroke-rose-500 ${(images.length || videos.length) ? 'pointer-events-none opacity-50' : ''}`}
           onClick={(e) => handleOnClick(e, "document")}
         />
       ),
@@ -170,19 +171,19 @@ console.log(images,videos,"======images")
         setInitialValues((prevValues: any) => ({
           ...prevValues,
           content: currentText + emoji.emoji,
-        }));      }
+        }));
+      }
     }
   };
 
   const handleOnClick = (e: React.MouseEvent<SVGElement, MouseEvent>, name: any) => {
-
     if (name === "image" && !images) {
       setSelectedName("image");
       setPopupType("image");
     } else if (name === "video" && !videos) {
       setSelectedName("video");
       setPopupType("video");
-    }else{
+    } else {
       setSelectedName(name);
       setPopupType(name)
     }
@@ -249,7 +250,7 @@ console.log(images,videos,"======images")
 
       } else {
         setIsUploadLoading(false);
-        toasterInfo("Unable to upload the file. You are allowed to upload only 10 files at a time.");
+        toasterInfo("Unable to upload the file. You are allowed to upload only 10 files at a time.", 1000, "id");
       }
     }
   };
@@ -266,23 +267,23 @@ console.log(images,videos,"======images")
 
   const renderFilePreview = (file: File) => {
     const fileExtension = file.name.split('.').pop()?.toLowerCase();
-    
+
     if (fileExtension === 'pdf') {
-      return <IoDocumentTextSharp  className="w-6 h-6 text-gray-600" />;
+      return <IoDocumentTextSharp className="w-6 h-6 text-gray-600" />;
     }
-    
+
     if (fileExtension === 'xls' || fileExtension === 'xlsx') {
-      return <TbFileTypeXls  className="w-6 h-6 text-green-600" />;
+      return <TbFileTypeXls className="w-6 h-6 text-green-600" />;
     }
-    
+
     return <FiFile className="w-6 h-6 text-gray-600" />;
   };
   const renderFileUploadSection = (
-    fieldName: any, 
-    icon: JSX.Element, 
-    label: string, 
-    acceptedFiles: string, 
-    fileType: string, 
+    fieldName: any,
+    icon: JSX.Element,
+    label: string,
+    acceptedFiles: string,
+    fileType: string,
     filesList: any[]
   ) => {
     return (
@@ -313,7 +314,6 @@ console.log(images,videos,"======images")
         ) : filesList.length > 0 ? (
           <div className="relative mt-4 grid grid-cols-4 gap-4">
             {filesList.map((file, index) => (
-              console.log(file,"========="),
               <div key={index} className="relative">
                 {fileType === "image" ? (
                   <Image
@@ -324,7 +324,7 @@ console.log(images,videos,"======images")
                     className="object-cover rounded-lg w-40 h-30"
                   />
                 ) : null}
-  
+
                 {fileType === "video" ? (
                   <video
                     controls
@@ -334,13 +334,13 @@ console.log(images,videos,"======images")
                     Your browser does not support the video tag.
                   </video>
                 ) : null}
-                 {fileType === "document" ? (
-                    <div className="flex items-center justify-center w-full h-30">
+                {fileType === "document" ? (
+                  <div className="flex items-center justify-center w-full h-30">
                     {renderFilePreview(file)}
                     <span className="ml-2 text-sm text-gray-600">{file.name}</span>
                   </div>
                 ) : null}
-  
+
                 <RxCross2
                   onClick={() => handleFileDelete(index, fieldName)}
                   className="absolute top-0 right-0 text-red-500 cursor-pointer w-6 h-6 bg-white rounded-full z-10"
@@ -352,12 +352,10 @@ console.log(images,videos,"======images")
       </div>
     );
   };
-  
-console.log(initialValues.content,"initialValues.content")
-  const handleSubmit = async () => {
-    console.log("first")
-    if (!(value|| initialValues.mediaUrl && initialValues.mediaUrl.length > 0)) {
-      toasterInfo("Please add some content or upload media before posting.");
+
+  const handleSubmit = async (e: any) => {
+    if (!(value || initialValues.mediaUrl && initialValues.mediaUrl.length > 0)) {
+      toasterInfo("Please add some content or upload media before posting.", 3000, "id");
       return;
     }
 
@@ -385,8 +383,8 @@ console.log(initialValues.content,"initialValues.content")
     <>
       <Formik
         initialValues={{ userId, postType: "", content: "", mediaUrl: [], sharedLink: "", type: "" }}
-        // validationSchema={validationPostSchema}
-        onSubmit={handleSubmit}      >
+        onSubmit={(e: any) => handleSubmit(e)}
+      >
         {({ errors, isSubmitting }: any) => (
           <Form>
             <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
@@ -418,16 +416,16 @@ console.log(initialValues.content,"initialValues.content")
                       <div className="!z-1">
                         <QuillEditor value={value} setValue={setValue}
                         />
-
                       </div>
 
                       <div className="my-2 relative">
-                        <button onClick={handleEmojis}>
+                        <button type="button" onClick={handleEmojis}>
                           <BsEmojiSmile className="w-6 h-6" />
                         </button>
                         {emoji && (
                           <div ref={emojiPickerRef}>
                             <EmojiPicker
+                              lazyLoadEmojis={true}
                               className="max-w-[300px] max-h-[350px] !absolute right-0 top-[50%] translate-y-[-50%]"
                               onEmojiClick={handleEmojiSelect}
                               searchDisabled

@@ -30,6 +30,7 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ value, setValue }) => {
       value={value}
       onChange={handleEditorChange}
       modules={modules}
+      
     />
   );
 };
