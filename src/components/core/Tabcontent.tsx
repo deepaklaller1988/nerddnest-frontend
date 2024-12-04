@@ -21,11 +21,11 @@ const TabContent = <T extends string, Item>({
   };
 
   return (
-    <div className="min-w-[280px] max-w-[280px] rounded-[12px] bg-white p-4">
-      <h2 className="text-[var(--highlight)] font-semibold pb-4">{title}</h2>
+    <div className="min-w-[280px] max-w-[280px] rounded-[12px] bg-[var(--sections)] border border-white/5 p-4">
+      <h2 className="text-[var(--highlight)] font-semibold pb-4 text-white">{title}</h2>
       
       <div className="w-full">
-        <section className="border-b border-gray-500/50 flex gap-4 mb-4">
+        <section className="border-b border-[var(--foreground)] flex gap-4 mb-4">
           {tabs.map((tab) => (
             <button
               key={tab.tabName}
@@ -53,7 +53,7 @@ const TabContent = <T extends string, Item>({
         {title === "GROUPS" && (
           <ViewButton
             onClick={handleClick}
-            className="sticky bottom-0 bg-white font-semibold w-full p-4 text-center flex gap-2 items-center justify-center text-[var(--highlight-blue)] hover:text-[--highlight] buttonSet"
+            className="sticky bottom-0 font-semibold w-full p-4  pb-0 text-center flex gap-2 items-center justify-center text-[var(--highlight-blue)] hover:text-[--highlight] buttonSet"
             name={"View All"}
           />
         )}

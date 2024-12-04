@@ -59,7 +59,7 @@ export default function FeedSearchBar() {
     <div className="relative flex items-center justify-between w-[250px]">
       <FiSearch className="text-[18px] absolute left-[15px] text-[var(--lightgrey)]" />
       <input
-        className="bg-white rounded-full p-[10px] pl-12 w-full"
+        className="bg-[var(--bgh)] rounded-full p-[10px] pl-12 w-full placeholder:text-[var(--foreground)]"
         type="text"
         placeholder="Search feed..."
         value={searchTerm}

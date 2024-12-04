@@ -5,9 +5,9 @@ import PostContent from "./PostContent";
 export default function Feeds() {
   return (
     <div className="mt-4">
-      <div className="-mb-3 w-full rounded-[12px] bg-gray-200 p-4 py-3 pb-6 flex items-center gap-4 justify-between">
+      <div className="-mb-3 w-full rounded-[12px] bg-[var(--sections)] border border-white/5 p-4 py-3 pb-6 flex items-center gap-4 justify-between">
         <section className="flex gap-10 cursor-pointer">
-          <span className=" text-[var(--highlight)] border-b-2 border-[var(--highlight)]">
+          <span className=" text-white border-b-2 border-white">
             All Updates
           </span>
           <span>Likes</span>

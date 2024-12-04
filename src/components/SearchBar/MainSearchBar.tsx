@@ -50,7 +50,7 @@ export default function MainSearchBar() {
       <div className="relative flex items-center justify-between">
         <FiSearch className="text-[18px] absolute left-[15px] text-[var(--lightgrey)]" />
         <input
-          className="bg-white rounded-full p-[10px] pl-12 w-full"
+          className="bg-white/10 placeholder:text-[var(--foreground)] rounded-full p-[10px] pl-12 w-full"
           type="text"
           placeholder="Search..."
           value={searchTerm}

@@ -31,7 +31,7 @@ export default function PostFeed() {
         </div>
       )}
 
-      <div className="bg-white rounded-[12px] mt-3">
+      <div className="bg-[var(--sections)] border border-white/5 rounded-[12px] mt-3">
         <div className="w-full">
           <section className="flex gap-4 cursor-pointer p-4">
             <span className="min-w-12 min-h-12 max-w-12 max-h-12 rounded-full overflow-hidden block">
@@ -46,7 +46,7 @@ export default function PostFeed() {
             </span>
             <div
               onClick={handleClick}
-              className="w-full bg-gray-200 p-2 px-5 rounded-full flex items-center text-gray-500/70"
+              className="w-full bg-[var(--bgh)] p-2 px-5 rounded-full flex items-center text-[var(--foreground)]"
             >
               Share whats on your mind, Alvin Marcos...
             </div>
@@ -65,7 +65,7 @@ export default function PostFeed() {
               <HiOutlineGif className="w-6 h-6 stroke-purple-700" />
             </span>
             <span className="cursor-pointer">
-              <BiBarChartSquare className="w-6 h-6 fill-black" />
+              <BiBarChartSquare className="w-6 h-6 fill-white" />
             </span>
           </section>
         </div>

@@ -8,30 +8,30 @@ import { useRouter } from "next/navigation";
 export default function AddStory() {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [stories, setStories] = useState<any>([
-    // {
-    //   id: 1,
-    //   title: "Story 1",
-    //   image: "/story1.jpg",
-    //   logo: "/logo1.jpg",
-    // },
-    // {
-    //   id: 2,
-    //   title: "Story 2",
-    //   image: "/story2.jpg",
-    //   logo: "/logo2.jpg",
-    // },
-    // {
-    //   id: 3,
-    //   title: "Story 3",
-    //   image: "/story3.jpg",
-    //   logo: "/logo3.jpg",
-    // },
-    // {
-    //   id: 4,
-    //   title: "Story 4",
-    //   image: "/story4.jpg",
-    //   logo: "/logo4.jpg",
-    // },
+    {
+      id: 1,
+      title: "Story 1",
+      image: "/bg1.jpg",
+      logo: "/dp.jpg",
+    },
+    {
+      id: 2,
+      title: "Story 2",
+      image: "/bg.jpg",
+      logo: "/dp.jpg",
+    },
+    {
+      id: 3,
+      title: "Story 3",
+      image: "/bg1.jpg",
+      logo: "/dp.jpg",
+    },
+    {
+      id: 4,
+      title: "Story 4",
+      image: "/dp.jpg",
+      logo: "/dp.jpg",
+    },
   ]);
   
   const router = useRouter();

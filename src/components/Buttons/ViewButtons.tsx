@@ -10,7 +10,7 @@ const ViewButton= ({ name, onClick, className }:ViewButtonProps) => {
       className={className}
     >
       {name}
-      <FiArrowRight />
+      <FiArrowRight/>
     </button>
   );
 };

@@ -7,7 +7,7 @@ import HeaderButtons from "../Buttons/HeaderButtons";
 
 export default function Header() {
   return (
-    <div className="header w-full bg-[var(--highlght-hover)] sticky top-0 z-10">
+    <div className="header w-full bg-[var(--bgh)] sticky top-0 z-10 headerGradient">
       <section className="w-full max-w-[1230px] py-3 px-4 m-auto">
         <div className="flex w-full justify-between items-center">
           <section className="flex gap-4 items-center">
