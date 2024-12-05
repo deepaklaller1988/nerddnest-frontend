@@ -14,10 +14,10 @@ const GroupSearch: React.FC<GroupSearchProps> = ({
   onClearSearch,
 }) => {
   return (
-    <div className="relative flex items-center justify-between w-full px-2 border rounded-full bg-gray-100 text-[var(--lightgrey)]">
+    <div className="relative flex items-center justify-between w-full rounded-full">
       <FiSearch className="text-[18px] absolute left-[15px]" />
       <input
-        className="bg-white rounded-full p-[10px] pl-12 w-full focus:outline-none"
+        className="bg-white/10 placeholder:text-[var(--foreground)] rounded-full p-[10px] pl-12 w-full"
         type="text"
         placeholder="Search groups..."
         value={searchTerm}

@@ -29,8 +29,8 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ value, setValue }) => {
       theme="snow"
       value={value}
       onChange={handleEditorChange}
-      modules={modules}
-      
+      modules={modules} 
+      className='postEditorText'    
     />
   );
 };

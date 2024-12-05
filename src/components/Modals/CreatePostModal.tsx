@@ -139,7 +139,7 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
       activeIcon: <MdInsertChart className="w-6 h-6 fill-black-600" />,
       inactiveIcon: (
         <BiBarChartSquare
-          className="w-6 h-6 fill-black"
+          className="w-6 h-6 fill-white"
           onClick={(e) => handleOnClick(e, "poll")}
         />
       ),
@@ -183,15 +183,16 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
     } else if (name === "video" && !videos) {
       setSelectedName("video");
       setPopupType("video");
-    } else {
+    }
+     else {
       setSelectedName(name);
       setPopupType(name)
     }
   };
 
   const IconSection = ({ selectedName, type }: any) => (
-    <div>
-      <section className="border-t border-gray-500/10 p-4 flex gap-4">
+    <div className="">
+      <section className=" p-4 flex gap-4">
         {iconMapping.map(({ name, activeIcon, inactiveIcon }) => (
           <span key={name} className="cursor-pointer">
             {selectedName === name || type === name ? activeIcon : inactiveIcon}
@@ -285,9 +286,10 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
     acceptedFiles: string,
     fileType: string,
     filesList: any[]
+
   ) => {
     return (
-      <div className="mt-4">
+      <div className="mb-4">
         <label
           htmlFor={`file-upload-${fieldName}`}
           className="cursor-pointer text-[var(--highlight-blue)] mt-4 block text-center transition-all"
@@ -296,8 +298,8 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
             <div className="bg-gray-200 rounded-full p-4">
               {icon}
             </div>
-            <span className="text-lg text-[var(--highlight)]">{label}</span>
-            <span className="text-md mt-1 text-[var(--highlight)]">or Drag and Drop File</span>
+            <span className="mt-2 text-lg text-white">{label}</span>
+            <span className="text-md font-bold text-white">or Drag and Drop File</span>
           </div>
         </label>
         <Field
@@ -312,9 +314,9 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
         {isUploadLoading ? (
           <MiniLoader />
         ) : filesList.length > 0 ? (
-          <div className="relative mt-4 grid grid-cols-4 gap-4">
+          <div className="relative mt-4 grid grid-cols-4 gap-4 uploaded-data">
             {filesList.map((file, index) => (
-              <div key={index} className="relative">
+              <div key={index} className="relative uploaded-dataInner">
                 {fileType === "image" ? (
                   <Image
                     src={URL.createObjectURL(file)}
@@ -379,6 +381,8 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
     }
   };
 
+
+
   return (
     <>
       <Formik
@@ -388,30 +392,31 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
         {({ errors, isSubmitting }: any) => (
           <Form>
             <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-              <div className="bg-white w-full max-w-[800px] rounded-[12px] shadow-lg">
+              <div className="max-h-[80vh] overflow-auto bg-[var(--sections)] border border-white/10 w-full max-w-[600px] rounded-[12px] shadow-lg">
                 <PopupHeader title={"Create a Post"} onClick={closePopup} />
-                <div className="p-4 ">
-                  <div className="flex items-center mb-2 gap-4">
+                <div className="p-4">
+                  <div className="flex items-center mb-4 gap-2">
                     <Image
                       src="/profile-avatar-legacy-50.png"
                       alt="Image"
-                      height={50}
-                      width={50}
+                      height={40}
+                      width={40}
                       className="rounded-full"
                     />
                     <div className="flex flex-col">
-                      <span className="text-lg text-[var(--highlight)]">
+                      <span className="text-white font-semibold">
                         LordLexxy
                       </span>
-                      <div className="text-[13px] text-gray-500/50 flex items-center gap-2">
-                        <div className="border p-2 rounded">
+                      <div className="text-[13px] text-gray-500/50 flex items-center gap-2 cursor-pointer">
+                        <div className="">
                           {selectedIcon || <GoGlobe />}
                         </div>
+                        <p className="text-sm">Public</p>
                         <TiArrowSortedDown onClick={toggleVisibility} />
                       </div>
                     </div>
                   </div>
-                  <div className="w-full">
+                  <div className="w-full mb-2">
                     <div className="flex flex-col">
                       <div className="!z-1">
                         <QuillEditor value={value} setValue={setValue}
@@ -440,7 +445,7 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
                   {((selectedName === "image" || type === "image") ||
                     (selectedName === "video" || type === "video") ||
                     (selectedName === "document" || type === "document")) && (
-                      <div className="border p-2 text-center flex flex-col justify-center items-center bg-gray-100">
+                      <div className="border border-white/5 rounded-lg p-2 text-center flex flex-col justify-center items-center bg-white/10">
                         {selectedName === "image" || type === "image" ? renderFileUploadSection(
                           'images',
                           <CiCamera size={30} />,
@@ -470,18 +475,18 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
                       </div>
                     )}
                   {selectedName == "gif" && <GifSearch />}
-                  <div className="flex justify-between">
+                  <div className="pt-4 flex justify-between border-t border-gray-500/10">
                     <IconSection selectedName={selectedName} type={type} />
                     <div className="flex items-center gap-1">
                       <button
                         onClick={() => setSchedulePopupOpen(true)}
-                        className="bg-slate-300 hover:bg-blue-200 text-white px-2 py-2 rounded-md flex items-center gap-1"
+                        className="text-white px-2 py-2 rounded-md flex items-center gap-1"
                       >
                         <span>
                           <PiClockFill size={20} />
                         </span>
                         <span>
-                          <FaCaretDown size={15} />
+                          <FaCaretDown size={15}  />
                         </span>
                       </button>{" "}
                       <button
