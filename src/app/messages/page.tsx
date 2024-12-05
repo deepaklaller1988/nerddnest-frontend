@@ -195,7 +195,7 @@ const ChatInterface = () => {
                     <HiOutlineGif className="w-6 h-6 stroke-purple-700" />
                   </span>
                   <span className="cursor-pointer">
-                    <BiBarChartSquare className="w-6 h-6 fill-black" />
+                    <BiBarChartSquare className="w-6 h-6 fill-white" />
                   </span>
                 </section>
                 <div >

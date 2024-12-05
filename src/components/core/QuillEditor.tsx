@@ -14,7 +14,7 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ value, setValue }) => {
     [{ list: 'ordered' }, { list: 'bullet' }],
     ['blockquote', 'code-block'],
     ['link'],
-  ];
+  ]
   const handleEditorChange = (content: string) => {
     const plainText = content.replace(/<[^>]+>/g, '').trim(); 
     setValue(plainText);
@@ -22,6 +22,8 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ value, setValue }) => {
 
   const modules = {
     toolbar: toolbarOptions,
+    
+
   };
 
   return (
@@ -29,8 +31,8 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ value, setValue }) => {
       theme="snow"
       value={value}
       onChange={handleEditorChange}
-      modules={modules}
-      
+      modules={modules} 
+      className='postEditorText'    
     />
   );
 };

@@ -89,23 +89,23 @@ const VisibilityPopup: React.FC<VisibilityPopupProps> = ({
   };
 
   return (
-    <div className="z-50 w-[800px]">
-      <div className="bg-white w-full w-[800px] h-[450px] rounded-[12px] shadow-lg">
+    <div className="z-50 w-[600px]">
+      <div className="bg-[var(--sections)] w-full rounded-[12px] shadow-lg">
         <PopupHeader title={"Who can see your post?"} onClick={toggleVisibilityPopup} />
 
-        <div className="p-6">
+        <div className="p-4">
           <ul className="space-y-4">
             {visibilityOptions.map((option) => (
               <li
                 key={option.id}
-                className="rounded-lg hover:bg-gray-200 transition-colors duration-200"
+                className="rounded-lg transition-colors duration-200"
               >
                 <label className="flex items-center space-x-4">
-                  <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
+                  <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
                     {option.icon}
                   </div>
                   <div className="flex-grow">
-                    <span className="font-medium text-[var(--highlight)]">
+                    <span className="font-medium text-white">
                       {option.title}
                     </span>
                     <p className="text-sm text-gray-500">{option.description}</p>
@@ -125,13 +125,13 @@ const VisibilityPopup: React.FC<VisibilityPopupProps> = ({
 
       {showGroupPopup && (
         <div className="fixed inset-0 mb-4 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
-          <div className="bg-white w-[800px] h-[360px] rounded-[12px] shadow-lg">
-            <div className="flex items-center justify-between p-4 border-b">
-              <h3 className="text-lg font-semibold text-[var(--highlight)]">
+          <div className="bg-[var(--sections)] w-[600px] rounded-[12px] shadow-lg border border-white/5">
+            <div className="flex items-center justify-between p-4 border-b border-white/5">
+              <h3 className="font-semibold text-white uppercase">
                 Select a Group
               </h3>
               <button
-                className="bg-gray-200 w-10 h-10 flex items-center justify-center rounded-full text-[30px] text-gray-600 hover:text-gray-800"
+                className="w-7 h-7 p-0 flex items-center justify-center rounded-full text-[30px] text-gray-600 hover:text-white"
                 onClick={() => setShowGroupPopup(false)}
               >
                 &times;
@@ -149,15 +149,15 @@ const VisibilityPopup: React.FC<VisibilityPopupProps> = ({
                   filteredGroups.map((group, index) => (
                     <li
                       key={index}
-                      className="cursor-pointer flex items-center space-x-4 hover:bg-gray-100 p-2 rounded-lg"
+                      className="cursor-pointer flex items-center space-x-2 hover:bg-white/5 p-2 rounded-lg"
                       onClick={() => {
                         setSelectedGroup(group);
                         setShowGroupPopup(false);
                       }}
                     >
                       <Image src="/logo.png" height={30} width={30} alt="Group Icon" />
-                      <span className="text-[var(--highlight)] font-medium">{group}</span>
-                    </li>
+                      <span className="text-[white] font-medium">{group}</span>
+                    </li>                    
                   ))
                 ) : (
                   <li className="text-gray-500 text-center">No groups found.</li>
@@ -165,7 +165,7 @@ const VisibilityPopup: React.FC<VisibilityPopupProps> = ({
               </ul>
             </div>
 
-            <div className="flex gap-2 justify-end mb-4 mr-2">
+            <div className="flex gap-2 justify-end p-4 border-t border-white/5">
               <Button type="submit" label={" Back "} variant="default" />
               <Button type="submit" label={" Save "} variant="default" />
             </div>

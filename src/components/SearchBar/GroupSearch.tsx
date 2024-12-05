@@ -32,21 +32,22 @@ export default function GroupSearch() {
         setShowClear(false);
     };
     return (
-        <div className="relative flex items-center justify-between mr-4">
-            <FiSearch className="text-[18px] absolute left-[15px] text-[var(--lightgrey)]" />
-            <input
-                className="bg-gray-500/10 rounded-full p-[10px] pl-12 w-full"
-                type="text"
-                placeholder="Search Groups..."
-                value={searchTerm}
-                onChange={handleInputChange}
-            />
-          <MdClose
-          className={`absolute right-[15px] text-[var(--lightgrey)] cursor-pointer ${searchTerm ? "opacity-1" : "opacity-0"}`}
+      <>
+      <div className="relative flex items-center justify-between w-full rounded-full">
+      <FiSearch className="text-[18px] absolute left-[15px]" />
+      <input
+        className="bg-white/10 placeholder:text-[var(--foreground)] rounded-full p-[10px] pl-12 w-full"
+        type="text"
+        placeholder="Search groups..."
+        value={searchTerm}
+        onChange={handleInputChange}
+      />
+      {searchTerm && (
+        <MdClose
+          className="absolute right-[15px] text-[var(--lightgrey)] cursor-pointer"
           onClick={clearSearch}
-        />
-
-        
+        />)}
         </div>
+        </>
     )
 }

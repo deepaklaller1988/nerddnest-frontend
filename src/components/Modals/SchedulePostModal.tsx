@@ -15,38 +15,38 @@ const SchedulePostPopup = ({ isOpen, onClose }: SchedulePostPopupProps) => {
 
   return (
     <div className="fixed inset-0 mb-4 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
-      <div className="bg-white w-full max-w-[500px] rounded-[12px] shadow-lg">
-        <div className="flex items-center justify-between p-4 border-b">
-          <h3 className="text-lg font-semibold text-[var(--highlight)]">
+      <div className="bg-[var(--sections)] w-[600px] rounded-[12px] shadow-lg border border-white/5">
+        <div className="flex items-center justify-between p-4 border-b border-white/5">
+          <h3 className="uppercase font-semibold text-white">
             Schedule Post
           </h3>
           <button
-            className="bg-gray-200 w-10 h-10 flex items-center justify-center rounded-full text-[30px] text-gray-600 hover:text-gray-800"
+            className="w-7 h-7 p-0 flex items-center justify-center rounded-full text-[30px] text-gray-600 hover:text-white"
             onClick={onClose}
           >
             &times;
           </button>
         </div>
 
-        <div className="p-6">
+        <div className="p-4">
           <div className="text-sm text-gray-500 mb-4">
-            <p className="mt-2">November 21, 2024 at 09:09 AM</p>
+            <p className="text-white">November 21, 2024 at 09:09 AM</p>
           </div>
 
           <div className="mb-4">
-            <label className="block text-md font-medium text-[var(--highlight)] mb-1">
+            <label className="mb-2 block">
               Date
             </label>
             <input
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className="w-full border rounded-md px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="bg-white/10 placeholder:text-[var(--foreground)] rounded-full p-[10px] w-full"
             />
           </div>
 
           <div className="mb-6">
-            <label className="block text-md font-medium text-[var(--highlight)] mb-1">
+            <label className="block mb-2">
               Time
             </label>
             <div className="flex items-center">
@@ -54,24 +54,24 @@ const SchedulePostPopup = ({ isOpen, onClose }: SchedulePostPopupProps) => {
                 type="time"
                 value={time}
                 onChange={(e) => setTime(e.target.value)}
-                className="w-full border rounded-md px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="bg-white/10 placeholder:text-[var(--foreground)] rounded-full p-[10px] w-full"
               />
               <div className="ml-2 flex gap-2">
-                <button
-                  className={`px-4 py-2 border rounded-full ${
+              <button
+                  className={`px-4 py-2 rounded-full ${
                     time.includes("AM")
-                      ? "bg-blue-500 text-white"
-                      : "bg-gray-200 text-gray-600"
+                      ? "bg-[var(--highlight-blue)] text-white"
+                      : "bg-[var(--foreground)] text-white"
                   }`}
                   onClick={() => setTime("AM")}
                 >
                   AM
                 </button>
                 <button
-                  className={`px-4 py-2 border rounded-full ${
+                  className={`px-4 py-2 rounded-full ${
                     time.includes("PM")
-                      ? "bg-blue-500 text-white"
-                      : "bg-gray-200 text-gray-600"
+                       ? "bg-[var(--highlight-blue)] text-white"
+                      : "bg-[var(--foreground)] text-white"
                   }`}
                   onClick={() => setTime("PM")}
                 >
@@ -81,15 +81,15 @@ const SchedulePostPopup = ({ isOpen, onClose }: SchedulePostPopupProps) => {
             </div>
           </div>
 
-          <div className="flex border-b">
-            <p className="text-[var(--highlight)] ">View all scheduled posts </p>
+          <div className="flex">
+            <p className="text-white pb-2">View all scheduled posts </p>
             <MdOutlineArrowRightAlt
               className="ml-1 mt-0.5 text-[var(--highlight)]"
               size={20}
             />
           </div>
         </div>
-        <div className="flex gap-2 justify-end mb-4 mr-2 ">
+        <div className="border-t border-white/5 flex gap-2 justify-end p-4">
           <Button
             type="submit"
             label={" Back "}
