@@ -13,52 +13,40 @@ import { FaSearch } from "react-icons/fa";
 const ChatInterface = () => {
   return (
     <div className="messageSetInner">
-      <div className="message flex h-full bg-white overlap-hidden">
+      <div className="message flex h-full bg-white/10 overlap-hidden">
         {/* Sidebar */}
-        <div className="w-1/4 bg-white border-r">
-          <h2 className="text-xl font-semibold text-green-600 p-4 py-7 pb-8">
+        <div className="w-1/4 bg-[var(--sections)] border-r border-white/20">
+          <h2 className="text-xl font-semibold text-white p-4 py-7 pb-8">
             Messages
           </h2>
-          <div className="w-full bg-gray-300/20 px-4 py-2 relative">
+          <div className="w-full bg-white/10 border-b border-white/5 px-4 py-2 relative">
             <input
               type="text"
-              className="w-full bg-white/0 py-2 placeholder:font-semibold pr-5"
+              className="w-full bg-white/0 py-2 placeholder:font-semibold placeholder:text-[var(--foreground)] pr-5"
               placeholder="Search here..."
             />
             <button className="absolute right-7 top-5"><FaSearch /></button>
           </div>
-          <div className="space-y-2 border-b border-r-4 hover:bg-teal-900/20 border-r-[var(--highlght-hover)] bg-teal-900/20 duration-[.3s]">
+          <div className="space-y-2 border-b border-white/5 border-r-4 hover:bg-white/5 border-r-white bg-white/10 duration-[.3s]">
             <div className="flex items-center space-x-2 p-4 cursor-pointer">
-              <div className="w-10 h-10 min-w-10 min-h-10 bg-gray-300 rounded-full overflow-hidden border border-white">
+              <div className="w-10 h-10 min-w-10 min-h-10 rounded-full overflow-hidden border border-white">
                 <img src="dp.jpg" alt="dp" />
               </div>
               <div className="w-full relative">
-                <p className="font-semibold text-black">Alvin Marcos</p>
-                <p className=" text-gray-500">You: hii</p>
+                <p className="font-semibold text-white">Alvin Marcos</p>
+                <p className="">You: hii</p>
                 <p className="text-xs absolute bottom-0 right-0">Tuesday</p>
               </div>
             </div>
           </div>
-          <div className="space-y-2 border-b">
-            <div className="flex items-center space-x-2 p-4 cursor-pointer hover:bg-teal-900/20 duration-[.3s]">
-              <div className="w-10 h-10 min-w-10 min-h-10 bg-gray-300 rounded-full overflow-hidden border border-white">
+          <div className="space-y-2 border-b border-white/5 border-r-4 hover:bg-white/5 bg-white/10 duration-[.3s]">
+            <div className="flex items-center space-x-2 p-4 cursor-pointer">
+              <div className="w-10 h-10 min-w-10 min-h-10 rounded-full overflow-hidden border border-white">
                 <img src="dp.jpg" alt="dp" />
               </div>
               <div className="w-full relative">
-                <p className="font-semibold text-black">Rambo</p>
-                <p className=" text-gray-500">You: Hi this is perfect</p>
-                <p className="text-xs absolute bottom-0 right-0">Now</p>
-              </div>
-            </div>
-          </div>
-          <div className="space-y-2 border-b">
-            <div className="flex items-center space-x-2 p-4 cursor-pointer  hover:bg-teal-900/20 duration-[.3s]">
-              <div className="w-10 h-10 min-w-10 min-h-10 bg-gray-300 rounded-full overflow-hidden border border-white">
-                <img src="dp.jpg" alt="dp" />
-              </div>
-              <div className="w-full relative">
-                <p className="font-semibold text-black">Rehan Fullets Amber</p>
-                <p className=" text-gray-500">You: hii</p>
+                <p className="font-semibold text-white">Alvin Marcos</p>
+                <p className="">You: hii</p>
                 <p className="text-xs absolute bottom-0 right-0">Tuesday</p>
               </div>
             </div>
@@ -66,8 +54,8 @@ const ChatInterface = () => {
         </div>
 
         {/* Chat Window */}
-        <div className="flex-1 flex flex-col bg-gray-500/5">
-          <div className="flex items-center justify-between gap-6 border-b p-4">
+        <div className="flex-1 flex flex-col bg-[var(--sections)]">
+          <div className="flex items-center justify-between gap-6 border-b border-white/5 p-4">
             <div className="flex gap-3">
               <div className="w-14 rounded-full overflow-hidden border-2 border-white">
                 <img
@@ -77,8 +65,8 @@ const ChatInterface = () => {
                 />
               </div>
               <div>
-                <h3 className="capitalize text-lg font-semibold text-green-600">
-                  testing
+                <h3 className="capitalize text-lg font-semibold text-white">
+                  Avion Astro
                 </h3>
                 <p className="">Started Friday</p>
               </div>
@@ -88,10 +76,10 @@ const ChatInterface = () => {
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-white">
-            <div className="text-center text-gray-500 text-sm relative border-t my-4 mb-7"><b className="absolute bg-[var(--highlght-hover)] rounded-full top-[-10px] px-3 text-sm text-white">Friday</b></div>
+          <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-4 bg-white/10 border-b border-white/5">
+            <div className="text-center text-gray-500 text-sm relative border-t border-white/5 mt-5 pb-5"><b className="absolute bg-[var(--highlght-hover)] rounded-full top-[-10px] px-3 text-sm text-white">Friday</b></div>
             <div className="w-full receiver">
-              <div className="inline-flex items-start space-x-3 bg-[var(--highlght-hover)] rounded-xl p-4 max-w-[80%]">
+              <div className="inline-flex items-start space-x-3 bg-[var(--sections)] rounded-xl p-4 max-w-[80%]">
                 <div className="min-w-10 min-h-10 max-w-10 max-h-10 bg-white rounded-full overflow-hidden border border-white">
                   <img src="dp.jpg" alt="dp" />
                 </div>
@@ -102,7 +90,7 @@ const ChatInterface = () => {
               </div>
             </div>
             <div className="w-full sender flex justify-end">
-              <div className="inline-flex items-start space-x-3 bg-black/5 rounded-xl p-4 max-w-[80%]">
+              <div className="inline-flex items-start space-x-3 bg-black/20 rounded-xl p-4 max-w-[80%]">
                 <div>
                   <p className="">Hi, i am marcos from Amazon, I want to know that which parcel is pending from your side? Hi, i am marcos from Amazon, I want to know that which parcel is pending from your side? Hi, i am marcos from Amazon, I want to know that which parcel is pending from your side? Hi, i am marcos from Amazon, I want to know that which parcel is pending from your side? Hi, i am marcos from Amazon, I want to know that which parcel is pending from your side? </p>
                   <p className="text-xs text-gray-400 text-right relative top-2">4:37 AM</p>
@@ -110,7 +98,7 @@ const ChatInterface = () => {
               </div>
             </div>
             <div className="w-full receiver">
-              <div className="inline-flex items-start space-x-3 bg-[var(--highlght-hover)] rounded-xl p-4 max-w-[80%]">
+              <div className="inline-flex items-start space-x-3 bg-[var(--sections)] rounded-xl p-4 max-w-[80%]">
                 <div className="min-w-10 min-h-10 max-w-10 max-h-10 bg-white rounded-full overflow-hidden border border-white">
                   <img src="dp.jpg" alt="dp" />
                 </div>
@@ -121,7 +109,7 @@ const ChatInterface = () => {
               </div>
             </div>
             <div className="w-full sender flex justify-end">
-              <div className="inline-flex items-start space-x-3 bg-black/5 rounded-xl p-4 max-w-[80%]">
+              <div className="inline-flex items-start space-x-3 bg-black/20 rounded-xl p-4 max-w-[80%]">
                 <div>
                   <p className="">Hi, i am marcos from Amazon, I want to know that which parcel is pending from your side? </p>
                   <p className="text-xs text-gray-400 text-right relative top-2">4:37 AM</p>
@@ -129,7 +117,7 @@ const ChatInterface = () => {
               </div>
             </div>
             <div className="w-full receiver">
-              <div className="inline-flex items-start space-x-3 bg-[var(--highlght-hover)] rounded-xl p-4 max-w-[80%]">
+              <div className="inline-flex items-start space-x-3 bg-[var(--sections)] rounded-xl p-4 max-w-[80%]">
                 <div className="min-w-10 min-h-10 max-w-10 max-h-10 bg-white rounded-full overflow-hidden border border-white">
                   <img src="dp.jpg" alt="dp" />
                 </div>
@@ -140,16 +128,16 @@ const ChatInterface = () => {
               </div>
             </div>
             <div className="w-full sender flex justify-end">
-              <div className="inline-flex items-start space-x-3 bg-black/5 rounded-xl p-4 max-w-[80%]">
+              <div className="inline-flex items-start space-x-3 bg-black/20 rounded-xl p-4 max-w-[80%]">
                 <div>
                   <p className="">Hi, i am marcos from Amazon, I want to know that which parcel is pending from your side? </p>
                   <p className="text-xs text-gray-400 text-right relative top-2">4:37 AM</p>
                 </div>
               </div>
             </div>
-            <div className="text-center text-gray-500 text-sm relative border-t my-4 mb-7"><b className="absolute bg-[var(--highlght-hover)] rounded-full top-[-10px] px-3 text-sm text-white">Friday</b></div>
+            <div className="text-center text-gray-500 text-sm relative border-t border-white/5 mt-5 pb-5"><b className="absolute bg-[var(--highlght-hover)] rounded-full top-[-10px] px-3 text-sm text-white">Friday</b></div>
             <div className="w-full receiver">
-              <div className="inline-flex items-start space-x-3 bg-[var(--highlght-hover)] rounded-xl p-4 max-w-[80%]">
+              <div className="inline-flex items-start space-x-3 bg-[var(--sections)] rounded-xl p-4 max-w-[80%]">
                 <div className="min-w-10 min-h-10 max-w-10 max-h-10 bg-white rounded-full overflow-hidden border border-white">
                   <img src="dp.jpg" alt="dp" />
                 </div>
@@ -160,7 +148,7 @@ const ChatInterface = () => {
               </div>
             </div>
             <div className="w-full sender flex justify-end">
-              <div className="inline-flex items-start space-x-3 bg-black/5 rounded-xl p-4 max-w-[80%]">
+              <div className="inline-flex items-start space-x-3 bg-black/20 rounded-xl p-4 max-w-[80%]">
                 <div>
                   <p className="">Hi, i am marcos from Amazon, I want to know that which parcel is pending from your side? </p>
                   <p className="text-xs text-gray-400 text-right relative top-2">4:37 AM</p>

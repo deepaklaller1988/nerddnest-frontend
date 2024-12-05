@@ -29,14 +29,14 @@ export default function page() {
                   </span>
                 </section>
                 <section>
-                  <h5 className='text-[25px] text-[var(--highlight)] font-semibold'>Amazon Shoping Group <b className='relative top-[-2px] font-normal text-[12px] p-1 px-2 rounded-full text-white bg-[var(--highlight)]'>Group</b></h5>
+                  <h5 className='text-[25px] text-white font-semibold'>Amazon Shoping Group <b className='relative top-[-2px] font-normal text-[12px] p-1 px-2 rounded-full text-white bg-[var(--highlight)]'>Group</b></h5>
                   <p><span className=''>Public</span><b className='font-bold text-[20px] px-1 relative -top-[2] text-gray-500/50'>.</b><span className=''>Group</span><b className='font-bold text-[20px] px-1 relative -top-[2] text-gray-500/50'>.</b><span className=''>Active 16 hours ago</span></p>
-                  <p className='text-black mt-2'>Printing and typesetting industry.</p>
+                  <p className='text-white mt-2'>Printing and typesetting industry.</p>
                   <div className='mt-2 flex gap-2 items-center'>
-                    <div className='w-8 h-8 rounded-full overflow-hidden border-2 border-black/20'>
+                    <div className='w-8 h-8 rounded-full overflow-hidden border-2 border-white/10'>
                       <img src='dp.jpg' alt="dp" />
                     </div>
-                    <p>Lord Lexi (<b className='text-normal text-[12px] text-black'>Organizer</b>)</p>
+                    <p>Lord Lexi (<b className='text-normal text-[12px] text-white'>Organizer</b>)</p>
                   </div>
                 </section>
               </div>
@@ -45,16 +45,16 @@ export default function page() {
               <button className='p-2 px-3 rounded-lg bg-black/50'><HiBell className='hidden' /><HiBellSlash className='fill-white'/></button>
               </div>
             </section>
-            <div className='w-full border-t p-8 py-0 flex gap-6 items-center'>
-            <div className='mr-4'><button className='flex gap-2 items-center font-semibold text-black'>Members <b className='text-[12px] px-2 rounded-full text-white bg-black/50 min-w-[30px]'>2</b></button></div>
-            <button className='text-[var(--highlight)] font-semibold border-b border-[var(--highlight)] py-4'>Feed</button>
-            <button className='border-b border-white hover:border-[var(--highlight)] py-4 hover:text-[var(--highlight)]'>Photos</button>
-            <button className='border-b border-white hover:border-[var(--highlight)] py-4 hover:text-[var(--highlight)]'>Videos</button>
-            <button className='border-b border-white hover:border-[var(--highlight)] py-4 hover:text-[var(--highlight)]'>Album</button>
-            <button className='border-b border-white hover:border-[var(--highlight)] py-4 hover:text-[var(--highlight)]'>Documents</button>
-            <button className='border-b border-white hover:border-[var(--highlight)] py-4 hover:text-[var(--highlight)]'>Send Invites</button>
-            <button className='border-b border-white hover:border-[var(--highlight)] py-4 hover:text-[var(--highlight)]'>Discussions</button>
-            <button className='border-b border-white hover:border-[var(--highlight)] py-4 hover:text-[var(--highlight)]'>Manage</button>
+            <div className='w-full border-t border-white/5 p-8 py-0 flex gap-6 items-center'>
+            <div className='mr-4'><button className='flex gap-2 items-center font-semibold text-white'>Members <b className='text-[12px] px-2 rounded-full text-white bg-black/50 min-w-[30px]'>2</b></button></div>
+            <button className='text-white font-semibold border-b border-white py-4'>Feed</button>
+            <button className='border-b border-white/0 hover:border-white py-4 hover:text-white'>Photos</button>
+            <button className='border-b border-white/0 hover:border-white py-4 hover:text-white'>Videos</button>
+            <button className='border-b border-white/0 hover:border-white py-4 hover:text-white'>Album</button>
+            <button className='border-b border-white/0 hover:border-white py-4 hover:text-white'>Documents</button>
+            <button className='border-b border-white/0 hover:border-white py-4 hover:text-white'>Send Invites</button>
+            <button className='border-b border-white/0 hover:border-white py-4 hover:text-white'>Discussions</button>
+            <button className='border-b border-white/0 hover:border-white py-4 hover:text-white'>Manage</button>
 
             </div>
           </div>
