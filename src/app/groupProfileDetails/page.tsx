@@ -8,7 +8,7 @@ export default function page() {
   return (
     <div className='w-full pt-8'>
       <div className='w-full max-w-[1230px] py-3 px-4 m-auto'>
-        <div className='w-full rounded-[12px] bg-white'>
+        <div className='w-full rounded-[12px]  bg-[var(--sections)] border border-white/5'>
           <div className='w-full relative'>
             <div className='w-full bg-[var(--highlght-hover)] rounded-[12px] overflow-fidden'>
               <img src='cover-image.png' className='w-full' alt="Cover Image" />

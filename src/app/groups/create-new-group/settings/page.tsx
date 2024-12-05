@@ -10,7 +10,7 @@ const RadioGroup = ({ name, options }: any) => (
             
           />
           <div>
-            <h3 className="font-semibold text-black">
+            <h3 className="font-semibold text-white">
               {option.label}
             </h3>
           </div>
@@ -31,7 +31,7 @@ const RadioGroup = ({ name, options }: any) => (
 export default function Settings() {
   return (
     <div className="p-6">
-      <h2 className=" text-[var(--highlight)] mb-4 font-bold text-[20px]">Privacy Options</h2>
+      <h2 className=" text-white mb-4 font-bold text-[20px]">Privacy Options</h2>
 
       <RadioGroup
         name="public"
@@ -82,7 +82,7 @@ export default function Settings() {
       />
 
       {/* Group Invitations */}
-      <h2 className=" text-[var(--highlight)] border-b pb-4 pt-5">
+      <h2 className=" border-b border-white/5  pb-4 pt-5">
         Group Invitations
       </h2>
       <h2 className=" mt-4">Which members of this group are allowed to invite others?</h2>
@@ -96,7 +96,7 @@ export default function Settings() {
       />
 
       {/* Activity Feeds */}
-      <h2 className=" text-[var(--highlight)] border-b pb-4 pt-5">
+      <h2 className="border-b border-white/5  pb-4 pt-5">
         Activity Feeds
       </h2>
       <h2 className=" mt-4 p-2">
@@ -112,7 +112,7 @@ export default function Settings() {
       />
 
       {/* Group Photos */}
-      <h2 className=" text-[var(--highlight)] border-b pb-4 pt-5">Group Photos</h2>
+      <h2 className="border-b border-white/5  pb-4 pt-5">Group Photos</h2>
       <h2 className=" mt-4 p-2">Which members of this group are allowed to upload photos?</h2>
       <RadioGroup
         name="photos"
@@ -124,7 +124,7 @@ export default function Settings() {
       />
 
       {/* Group Albums */}
-      <h2 className=" text-[var(--highlight)] border-b pb-4 pt-5">Group Albums</h2>
+      <h2 className="border-b border-white/5  pb-4 pt-5">Group Albums</h2>
       <h2 className=" mt-4 p-2">Which members of this group are allowed to create albums?</h2>
       <RadioGroup
         name="albums"
@@ -136,7 +136,7 @@ export default function Settings() {
       />
 
       {/* Group Documents */}
-      <h2 className=" text-[var(--highlight)] border-b pb-4 pt-5">
+      <h2 className="border-b border-white/5  pb-4 pt-5">
         Group Documents
       </h2>
       <h2 className=" mt-4 p-2">Which members of this group are allowed to upload documents?</h2>
@@ -150,7 +150,7 @@ export default function Settings() {
       />
 
       {/* Group Videos */}
-      <h2 className=" text-[var(--highlight)] border-b pb-4 pt-5">Group Videos</h2>
+      <h2 className="border-b border-white/5  pb-4 pt-5">Group Videos</h2>
       <h2 className=" mt-4 p-2">Which members of this group are allowed to upload videos?</h2>
       <RadioGroup
         name="videos"
