@@ -17,6 +17,7 @@ import Image from "next/image";
 import { timeAgo } from "@/utils/timeAgo";
 import { IoDocumentTextOutline } from "react-icons/io5";
 import { useRouter } from "next/navigation";
+import { capitalizeName } from "@/utils/capitalizeName";
 
 
 export default function PostContent() {
@@ -198,7 +199,7 @@ export default function PostContent() {
                   <span className="w-full">
                     <p className="text-[12px]">
                       <b className="text-white font-[600] mr-1">
-                        {data?.user?.firstname.charAt(0).toUpperCase() + data?.user?.firstname.slice(1)}{" "}{data?.user?.lastname.charAt(0).toUpperCase() + data?.user?.lastname.slice(1)}
+                        {capitalizeName(data?.user?.firstname)} {capitalizeName(data?.user?.lastname)}
                       </b>
                       {postDescription}
                     </p>

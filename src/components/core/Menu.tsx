@@ -12,7 +12,7 @@ const Menu: React.FC<MenuItemProp> = ({ name, icon, links, isOpen, onToggle }) =
 
   const handleToggle = () => {
     if (name === 'Logout') {
-      logout()
+         logout()
 
     } else {
       onToggle();

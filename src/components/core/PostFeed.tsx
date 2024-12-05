@@ -10,11 +10,18 @@ import { BiBarChartSquare } from "react-icons/bi";
 const CreatePostPopup = dynamic(() => import('../Modals/CreatePostModal'), { ssr: false });
 
 import Image from "next/image";
+import { capitalizeName } from '@/utils/capitalizeName';
+import { useSelector } from 'react-redux';
 
 export default function PostFeed() {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [popupType, setPopupType] = useState<string | null>(null);
   const popupRef = useRef<HTMLDivElement>(null);
+  const firstName = useSelector((state: any) => state.auth.firstName);
+  const lastName = useSelector((state: any) => state.auth.lastName);
+  const id = useSelector((state: any) => state.auth.id);
+  const userId = useSelector((state: any) => state.auth.userId);
+  console.log(firstName,lastName,id,userId,"===============")
 
   const handleClick = (type: string) => {
     setPopupType(type);
@@ -49,7 +56,8 @@ export default function PostFeed() {
               onClick={() => handleClick("text")}
               className="w-full bg-[var(--bgh)] p-2 px-5 rounded-full flex items-center text-[var(--foreground)]"
             >
-              Share whats on your mind, Alvin Marcos...
+              {`Share what's on your mind, ${capitalizeName(firstName || '')} ${capitalizeName(lastName || '')} ...` }
+
             </div>
           </section>
           <section className="border-t border-gray-500/10 p-4 flex gap-4">

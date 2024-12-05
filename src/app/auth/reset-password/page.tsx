@@ -40,7 +40,7 @@ function InnerResetPassword({ route }: { route: ReturnType<typeof useRouter> }) 
     setLoading(false);
     if (success) {
       dispatch(setAuth({ accessToken: data.accessToken}));
-      dispatch(setUserId({ id: data.id, userId: data.userId }));
+      dispatch(setUserId({ id: data.id, userId:data.userId,firstName:data.firstName,lastName:data.lastName}));
       toasterSuccess("Password changed successfully", 1000, "id");
       route.push("/home");
     }

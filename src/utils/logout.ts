@@ -8,7 +8,7 @@ export const useLogoutUser = () => {
   const logout = async () => {
     try {
       await API.get("auth/logout");
-      typeof window !== "undefined" && localStorage.clear();
+      typeof window !== "undefined" &&localStorage.clear();
       router.push("/auth/login");
     } catch (error) {
       console.error("Logout failed:", error);
