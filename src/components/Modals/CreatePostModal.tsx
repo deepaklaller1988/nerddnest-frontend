@@ -475,6 +475,7 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
                     <div className="flex items-center gap-1">
                       <button
                         onClick={() => setSchedulePopupOpen(true)}
+                        type="button"
                         className="bg-slate-300 hover:bg-blue-200 text-white px-2 py-2 rounded-md flex items-center gap-1"
                       >
                         <span>

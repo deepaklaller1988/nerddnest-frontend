@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from "../store";
 
 interface AuthState {
   accessToken: string | null;
@@ -8,9 +9,9 @@ interface AuthState {
 }
 
 const initialState: AuthState = {
-  accessToken: localStorage.getItem("accessToken") || null,
-  userId: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")!).userId : null,
-  id: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")!).id : null,
+  accessToken: typeof window !== "undefined" && localStorage.getItem("accessToken") || null,
+  userId: typeof window !== "undefined" && localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")!).userId : null,
+  id: typeof window !== "undefined" && localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")!).id : null,
 };
 
 const authSlice = createSlice({
@@ -20,23 +21,25 @@ const authSlice = createSlice({
     setAuth(state, action: PayloadAction<{ accessToken: string;}>) {
       state.accessToken = action.payload.accessToken;
       // state.password = action.payload.password;
-      localStorage.setItem("accessToken", action.payload.accessToken); // Save to localStorage
+      typeof window !== "undefined" && localStorage.setItem("accessToken", action.payload.accessToken); // Save to localStorage
     },
     setUserId(state, action: PayloadAction<{ id: number; userId: string}>) {
       state.id = action.payload.id;
       state.userId = action.payload.userId;
       // state.password = action.payload.password;
-      localStorage.setItem("user", JSON.stringify({id:action.payload.id, userId: action.payload.userId}));
+      typeof window !== "undefined" && localStorage.setItem("user", JSON.stringify({id:action.payload.id, userId: action.payload.userId}));
     },
     clearAuth(state) {
       state.accessToken = null;
       state.userId = null;
       state.id = null;
-      localStorage.removeItem("accessToken"); // Clear from localStorage
-      localStorage.removeItem("user");
+      typeof window !== "undefined" && localStorage.removeItem("accessToken"); // Clear from localStorage
+      typeof window !== "undefined" && localStorage.removeItem("user");
     },
   },
 });
 
 export const { setAuth,setUserId, clearAuth } = authSlice.actions;
+export const isAuthenticated = (state: RootState) => !!state.auth.accessToken;
+
 export default authSlice.reducer;

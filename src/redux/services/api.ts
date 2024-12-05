@@ -30,7 +30,7 @@ const baseQuery = fetchBaseQuery({
     if (token) {
       headers.set("Authorization", `Bearer ${token}`);
     }
-    else if(localStorage.getItem("accessToken")){
+    else if(typeof window !== "undefined" && localStorage.getItem("accessToken")){
         headers.set("Authorization", `Bearer ${localStorage.getItem("accessToken")}`);
     }
     return headers;

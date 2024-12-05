@@ -13,6 +13,7 @@ const TabContent = <T extends string, Item>({
   onTabSwitch,
   activeTab,
   renderItem,
+  
 }: TabContentProps<T, Item>) => {
   const router=useRouter()
   
@@ -50,7 +51,7 @@ const TabContent = <T extends string, Item>({
           )}
         </div>
         
-        {title === "GROUPS" && (
+        {title === "GROUPS"  && items.length > 0 && (
           <ViewButton
             onClick={handleClick}
             className="sticky bottom-0 font-semibold w-full p-4  pb-0 text-center flex gap-2 items-center justify-center text-[var(--highlight-blue)] hover:text-[--highlight] buttonSet"

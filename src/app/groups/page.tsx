@@ -1,19 +1,19 @@
 "use client"
 import React from 'react'
-import { FiSearch } from "react-icons/fi";
-import { MdClose } from "react-icons/md";
 import { BiGridAlt } from "react-icons/bi";
 import { BiListUl } from "react-icons/bi";
 import { IoIosCheckmarkCircle } from "react-icons/io";
 import { MdOutlineExitToApp } from "react-icons/md";
 import Select from 'react-select'
 import { useRouter } from 'next/navigation';
+import GroupSearch from '@/components/SearchBar/GroupSearch';
 
 const options = [
   { value: 'Recently Active', label: 'Recently Active' },
   { value: 'Recently Active1', label: 'Recently Active1' },
   { value: 'Recently Active2', label: 'Recently Active2' }
 ]
+
 export default function Page() {
   const route = useRouter()
   return (
@@ -23,17 +23,7 @@ export default function Page() {
         <div className='w-full rounded-[12px] bg-white'>
           <section className='flex gap-4 justify-between'>
             <h2 className="text-[var(--highlight)] font-semibold p-4 py-6 uppercase">Groups</h2>
-            <div className="relative flex items-center justify-between mr-4">
-              <FiSearch className="text-[18px] absolute left-[15px] text-[var(--lightgrey)]" />
-              <input
-                className="bg-gray-500/10 rounded-full p-[10px] pl-12 w-full"
-                type="text"
-                placeholder="Search Groups..."
-              />
-              <MdClose
-                className="absolute right-[15px] text-[var(--lightgrey)] cursor-pointer opacity-0"
-              />
-            </div>
+            <GroupSearch />
           </section>
           <div className='w-full p-4 border-t flex gap-4 justify-between'>
             <section className='w-full flex gap-8'>

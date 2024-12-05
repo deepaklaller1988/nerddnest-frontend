@@ -1,36 +1,52 @@
-import React from "react";
-import { FiSearch } from "react-icons/fi";
-import { MdClose } from "react-icons/md";
+import React, { useState } from 'react'
+import { FiSearch } from 'react-icons/fi'
+import { MdClose } from 'react-icons/md'
 
-type GroupSearchProps = {
-  searchTerm: string;
-  onSearchChange: (value: string) => void;
-  onClearSearch: () => void;
-};
+export default function GroupSearch() {
+    const [searchTerm, setSearchTerm] = useState('');
+    const [showClear, setShowClear] = useState(false);
 
-const GroupSearch: React.FC<GroupSearchProps> = ({
-  searchTerm,
-  onSearchChange,
-  onClearSearch,
-}) => {
-  return (
-    <div className="relative flex items-center justify-between w-full px-2 border rounded-full bg-gray-100 text-[var(--lightgrey)]">
-      <FiSearch className="text-[18px] absolute left-[15px]" />
-      <input
-        className="bg-white rounded-full p-[10px] pl-12 w-full focus:outline-none"
-        type="text"
-        placeholder="Search groups..."
-        value={searchTerm}
-        onChange={(e) => onSearchChange(e.target.value)}
-      />
-      {searchTerm && (
-        <MdClose
-          className="absolute right-[15px] text-[var(--lightgrey)] cursor-pointer"
-          onClick={onClearSearch}
+    const groups = [
+        'React Developers',
+        'Node.js Enthusiasts',
+        'JavaScript Wizards',
+        'Next.js Fans',
+        'Tailwind CSS Designers',
+        'MongoDB Masters',
+        'Express.js Experts',
+        'Frontend Engineers',
+        'Backend Developers',
+    ];
+
+    const filteredGroups = groups.filter((group) =>
+        group.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    const handleInputChange = (e:any) => {
+        setSearchTerm(e.target.value);
+        setShowClear(e.target.value.length > 0);
+    };
+
+    const clearSearch = () => {
+        setSearchTerm('');
+        setShowClear(false);
+    };
+    return (
+        <div className="relative flex items-center justify-between mr-4">
+            <FiSearch className="text-[18px] absolute left-[15px] text-[var(--lightgrey)]" />
+            <input
+                className="bg-gray-500/10 rounded-full p-[10px] pl-12 w-full"
+                type="text"
+                placeholder="Search Groups..."
+                value={searchTerm}
+                onChange={handleInputChange}
+            />
+          <MdClose
+          className={`absolute right-[15px] text-[var(--lightgrey)] cursor-pointer ${searchTerm ? "opacity-1" : "opacity-0"}`}
+          onClick={clearSearch}
         />
-      )}
-    </div>
-  );
-};
 
-export default GroupSearch;
+        
+        </div>
+    )
+}

@@ -3,10 +3,11 @@ import { GoGlobe } from "react-icons/go";
 import { HiOutlineUserGroup, HiOutlineUsers } from "react-icons/hi2";
 import { MdLockOutline } from "react-icons/md";
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
-import GroupSearch from "../SearchBar/GroupSearch";
+import GroupSearch from "../SearchBar/GroupPostSearch";
 import Button from "../Buttons/Button";
 import PopupHeader from "../Header/PopupHeader";
 import Image from "next/image";
+import GroupPostSearch from "../SearchBar/GroupPostSearch";
 
 type VisibilityPopupProps = {
   toggleVisibilityPopup: () => void;
@@ -138,7 +139,7 @@ const VisibilityPopup: React.FC<VisibilityPopupProps> = ({
             </div>
 
             <div className="p-4">
-              <GroupSearch
+              <GroupPostSearch
                 searchTerm={searchTerm}
                 onSearchChange={setSearchTerm}
                 onClearSearch={() => setSearchTerm("")}

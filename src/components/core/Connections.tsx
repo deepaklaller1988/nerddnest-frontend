@@ -19,9 +19,9 @@ const Connections = () => {
     try {
       setTimeout(() => {
         const data :Connection[]= [
-          { name: "Ambros Marcos", status: "online", imageUrl: "/logo.png" },
-          { name: "John Doe", status: "offline", imageUrl: "/logo.png" },
-          { name: "Jane Smith", status: "online", imageUrl: "/logo.png" },
+          // { name: "Ambros Marcos", status: "online", imageUrl: "/logo.png" },
+          // { name: "John Doe", status: "offline", imageUrl: "/logo.png" },
+          // { name: "Jane Smith", status: "online", imageUrl: "/logo.png" },
         ];
 
         if (data.length === 0) {
@@ -52,7 +52,7 @@ const Connections = () => {
       title="FRIENDS"
       items={connections}
       isLoading={loading}
-      noItemsMessage="There are no users currently available."
+      noItemsMessage={(activeTab=="friends" || "connections")?"There are no users currently online.":"There are no users currently online."}
       tabs={[
         { label: "Online", count: connections.filter((c) => c.status === "online").length, tabName: "friends" },
         { label: "Followers", count: connections.length, tabName: "connections" },

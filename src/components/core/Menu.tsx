@@ -3,20 +3,20 @@ import React, { useState } from 'react';
 
 import { MenuItemProp } from '@/types/sidebarInterfaces';
 import { IoIosArrowDown, IoMdArrowDropright } from 'react-icons/io';
+import { useLogoutUser } from '@/utils/logout';
 
 const Menu: React.FC<MenuItemProp> = ({ name, icon, links, isOpen, onToggle }) => {
-  const [active, setActive] = useState(false); 
+  const [active, setActive] = useState(false);
+  const logout = useLogoutUser()
 
-  const handleLogout =async () => {
-    // LogoutUser()
-  };
-  
+
   const handleToggle = () => {
     if (name === 'Logout') {
-      handleLogout(); 
+      logout()
+
     } else {
-    onToggle();  
-    setActive(prev => !prev);  
+      onToggle();
+      setActive(prev => !prev);
     }
   };
 
@@ -31,7 +31,7 @@ const Menu: React.FC<MenuItemProp> = ({ name, icon, links, isOpen, onToggle }) =
         </span>
         {links && (
           <span className="p-4">
-            {name !=="Logout" ?<IoIosArrowDown className={`text-[16px] ${isOpen ? 'rotate-180 fill-white' : ''}`}/> :""}
+            {name !== "Logout" ? <IoIosArrowDown className={`text-[16px] ${isOpen ? 'rotate-180 fill-white' : ''}`} /> : ""}
           </span>
         )}
       </section>
@@ -41,7 +41,7 @@ const Menu: React.FC<MenuItemProp> = ({ name, icon, links, isOpen, onToggle }) =
             <div key={idx}>
               <Link className="hover:bg-gray-200" href={link.href} legacyBehavior>
                 <a className="flex items-center gap-2 px-4 py-2 ">
-                  <IoMdArrowDropright  className='fill-white'/>  {link.name}
+                  <IoMdArrowDropright className='fill-white' />  {link.name}
                 </a>
               </Link>
             </div>
