@@ -53,7 +53,7 @@ export default function PostFeed() {
             </div>
           </section>
           <section className="border-t border-gray-500/10 p-4 flex gap-4">
-            <span className="cursor-pointer" onClick={() => handleClick('camera')}>
+            <span className="cursor-pointer" onClick={() => handleClick('image')}>
               <MdOutlineLinkedCamera className="w-6 h-6 fill-green-600" />
             </span>
             <span className="cursor-pointer" onClick={() => handleClick('video')}>
