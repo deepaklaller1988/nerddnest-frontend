@@ -27,12 +27,12 @@ const InputField: React.FC<InputFieldProps> = ({ name, type, placeholder, icon, 
           {label}
         </label>
       )}
-      <div className="relative flex items-center border border-gray-300 rounded-lg p-2">
-        {icon && <div className="mr-2">{icon}</div>}
+      <div className="relative flex items-center border border-white/5 rounded-lg p-2 pl-4">
+        {icon && <div className="">{icon}</div>}
         <Field
           type={type === "password" ? (passwordVisible ? "text" : "password") : type}
           name={name}
-          className="w-full p-2 focus:outline-none"
+          className="w-full p-2 focus:outline-none bg-white/0 placeholder:text-[var(--foreground)]"
           placeholder={placeholder}
         />
         {type === "password" && (

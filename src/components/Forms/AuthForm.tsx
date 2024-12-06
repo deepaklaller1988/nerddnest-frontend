@@ -45,15 +45,15 @@ const AuthForm = <T extends AuthFormValues>({
         />
       </div>
 
-      <div className="w-1/2 flex flex-col justify-center items-center p-10 bg-white">
+      <div className="w-1/2 flex flex-col justify-center items-center p-10 bg-[var(--sections)]">
         <div className="max-w-md w-full">
           <div className="flex mb-8">
             <Image
-              src="/logo1.png"
-              width={50}
-              height={50}
+              src="/Nerdlogo.png"
+              width={100}
+              height={100}
               alt="Futuristic Avatar"
-              className="rounded-full h-[50px] w-[50px] m-auto"
+              className="h-[100px] w-[100px] m-auto"
             />
           </div>
 
@@ -119,7 +119,7 @@ const AuthForm = <T extends AuthFormValues>({
                 </div>
               )}
               {type == "forgot-password" && (
-                <p className="mb-10 text-gray-600 mt-5">
+                <p className="mb-10 mt-5">
                   Please enter your username or email address. You will receive
                   an email message with instructions on how to reset your
                   password.
@@ -199,21 +199,21 @@ const AuthForm = <T extends AuthFormValues>({
                           type="text"
                           placeholder="Where are you from? (optional)"
                         />
-                        <label className="flex items-center">
+                        <label className="flex items-center customCheckbox gap-2">
                           <Field
                             type="checkbox"
                             name="agree"
                             className="h-4 w-4 text-indigo-500 border-gray-300 rounded"
                           />
-                          <span className="ml-2 text-sm text-gray-600">
+                          <span>
+                          </span>
                             I agree to the
-                            <span
+                            <b
                               onClick={openModal}
-                              className="text-sm hover:text-blue-500 cursor-pointer ml-1"
+                              className="text-sm text-white hover:text-[var(--highlight-blue)] cursor-pointer"
                             >
                               Terms of Service.
-                            </span>
-                          </span>
+                            </b>
                         </label>
                         <ErrorMessage
                           name="agree"
@@ -225,14 +225,13 @@ const AuthForm = <T extends AuthFormValues>({
 
                     {type == "login" && (
                       <div className="flex items-center justify-between">
-                        <label className="flex items-center">
+                        <label className="flex items-center customCheckbox gap-2">
                           <input
                             type="checkbox"
                             className="h-4 w-4 text-indigo-500 border-gray-300 rounded"
                           />
-                          <span className="ml-2 text-sm text-gray-600">
+                          <span></span>
                             Remember Me
-                          </span>
                         </label>
                         <Link
                           href="/auth/forgot-password"
