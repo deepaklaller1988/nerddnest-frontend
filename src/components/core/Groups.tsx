@@ -5,20 +5,26 @@ import Image from "next/image";
 
 type Group = {
   name: string;
-  activeSince: string; 
+  activeSince: string;
 };
+
 const Groups = () => {
   const [activeTab, setActiveTab] = useState<"Newest" | "Active" | "Popular">("Newest");
 
-  const handleTabSwitch = (tab: string) => { 
-    setActiveTab(tab as "Newest" | "Active" | "Popular"); 
+  const handleTabSwitch = (tab: string) => {
+    setActiveTab(tab as "Newest" | "Active" | "Popular");
   };
 
+  const items: Group[] = [
+    { name: "React Developers", activeSince: "3 days ago" },
+    { name: "Node.js Enthusiasts", activeSince: "5 days ago" },
+  ];
+  console.log(items.length,)
   return (
     <TabContent
       title="GROUPS"
-      items={[]} 
-      isLoading={false} 
+      items={items}
+      isLoading={false}
       noItemsMessage="There are no groups currently available."
       tabs={[
         { label: "Newest", count: 0, tabName: "Newest" },
@@ -27,24 +33,24 @@ const Groups = () => {
       ]}
       onTabSwitch={handleTabSwitch}
       activeTab={activeTab}
-      renderItem={(group:Group) => (
+      renderItem={(group: Group) => (
         <section key={group.name} className="cursor-pointer flex items-center gap-2">
           <span className="relative min-w-10 min-h-10 max-w-10 max-h-10 rounded-full block border border-2 border-black/5 border-white">
-          <Image
-            height={50}
-            width={50}
+            <Image
+              height={50}
+              width={50}
               className="w-full block h-full bg-cover bg-center overflow-hidden rounded-full"
-              src="/logo.png"
+              src="/group-avatar-buddyboss.png"
               alt="group logo"
             />
           </span>
           <span>
-            <h6 className="text-[var(--highlight)]">{group.name}</h6>
+            <h6 className="text-white font-semibold">{group.name}</h6>
             <p className="text-[13px] text-gray-500/50">active 3 days ago</p>
           </span>
         </section>
       )}
-      viewAllText="View All"
+      viewAllText={"View All"}
     />
   );
 };

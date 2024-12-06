@@ -145,7 +145,7 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
       ),
     },
   ];
-
+console.log(images,initialValues.mediaUrl,"============")
   const closePopup = () => {
     setIsPopupOpen(false);
   };
@@ -259,13 +259,21 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
   const handleFileDelete = (index: number, type: 'images' | 'video' | 'document') => {
     if (type === 'images') {
       setImages((prevFiles) => prevFiles.filter((_, i) => i !== index));
+    
     } else if (type === 'video') {
       setVideos((prevFiles) => prevFiles.filter((_, i) => i !== index));
+     
     } else if (type === 'document') {
       setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
+    
     }
+    setInitialValues((prevValues: any) => ({
+      ...prevValues,
+      mediaUrl: prevValues.mediaUrl.filter((_:any, i:any) => i !== index),
+    }));
   };
-
+  
+  
   const renderFilePreview = (file: File) => {
     const fileExtension = file.name.split('.').pop()?.toLowerCase();
 

@@ -71,7 +71,7 @@ const Signup = () => {
     }
     if (success) {
       dispatch(setAuth({ accessToken: data.accessToken}));
-      dispatch(setUserId({ id: data.id, userId: data.userId }));
+      dispatch(setUserId({ id: data.id, userId:data.userId,firstName:data.firstName,lastName:data.lastName}));
       setIsActivated(true);
       setSuccessMsg(
         "Your Account is Successfully Verified! Click on Ok Button"
