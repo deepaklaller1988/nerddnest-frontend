@@ -21,7 +21,6 @@ export default function PostFeed() {
   const lastName = useSelector((state: any) => state.auth.lastName);
   const id = useSelector((state: any) => state.auth.id);
   const userId = useSelector((state: any) => state.auth.userId);
-  console.log(firstName,lastName,id,userId,"===============")
 
   const handleClick = (type: string) => {
     setPopupType(type);

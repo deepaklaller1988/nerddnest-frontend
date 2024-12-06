@@ -53,7 +53,7 @@ const VisibilityPopup: React.FC<VisibilityPopupProps> = ({
       description: "Visible to all members on this site",
     },
     {
-      id: "my-connections",
+      id: "connections",
       icon: <HiOutlineUsers />,
       name: "Friends",
       title: "Friends",
@@ -67,7 +67,7 @@ const VisibilityPopup: React.FC<VisibilityPopupProps> = ({
       description: "Visible only to you",
     },
     {
-      id: "Group",
+      id: "groups",
       icon: <HiOutlineUsers />,
       name: "Group",
       title: (
@@ -85,36 +85,22 @@ const VisibilityPopup: React.FC<VisibilityPopupProps> = ({
   useEffect(() => {
     if (selectedVisibility?.name) {
       setCurrentSelectedVisibility(selectedVisibility);
-    } 
-    // else if (selectedVisibility?.name === "Group") {
-    //   setCurrentSelectedVisibility(selectedVisibility); // Set "Group" initially if it's selected
-    // }
+      if (selectedVisibility.id === "groups") {
+        setSelectedGroup(selectedVisibility);
+        setShowGroupPopup(false); // Don't open the popup automatically if a group is selected
+      }
+    }
   }, [selectedVisibility]);
-
-  useEffect(() => {
-    if (!selectedVisibility?.name && visibilityOptions[4]?.id === "Group") {
-      setCurrentSelectedVisibility(visibilityOptions[4]); // Manually set "Group" as default if not set yet
-    }
-  }, []);
-
-  // Reset the selected group when the visibility changes
-  useEffect(() => {
-    if (currentSelectedVisibility?.id !== "Group") {
-      setSelectedGroup(null); // Reset the selected group when visibility is not "Group"
-    }
-  }, [currentSelectedVisibility]);
-
-
 
   const handleVisibilitySelect = (option: any) => {
     sendSelectedIcon(option);
-    if (option.id !== "Group") {
+    if (option.id !== "groups") {
       toggleVisibilityPopup();
       setShowGroupPopup(false);
-      setSelectedGroup(null);
+      setSelectedGroup(null); // Clear selected group when choosing something other than group
     }
-    if (option.id === "Group") {
-      setShowGroupPopup(true);
+    if (option.id === "groups") {
+      setShowGroupPopup(true); // Open the popup only when selecting "Group"
     }
   };
 

@@ -78,12 +78,22 @@ const baseQueryWithReauth = async (args: any, api: any, extraOptions: any) => {
 
         if (refreshResult.data) {
           const { data: { accessToken } }: any = refreshResult.data;
+        
+          // Check if in the browser before using localStorage
+          if (typeof window !== "undefined") {
+            localStorage.setItem("accessToken", accessToken);
+          }
+        
+          // Dispatch the accessToken to the store
           api.dispatch(setAuth({ accessToken }));
-          localStorage.setItem("accessToken", accessToken);
+        
+          // Proceed with the base query
           result = await baseQuery(args, api, extraOptions);
         } else {
+          // Clear authentication if refresh fails
           api.dispatch(clearAuth());
         }
+        
       }
     } else {
       toasterError("An unexpected error occurred", 10000, "id");
