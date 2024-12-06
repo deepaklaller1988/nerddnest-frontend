@@ -22,8 +22,6 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ value, setValue }) => {
 
   const modules = {
     toolbar: toolbarOptions,
-    
-
   };
 
   return (

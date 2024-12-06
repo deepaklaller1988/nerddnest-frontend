@@ -20,26 +20,26 @@ export default function Page() {
     // <CreateGroupForm/>
     <div className='w-full pt-8'>
       <div className='w-full max-w-[1230px] py-3 px-4 m-auto'>
-        <div className='w-full rounded-[12px] bg-white'>
+        <div className='w-full rounded-[12px] bg-[var(--sections)] border border-white/5'>
           <section className='flex gap-4 justify-between'>
-            <h2 className="text-[var(--highlight)] font-semibold p-4 py-6 uppercase">Groups</h2>
+            <h2 className="text-white font-semibold p-4 py-6 uppercase">Groups</h2>
             <GroupSearch />
           </section>
-          <div className='w-full p-4 border-t flex gap-4 justify-between'>
+          <div className='w-full p-4 border-t border-white/5 flex gap-4 justify-between'>
             <section className='w-full flex gap-8'>
-              <button className='flex items-center gap-2 text-[var(--highlight)] font-semibold hover:text-[var(--highlight)]'>All Groups <b className='bg-[var(--highlight)] text-white rounded-full px-2 font-semibold'>5</b></button>
-              <button className='flex items-center gap-2 hover:text-[var(--highlight)]'>My Groups <b className='bg-[var(--highlight)] text-white rounded-full px-2 font-semibold'>5</b></button>
-              <button className='hover:text-[var(--highlight)]' onClick={() => route.push("/groups/create-new-group")}>Create Group</button>
+              <button className='flex items-center gap-2 text-white font-semibold hover:text-white'>All Groups <b className='bg-[var(--highlight)] text-white rounded-full px-2 font-semibold'>5</b></button>
+              <button className='flex items-center gap-2 hover:text-white'>My Groups <b className='bg-[var(--highlight)] text-white rounded-full px-2 font-semibold'>5</b></button>
+              <button className='hover:text-white' onClick={() => route.push("/groups/create-new-group")}>Create Group</button>
             </section>
             <section className='flex gap-2'>
-              <Select className='w-[180px]' options={options} />
+              <Select className='w-[180px] outline-none' options={options} />
               <div className='flex gap-2'>
                 <button className='bg-[var(--highlight)] hover:bg-[var(--highlight)] group w-10 flex items-center justify-center rounded-lg'><BiGridAlt className='group-hover:fill-white fill-white' /></button>
                 <button className='bg-gray-500/10 hover:bg-[var(--highlight)] group w-10 flex items-center justify-center rounded-lg'><BiListUl className='group-hover:fill-white' /></button>
               </div>
             </section>
           </div>
-          <div className='w-full border-t-2 bg-black/10 rounded-[12px]'>
+          <div className='w-full bg-white/10 rounded-[12px]'>
             <section className='flex p-2 flex-wrap'>
               <div className='p-2 w-1/1 md:w-1/2 lg:w-1/3 xl:w-1/4'>
                 {/* add listSet class on above div if user click on list icon */}

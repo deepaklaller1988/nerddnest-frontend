@@ -92,7 +92,7 @@ export default function AddStory() {
                 height={50}
                 width={50}
                 className="w-full h-full object-cover"
-                src={story.image}
+                src={story.image|| null}
                 alt={story.title}
               />
               <span className="absolute left-2 top-2 min-w-10 min-h-10 max-w-10 max-h-10 rounded-full block border border-2 border-black/5 border-white">
@@ -100,7 +100,7 @@ export default function AddStory() {
                   height={50}
                   width={50}
                   className="w-full block h-full bg-cover bg-center overflow-hidden rounded-full"
-                  src={story.logo}
+                  src={story.logo || null}
                   alt="logo"
                 />
               </span>

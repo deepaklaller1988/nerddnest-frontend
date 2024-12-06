@@ -46,14 +46,14 @@ const CreateGroupForm = () => {
   return (
     <div className="w-full pt-8">
       <div className="w-full max-w-[750px] py-3 px-4 m-auto">
-        <div className="w-full rounded-[12px] bg-white">
+        <div className="w-full rounded-[12px]  bg-[var(--sections)] border border-white/5">
           <PopupHeader title={"Create A New Group"} type="group" />
-          <div className="flex items-center justify-center border-b bg-gray-100">
+          <div className="flex items-center justify-center bg-white/10">
             {tabs.map((tab, index) => (
               <React.Fragment key={tab.id}>
                 <button
                   className={`px-1 py-4 font-normal ${activeTab === tab.id
-                      ? "text-[var(--highlight)] font-semibold"
+                      ? "text-white font-semibold"
                       : " "
                     }`}
                   onClick={() => setActiveTab(tab.id)}
@@ -63,7 +63,7 @@ const CreateGroupForm = () => {
                 {index < tabs.length - 1 && (
                   <span
                     className={`px-2 py-3 text-[30px] font-light relative -top-[2px] ${activeTab === tab.id || activeTab === tab.id + 1
-                        ? "text-[var(--highlight)]"
+                        ? "text-white"
                         : ""
                       }`}
                   >
@@ -108,9 +108,9 @@ const CreateGroupForm = () => {
 
 const DetailsTab = () => (
   <div className="p-6">
-    <h2 className=" text-[var(--highlight)] mb-4 font-bold text-[20px]">Information</h2>
+    <h2 className=" mb-4 font-bold text-[20px] text-white">Information</h2>
     <label
-      className="block mb-2  text-black"
+      className="block mb-2"
       htmlFor="groupName"
     >
       Group Name (required)
@@ -119,10 +119,10 @@ const DetailsTab = () => (
       id="groupName"
       type="text"
       placeholder="Enter group name"
-      className=" w-full px-4 py-3 border rounded-md "
+      className="bg-[var(--bgh)] rounded-md p-[10px] w-full placeholder:text-[var(--foreground)]"
     />
     <label
-      className="block mb-2  text-black mt-4"
+      className="block mb-2 mt-4"
       htmlFor="groupDescription"
     >
       Group Description
@@ -131,7 +131,7 @@ const DetailsTab = () => (
       id="groupDescription"
       rows={2}
       placeholder="Enter group description"
-      className="w-full px-4 py-4 border rounded-md"
+      className="bg-[var(--bgh)] rounded-md p-[10px] w-full placeholder:text-[var(--foreground)]"
     ></textarea>
   </div>
 );

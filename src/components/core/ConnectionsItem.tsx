@@ -4,7 +4,7 @@ import Image from "next/image";
 interface ConnectionItemProps {
   name: string;
   status: string;
-  imageUrl: string;
+  imageUrl: string | null;
 }
 
 const ConnectionItem = ({ name, status, imageUrl }: ConnectionItemProps) => {
@@ -16,7 +16,7 @@ const ConnectionItem = ({ name, status, imageUrl }: ConnectionItemProps) => {
           height={60}
           width={60}
           className="w-full block h-full bg-cover bg-center overflow-hidden rounded-full"
-          src={imageUrl}
+          src={imageUrl?imageUrl: "/logo.png"}
           alt="logo"
         />
       </span>

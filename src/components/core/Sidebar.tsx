@@ -16,13 +16,13 @@ export default function Sidebar({ type }: SidebarProps) {
     setOpenSections((prev) => ({ ...prev, [section]: !prev[section] }));
   };
 
-  useEffect(()=>{
-  async function abc(){
-    const data=await API.get("auth/get-users")
-    console.log(data)
-  }
-  abc();
-  },[])
+  // useEffect(()=>{
+  // async function abc(){
+  //   const data=await API.get("auth/get-users")
+  //   console.log(data)
+  // }
+  // abc();
+  // },[])
 
   return (
     <>

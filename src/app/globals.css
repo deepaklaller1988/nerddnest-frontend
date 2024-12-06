@@ -262,10 +262,10 @@ label.customCheckbox {
 label.customCheckbox span {
   width: 20px;
   height: 20px;
-  background: #f3f3f3;
+  background: #191629;
   display: block;
   border-radius: 6px;
-  border: 1px solid silver;
+  border: 1px solid rgba(255, 255, 255, .10);
   position: relative;
   transition: 0.5s;
   cursor: pointer;

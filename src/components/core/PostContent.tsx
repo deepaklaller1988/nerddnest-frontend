@@ -32,7 +32,6 @@ export default function PostContent() {
   const [isCommentingEnabled, setIsCommentingEnabled] = useState(true);
   const [isVisiblityLoader, setIsVisibilityLoader] = useState(false);
 
-
   const [PostData, setPostData] = useState<any>([])
   const [selectedItem, setSelectedItem] = useState(FeedVisiblityMenu[0]);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);

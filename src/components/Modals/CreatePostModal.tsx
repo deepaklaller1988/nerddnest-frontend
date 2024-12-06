@@ -35,6 +35,7 @@ import PopupHeader from "../Header/PopupHeader";
 import VisibilityPopup from "./CreatePostVisibilty";
 import SchedulePostPopup from "./SchedulePostModal";
 import { toasterInfo, toasterSuccess } from "../core/Toaster";
+import { capitalizeName } from "@/utils/capitalizeName";
 const EmojiPicker = dynamic(() => import('emoji-picker-react'), { ssr: false });
 
 interface CreatePostPopupProps {
@@ -51,12 +52,18 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
   const { API } = useApi();
   const emojiPickerRef = useRef<HTMLDivElement>(null);
   const userId = useSelector((state: any) => state.auth.id);
+  const firstName = useSelector((state: any) => state.auth.firstName);
+  const lastName = useSelector((state: any) => state.auth.lastName);
 
   const [value, setValue] = useState<any>("");
   const [selectedName, setSelectedName] = useState("");
   const [emoji, setEmoji] = useState(false);
   const [toggleVisibilityPopup, setToggleVisibilityPopup] = useState(false);
-  const [selectedIcon, setSelectedIcon] = useState<React.ReactNode | null>(null);
+  const [selectedVisibility, setSelectedVisibility] = useState<{
+    icon: string | null;
+    name: string;
+    id: any
+  } | null>(null);
   const [isSchedulePopupOpen, setSchedulePopupOpen] = useState(false);
   const [isUploadLoading, setIsUploadLoading] = useState(false);
 
@@ -145,7 +152,7 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
       ),
     },
   ];
-console.log(images,initialValues.mediaUrl,"============")
+
   const closePopup = () => {
     setIsPopupOpen(false);
   };
@@ -154,9 +161,10 @@ console.log(images,initialValues.mediaUrl,"============")
     setToggleVisibilityPopup((prev) => !prev);
   };
 
-  const handleSelectedIcon = (icon: React.ReactNode) => {
-    setSelectedIcon(icon);
+  const handleSelectedIcon = (option: any) => {
+    setSelectedVisibility({ icon: option.icon, name: option.name, id: option.id });
   };
+
 
   const handleEmojis = () => {
     setEmoji((prev) => !prev);
@@ -184,7 +192,7 @@ console.log(images,initialValues.mediaUrl,"============")
       setSelectedName("video");
       setPopupType("video");
     }
-     else {
+    else {
       setSelectedName(name);
       setPopupType(name)
     }
@@ -245,7 +253,6 @@ console.log(images,initialValues.mediaUrl,"============")
 
         } catch (error) {
           setIsUploadLoading(false);
-          console.error("Error uploading file:", error);
           toasterInfo("An error occurred while uploading the file. Please try again.");
         }
 
@@ -259,21 +266,21 @@ console.log(images,initialValues.mediaUrl,"============")
   const handleFileDelete = (index: number, type: 'images' | 'video' | 'document') => {
     if (type === 'images') {
       setImages((prevFiles) => prevFiles.filter((_, i) => i !== index));
-    
+
     } else if (type === 'video') {
       setVideos((prevFiles) => prevFiles.filter((_, i) => i !== index));
-     
+
     } else if (type === 'document') {
       setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
-    
+
     }
     setInitialValues((prevValues: any) => ({
       ...prevValues,
-      mediaUrl: prevValues.mediaUrl.filter((_:any, i:any) => i !== index),
+      mediaUrl: prevValues.mediaUrl.filter((_: any, i: any) => i !== index),
     }));
   };
-  
-  
+
+
   const renderFilePreview = (file: File) => {
     const fileExtension = file.name.split('.').pop()?.toLowerCase();
 
@@ -413,14 +420,26 @@ console.log(images,initialValues.mediaUrl,"============")
                     />
                     <div className="flex flex-col">
                       <span className="text-white font-semibold">
-                        LordLexxy
+                        {capitalizeName(firstName)} {capitalizeName(lastName)}
                       </span>
-                      <div className="text-[13px] text-gray-500/50 flex items-center gap-2 cursor-pointer">
-                        <div className="">
-                          {selectedIcon || <GoGlobe />}
+                      <div className="text-[13px] text-gray-500/50 flex items-center gap-2 cursor-pointer" onClick={toggleVisibility}>
+                        <div>
+                          {(selectedVisibility && selectedVisibility.id === "Group")  ?  (
+                            <Image
+                              src={selectedVisibility?.icon || '/profile-avatar-legacy-50.png'}
+                              height={15}
+                              width={15}
+                              alt="Group"
+                            />
+                          ) : selectedVisibility && selectedVisibility.icon ? (
+                            selectedVisibility.icon
+                          ) : (
+                            <GoGlobe />
+                          )}
+
                         </div>
-                        <p className="text-sm">Public</p>
-                        <TiArrowSortedDown onClick={toggleVisibility} />
+                        <p className="text-sm">{selectedVisibility && selectedVisibility.name ? selectedVisibility.name : "Public"}</p>
+                        <TiArrowSortedDown />
                       </div>
                     </div>
                   </div>
@@ -494,7 +513,7 @@ console.log(images,initialValues.mediaUrl,"============")
                           <PiClockFill size={20} />
                         </span>
                         <span>
-                          <FaCaretDown size={15}  />
+                          <FaCaretDown size={15} />
                         </span>
                       </button>{" "}
                       <button
@@ -524,8 +543,8 @@ console.log(images,initialValues.mediaUrl,"============")
         <VisibilityPopup
           toggleVisibilityPopup={() => setToggleVisibilityPopup(false)}
           groups={["Support"]}
-          setSelectedVisibility={() => { }}
-          sendSelectedIcon={handleSelectedIcon}
+          sendSelectedIcon={(option: any) => handleSelectedIcon(option)}
+          selectedVisibility={selectedVisibility}
         />
       )}
     </>

@@ -35,13 +35,13 @@ const PostDetails = () => {
       <h1>{post.title}</h1>
       <div>{post.content}</div>
       <div>
-        {post.media_url && post.media_url.length > 0 && (
+        {/* {post.media_url && post.media_url.length > 0 && (
           <div>
             {post.media_url.map((url: string, index: number) => (
               <img key={index} src={url} alt={`Image ${index + 1}`} width={300} height={300} />
             ))}
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );
