@@ -58,6 +58,8 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
 
   const [value, setValue] = useState<any>("");
   const [selectedName, setSelectedName] = useState("");
+  const [scheduleTime, setScheduledTime] = useState("");
+
   const [emoji, setEmoji] = useState(false);
   const [toggleVisibilityPopup, setToggleVisibilityPopup] = useState(false);
   const [selectedVisibility, setSelectedVisibility] = useState<{
@@ -81,7 +83,7 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
     mediaUrl: [],
     sharedLink: "",
     type: "",
-    visibilty:"public"
+    visibilty: "public"
   });
 
   useEffect(() => {
@@ -387,19 +389,20 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
         content: value,
         mediaUrl: initialValues.mediaUrl,
         sharedLink: initialValues.sharedLink || "",
-        visibility:selectedVisibility? selectedVisibility.id:initialValues.visibility
+        visibility: selectedVisibility ? selectedVisibility.id : initialValues.visibility,
+        scheduleTime: scheduleTime
       };
       const response = await API.post("posts/create", payload);
       if (response.success) {
-        const newPost = response.data; 
+        const newPost = response.data;
         toasterSuccess("Post created successfully!", 2000);
         closePopup();
-        dispatch(setPostedData(newPost));  
+        dispatch(setPostedData(newPost));
       }
-      
+
     } catch (error) {
       // toasterInfo("There was an issue submitting your post.");
-    } 
+    }
   };
 
 
@@ -517,6 +520,7 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
                     <IconSection selectedName={selectedName} type={type} />
                     <div className="flex items-center gap-1">
                       <button
+                        type="button"
                         onClick={() => setSchedulePopupOpen(true)}
                         className="text-white px-2 py-2 rounded-md flex items-center gap-1"
                       >
@@ -535,7 +539,7 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
                           : "bg-[var(--highlght-hover)]"
                           } text-white rounded-md px-3 py-2`}
                       >
-                        Post
+                        {scheduleTime ? "Schedule" : "Post"}
                       </button>
                     </div>
                   </div>
@@ -543,7 +547,7 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
                 <SchedulePostPopup
                   isOpen={isSchedulePopupOpen}
                   onClose={() => setSchedulePopupOpen(false)}
-                />
+                  onScheduleComplete={(scheduleTime: any) => setScheduledTime(scheduleTime)} />
               </div>
             </div>
           </Form>

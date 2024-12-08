@@ -3,6 +3,7 @@ import { MdOutlineComment, MdOutlineCommentsDisabled } from "react-icons/md";
 import { RiUnpinLine } from "react-icons/ri";
 import { FaRegEdit } from "react-icons/fa";
 import { RiNotificationOffLine } from "react-icons/ri";
+import { useState } from "react";
 
 export const PostActionsMenu = ({
   isPinned,
@@ -10,18 +11,22 @@ export const PostActionsMenu = ({
   isCommentingEnabled,
   toggleCommenting,
   deleted,
-
+  postId,
+  openEditModal
 }: {
   isPinned: boolean;
   togglePin: () => void;
   isCommentingEnabled: boolean;
   toggleCommenting: () => void;
   deleted: () => void;
+  postId: any
+  openEditModal: any
 
 }) => {
 
+
   const actions = [
-    { onClick: undefined, icon: <FaRegEdit />, label: "Edit" },
+    { onClick: () => openEditModal(postId), icon: <FaRegEdit />, label: "Edit" },
     { onClick: deleted, icon: <RiDeleteBin7Line />, label: "Delete" },
     {
       onClick: toggleCommenting,

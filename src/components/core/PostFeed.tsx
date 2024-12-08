@@ -47,7 +47,9 @@ export default function PostFeed() {
                 width={80}
                 quality={20}
                 className="w-full block h-full"
-                src="/dp.jpg"
+                // src="/dp.jpg"
+                src="/profile-avatar-legacy-50.png"
+
                 alt="user"
               />
             </span>

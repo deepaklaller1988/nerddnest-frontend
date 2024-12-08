@@ -18,6 +18,9 @@ import { useRouter } from "next/navigation";
 import { capitalizeName } from "@/utils/capitalizeName";
 import { selectPostedData } from '../../redux/slices/data.slice';
 import Loader from "../Loaders/Loader";
+import EditPostModal from "../Modals/EditPostModal";
+import { BiSolidLike } from "react-icons/bi";
+import CommentSection from "./CommentSection";
 
 
 export default function PostContent() {
@@ -36,6 +39,18 @@ export default function PostContent() {
   const [deleteItemId, setDeleteItemId] = useState<number | null>(null);
   const [openPostVisibilityIndex, setOpenPostVisibiltyIndex] = useState<number | null>(null);
   const [openPostActionMenuIndex, setOpenPostActionMenuIndex] = useState<number | null>(null);
+  const [currentPostId, setCurrentPostId] = useState<number | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
+  const openEditModal = (postId: number) => {
+    setCurrentPostId(postId);
+    setIsEditModalOpen(true); // Open the modal
+  };
+
+  const closeEditModal = () => {
+    setIsEditModalOpen(false);
+    setCurrentPostId(null);
+  };
   const postedData = useSelector(selectPostedData);
 
   useEffect(() => {
@@ -91,6 +106,7 @@ export default function PostContent() {
   //     window.removeEventListener("scroll", handleScroll);
   //   };
   // }, [loading]);
+
 
   const getAllPosts = async () => {
     if (loading) return;
@@ -156,6 +172,7 @@ export default function PostContent() {
   const handleDeleteClick = (id: number) => {
     setDeleteItemId(id);
     setIsDeletePopupOpen(true);
+    setOpenPostActionMenuIndex(null)
   };
 
   const handleClosePopup = () => {
@@ -208,6 +225,7 @@ export default function PostContent() {
         );
         setOpenPostActionMenuIndex(null)
         toasterSuccess(newState ? "Pinned Post SuccessFully." : "UnPin Post SuccessFully.", 1000, "id")
+        getAllPosts()
       } else {
         console.error(error);
       }
@@ -235,8 +253,6 @@ export default function PostContent() {
       setDeleteItemId(null);
     }
   };
-  // const handleTogglePin = () => setIsPinned((prev) => !prev);
-
 
 
   const getVisibilityIcon = (visibility: any) => {
@@ -252,6 +268,17 @@ export default function PostContent() {
             onDelete={handleConfirmDelete}
             onCancel={handleClosePopup}
           />
+        )}
+
+        {isEditModalOpen && (
+          <div
+            className="fixed inset-0 flex items-center justify-center z-50 bg-gray-800 bg-opacity-50"
+          >
+            <EditPostModal
+              postId={currentPostId!}
+              onClose={closeEditModal}
+            />
+          </div>
         )}
 
         {PostData && PostData.map((data: any, index: any) => {
@@ -353,11 +380,13 @@ export default function PostContent() {
                       {openPostActionMenuIndex === index && (
                         <div data-popup-type="postactions" className="!z-10 shadow-[0_-5px_25px_-15px_rgba(0,0,0,0.3)] w-full min-w-[210px] py-2 rounded-lg bg-[var(--bgh)] absolute mt-5 right-0">
                           {PostActionsMenu({
+                            postId: data.id,
                             isPinned: data.pinned,
                             togglePin: () => handleTogglePin(data),
                             isCommentingEnabled: data.isCommentingEnabled,
                             toggleCommenting: () => handleToggleCommenting(data),
                             deleted: () => handleDeleteClick(data.id),
+                            openEditModal: () => openEditModal(data.id)
 
                           }).map(({ icon, label, onClick }, index) => (
 
@@ -454,16 +483,16 @@ export default function PostContent() {
 
                     <div className="w-full mt-2 flex items-center justify-between gap-2">
                       <span className="inline-flex items-center gap-2 cursor-pointer">
-                        {/* <span className="bg-blue-500 p-1 rounded-full">
-                        <BiSolidLike className="fill-white" />
-                      </span>{" "} */}
-                        {/* Marcos, Alvin and 2 Others */}
+                        <span className="bg-blue-500 p-1 rounded-full">
+                          <BiSolidLike className="fill-white" />
+                        </span>{" "}
+                        Marcos, Alvin and 2 Others
                       </span>
                       <span className="cursor-pointer hover:text-white">
-                        {/* 3 Comments */}
+                        3 Comments
                       </span>
                     </div>
-                    {/* <CommentSection /> */}
+                    <CommentSection />
                   </section>
                 </div>
               </section>
