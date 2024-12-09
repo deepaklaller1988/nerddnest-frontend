@@ -428,8 +428,8 @@ label.customRadio input[type="radio"]:checked + span:before {
 } */
 
 .ql-editor {
-  display: flex !important;
-  word-break: break-all;
+  /* display: flex !important;
+  word-break: break-all; */
   max-height: 400px;
 }
 

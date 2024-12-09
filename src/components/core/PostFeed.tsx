@@ -19,8 +19,6 @@ export default function PostFeed() {
   const popupRef = useRef<HTMLDivElement>(null);
   const firstName = useSelector((state: any) => state.auth.firstName);
   const lastName = useSelector((state: any) => state.auth.lastName);
-  const id = useSelector((state: any) => state.auth.id);
-  const userId = useSelector((state: any) => state.auth.userId);
 
   const handleClick = (type: string) => {
     setPopupType(type);
@@ -75,7 +73,7 @@ export default function PostFeed() {
               <HiOutlineGif className="w-6 h-6 stroke-purple-700" />
             </span>
             <span className="cursor-pointer">
-              <BiBarChartSquare className="w-6 h-6 fill-white" />
+              <BiBarChartSquare className="w-6 h-6 fill-white" onClick={() => handleClick('poll')}/>
             </span>
           </section>
         </div>
