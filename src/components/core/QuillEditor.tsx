@@ -1,4 +1,4 @@
-import React, { useRef, forwardRef } from 'react';
+import React, { forwardRef } from 'react';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
 
@@ -34,9 +34,11 @@ const QuillEditor = forwardRef((props: QuillEditorProps, ref: React.Ref<any>) =>
       onChange={handleEditorChange}
       modules={modules}
       className='postEditorText'
-      ref={quillRef}  // Attach the ref to ReactQuill
+      ref={quillRef || ref}  
     />
   );
 });
+
+QuillEditor.displayName = 'QuillEditor';
 
 export default QuillEditor;

@@ -4,14 +4,16 @@ import { MdOutlineArrowRightAlt } from "react-icons/md";
 import ViewAllScheduleModal from "./ViewAllScheduleModal";
 
 const combineDateTime = (date: string, time: string, period: string) => {
-  let [hours, minutes] = time.split(":").map(Number);
-  if (period === "PM" && hours < 12) hours += 12;
-  if (period === "AM" && hours === 12) hours = 0;
+  const [hours, minutes] = time.split(":").map(Number); 
+  let adjustedHours = hours;
+  if (period === "PM" && adjustedHours < 12) adjustedHours += 12;
+  if (period === "AM" && adjustedHours === 12) adjustedHours = 0;
 
   const fullDate = new Date(date);
-  fullDate.setHours(hours, minutes, 0, 0);
+  fullDate.setHours(adjustedHours, minutes, 0, 0);
   return fullDate.toISOString();
 };
+
 
 type SchedulePostPopupProps = {
   isOpen: boolean;

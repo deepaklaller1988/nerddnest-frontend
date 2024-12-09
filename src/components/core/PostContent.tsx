@@ -91,23 +91,6 @@ export default function PostContent() {
     };
   }, [openPostVisibilityIndex, openPostActionMenuIndex]);
 
-  // useEffect(() => {
-  //   const handleScroll = () => {
-  //     if (
-  //       window.innerHeight + document.documentElement.scrollTop ===
-  //       document.documentElement.offsetHeight
-  //     ) {
-  //       setPage((prevPage) => prevPage + 1);
-  //     }
-  //   };
-
-  //   window.addEventListener("scroll", handleScroll);
-  //   return () => {
-  //     window.removeEventListener("scroll", handleScroll);
-  //   };
-  // }, [loading]);
-
-
   const getAllPosts = async () => {
     if (loading) return;
     setLoading(true);

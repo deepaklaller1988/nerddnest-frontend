@@ -1,6 +1,7 @@
 "use client";
+import dynamic from "next/dynamic";
 import FeedSearchBar from "../SearchBar/FeedSearchBar";
-import PostContent from "./PostContent";
+const PostContent = dynamic(() => import('./PostContent'), { ssr: false });
 
 export default function Feeds() {
   return (
