@@ -1,23 +1,26 @@
-"use client";
-import React from 'react';
+import React, { useRef, forwardRef } from 'react';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
 
 interface QuillEditorProps {
   value: any;
   setValue: React.Dispatch<React.SetStateAction<any>>;
+  quillRef: React.RefObject<any>;  // Receive quillRef as a prop
 }
 
-const QuillEditor: React.FC<QuillEditorProps> = ({ value, setValue }) => {
+const QuillEditor = forwardRef((props: QuillEditorProps, ref: React.Ref<any>) => {
+  const { value, setValue, quillRef } = props;
   const toolbarOptions = [
     ['bold', 'italic'],
     [{ list: 'ordered' }, { list: 'bullet' }],
     ['blockquote', 'code-block'],
     ['link'],
-  ]
+  ];
+
   const handleEditorChange = (content: string) => {
     const plainText = content.replace(/<[^>]+>/g, '').trim(); 
     setValue(plainText);
+    setValue(content);
   };
 
   const modules = {
@@ -29,10 +32,11 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ value, setValue }) => {
       theme="snow"
       value={value}
       onChange={handleEditorChange}
-      modules={modules} 
-      className='postEditorText'    
+      modules={modules}
+      className='postEditorText'
+      ref={quillRef}  // Attach the ref to ReactQuill
     />
   );
-};
+});
 
 export default QuillEditor;

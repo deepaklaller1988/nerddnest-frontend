@@ -37,6 +37,7 @@ import VisibilityPopup from "./CreatePostVisibilty";
 import SchedulePostPopup from "./SchedulePostModal";
 import { toasterInfo, toasterSuccess } from "../core/Toaster";
 import { capitalizeName } from "@/utils/capitalizeName";
+import PollModal from "./PollModal";
 const EmojiPicker = dynamic(() => import('emoji-picker-react'), { ssr: false });
 
 interface CreatePostPopupProps {
@@ -52,6 +53,7 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
 }) => {
   const { API } = useApi();
   const emojiPickerRef = useRef<HTMLDivElement>(null);
+  const quillRef = useRef<any>(null);
   const userId = useSelector((state: any) => state.auth.id);
   const firstName = useSelector((state: any) => state.auth.firstName);
   const lastName = useSelector((state: any) => state.auth.lastName);
@@ -69,7 +71,7 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
   } | null>(null);
   const [isSchedulePopupOpen, setSchedulePopupOpen] = useState(false);
   const [isUploadLoading, setIsUploadLoading] = useState(false);
-
+  const [isPollPopupOpen, setIsPollPopupOpen] = useState(false);
   const [images, setImages] = useState<File[]>([]);
   const [videos, setVideos] = useState<File[]>([]);
   const [files, setFiles] = useState<File[]>([]);
@@ -176,16 +178,32 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
     setEmoji((prev) => !prev);
   };
 
-  const handleEmojiSelect = (emoji: any) => {
-    if (typeof window !== "undefined") {
-      const quillEditor = document.querySelector(".ql-editor") as HTMLElement;
-      if (quillEditor) {
-        const currentText = quillEditor.innerHTML;
-        setValue(currentText + emoji.emoji);
-        setInitialValues((prevValues: any) => ({
-          ...prevValues,
-          content: currentText + emoji.emoji,
-        }));
+  // const handleEmojiSelect = (emoji: any) => {
+  //   if (typeof window !== "undefined") {
+  //     const quillEditor = document.querySelector(".ql-editor") as HTMLElement;
+  //     if (quillEditor) {
+  //       const currentText = quillEditor.innerHTML;
+  //       setValue(currentText + emoji.emoji);
+  //       setInitialValues((prevValues: any) => ({
+  //         ...prevValues,
+  //         content: currentText + emoji.emoji,
+  //       }));
+  //     }
+  //   }
+  // };
+  const handleEmojiSelect = (emoji: any, content: any) => {
+    if (typeof window !== "undefined" && quillRef.current) {
+      const quillInstance = quillRef.current.getEditor();
+      const selection = quillInstance.getSelection(); 
+
+      if (selection) {
+        const cursorPosition = selection.index;
+        quillInstance.insertText(cursorPosition, emoji.emoji);
+
+        quillInstance.setSelection(cursorPosition + emoji.emoji.length);
+      } else {
+        const currentText = quillRef.current.getEditor().root.innerHTML;
+        quillRef.current.getEditor().root.innerHTML = currentText + emoji.emoji;
       }
     }
   };
@@ -198,6 +216,11 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
       setSelectedName("video");
       setPopupType("video");
     }
+    else if (name === "poll") {
+      setSelectedName("poll");
+      setPopupType("poll");
+      setIsPollPopupOpen(true)
+    }
     else {
       setSelectedName(name);
       setPopupType(name)
@@ -205,6 +228,7 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
   };
 
   const IconSection = ({ selectedName, type }: any) => (
+
     <div className="">
       <section className=" p-4 flex gap-4">
         {iconMapping.map(({ name, activeIcon, inactiveIcon }) => (
@@ -405,7 +429,12 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
     }
   };
 
+  const closePollModal = () => {
+    setIsPollPopupOpen(false);
+    setSelectedName(""); 
+    setPopupType("")
 
+  };
   return (
     <>
       <Formik
@@ -460,8 +489,8 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
                   <div className="w-full mb-2">
                     <div className="flex flex-col">
                       <div className="!z-1">
-                        <QuillEditor value={value} setValue={setValue}
-                        />
+                        {/* Pass quillRef to the QuillEditor */}
+                        <QuillEditor value={value} setValue={setValue} quillRef={quillRef} />
                       </div>
 
                       <div className="my-2 relative">
@@ -473,7 +502,7 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
                             <EmojiPicker
                               lazyLoadEmojis={true}
                               className="max-w-[300px] max-h-[350px] !absolute right-0 top-[50%] translate-y-[-50%]"
-                              onEmojiClick={handleEmojiSelect}
+                              onEmojiClick={(emoji) => handleEmojiSelect(emoji, value)} // Pass value and emoji
                               searchDisabled
                               autoFocusSearch
                             />
@@ -516,6 +545,7 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
                       </div>
                     )}
                   {selectedName == "gif" && <GifSearch />}
+                  {selectedName == "poll" && <GifSearch />}
                   <div className="pt-4 flex justify-between border-t border-gray-500/10">
                     <IconSection selectedName={selectedName} type={type} />
                     <div className="flex items-center gap-1">
@@ -553,7 +583,9 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
           </Form>
         )}
       </Formik>
-
+      {isPollPopupOpen && (
+        <PollModal onClose={closePollModal}/>
+      )}
       {toggleVisibilityPopup && (
         <VisibilityPopup
           toggleVisibilityPopup={() => setToggleVisibilityPopup(false)}
