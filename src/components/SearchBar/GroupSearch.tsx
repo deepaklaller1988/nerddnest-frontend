@@ -33,7 +33,7 @@ export default function GroupSearch() {
     };
     return (
       <>
-      <div className="relative flex items-center justify-between w-full rounded-full">
+      <div className="relative flex items-center justify-between rounded-full">
       <FiSearch className="text-[18px] absolute left-[15px]" />
       <input
         className="bg-white/10 placeholder:text-[var(--foreground)] rounded-full p-[10px] pl-12 w-full"

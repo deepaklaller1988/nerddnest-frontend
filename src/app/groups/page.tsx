@@ -21,7 +21,7 @@ export default function Page() {
     <div className='w-full pt-8'>
       <div className='w-full max-w-[1230px] py-3 px-4 m-auto'>
         <div className='w-full rounded-[12px] bg-[var(--sections)] border border-white/5'>
-          <section className='flex gap-4 justify-between'>
+          <section className='flex gap-4 justify-between pr-4'>
             <h2 className="text-white font-semibold p-4 py-6 uppercase">Groups</h2>
             <GroupSearch />
           </section>

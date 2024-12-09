@@ -13,14 +13,14 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
 
   const token = localStorage.getItem("accessToken");
 
-  useEffect(() => {
-    if (token && pathname.startsWith("/auth")) {
-      router.push("/"); 
-    }
-    if (!token && !pathname.startsWith("/auth")) {
-      router.push("/auth/login"); 
-    }
-  }, [token, pathname, router]);
+  // useEffect(() => {
+  //   if (token && pathname.startsWith("/auth")) {
+  //     router.push("/"); 
+  //   }
+  //   if (!token && !pathname.startsWith("/auth")) {
+  //     router.push("/auth/login"); 
+  //   }
+  // }, [token, pathname, router]);
 
 
   const isAuthRoute = pathname.startsWith("/auth");
