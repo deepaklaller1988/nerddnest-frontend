@@ -9,10 +9,10 @@ type ButtonProps = {
 };
 
 const Button: React.FC<ButtonProps> = ({ label, onClick, variant = "default", icon ,type }) => {
-  const baseStyles = `flex items-center justify-center gap-2 px-4 py-2 rounded-full font-bold text-sm transition duration-300`;
+  const baseStyles = `bg-[var(--highlght-hover)] text-white rounded-md px-3 py-2`;
   
   const variants = {
-    default: `bg-teal-700 text-white hover:bg-teal-600 shadow-md hover:shadow-lg`,
+    default: `text-white shadow-md hover:shadow-lg`,
     secondary: `bg-gray-200 text-gray-800 hover:bg-gray-300`,
   };
 
