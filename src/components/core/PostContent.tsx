@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
 import { LuPin } from "react-icons/lu";
-import { MdMoreHoriz } from "react-icons/md";
+import { MdMoreHoriz, MdOutlineModeComment } from "react-icons/md";
 import { TiArrowSortedDown } from "react-icons/ti";
 
 import { useSelector } from "react-redux";
@@ -32,6 +32,8 @@ export default function PostContent() {
   const [page, setPage] = useState(1);
   const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
   const [isVisiblityLoader, setIsVisibilityLoader] = useState(false);
+  const [likedPosts, setLikedPosts] = useState<{ [key: number]: boolean }>({});
+  const [activeCommentIndex, setActiveCommentIndex] = useState(null);
 
   const [loading, setLoading] = useState(false);
   const [PostData, setPostData] = useState<any>([])
@@ -41,6 +43,10 @@ export default function PostContent() {
   const [openPostActionMenuIndex, setOpenPostActionMenuIndex] = useState<number | null>(null);
   const [currentPostId, setCurrentPostId] = useState<number | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
+  const toggleCommentSection = (index:any) => {
+    setActiveCommentIndex(activeCommentIndex === index ? null : index);
+  };
 
   const openEditModal = (postId: number) => {
     setCurrentPostId(postId);
@@ -144,7 +150,20 @@ export default function PostContent() {
     await updateVisibilty(id, userId, name);
   };
 
+  const likePost = async (postId: any) => {
+    const currentLikedState = likedPosts[postId] || false;
+    const { success, data, error } = await API.post("posts/like", { postId, userId });
 
+    if (success) {
+      setLikedPosts((prevState: any) => ({
+        ...prevState,
+        [postId]: !currentLikedState,
+      }));
+      // getAllLikes(postId)
+    } else {
+      console.error(error);
+    }
+  };
   const handleImageClick = (id: number) => {
     router.push(`/postdetails?id=${id}`);
   };
@@ -463,7 +482,35 @@ export default function PostContent() {
                       </div>
                     )}
 
-                    <CommentSection data={data} postId={data.id} userId={userId} />
+                    <div className="w-full mt-2 flex items-center justify-between gap-2">
+                      <span className="inline-flex items-center gap-2 cursor-pointer">
+                        <span className="bg-blue-500 p-1 rounded-full">
+                          <BiSolidLike className="fill-white" />
+                        </span>{" "}
+                        Marcos, Alvin and 2 Others
+                      </span>
+                      <span className="cursor-pointer hover:text-white">
+                        3 Comments
+                      </span>
+                    </div>
+                    <div className="w-full border-t border-gray-500/20 py-4">
+                      <section className="w-full flex items-center gap-2 justify-between">
+                        <button
+                          onClick={() => likePost(data.id)}
+                          className={`flex items-center gap-2 ${likedPosts[data.id] ? "text-green-600" : ""}`}
+                        >
+                          <BiSolidLike
+                            className={`w-5 h-5 ${likedPosts[data.id] ? 'fill-green-600' : 'fill-gray-400'}`}
+                            onClick={() => likePost(data.id)}
+                          />
+                          Like
+                        </button>
+                        <button className="flex items-center gap-2" onClick={() => toggleCommentSection(index)}>
+                          <MdOutlineModeComment className="w-5 h-5" /> Comment
+                        </button>
+                      </section>
+                      <CommentSection  isActive={activeCommentIndex === index} id={data.id} data={PostData} user_id={data.user_id}/>
+                    </div>
                   </section>
                 </div>
               </section>

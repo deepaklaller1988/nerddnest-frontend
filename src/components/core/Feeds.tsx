@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import FeedSearchBar from "../SearchBar/FeedSearchBar";
 const PostContent = dynamic(() => import('./PostContent'), { ssr: false });
 
+
 export default function Feeds() {
   return (
     <div className="mt-4">

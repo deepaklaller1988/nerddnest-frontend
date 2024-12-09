@@ -178,35 +178,35 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
     setEmoji((prev) => !prev);
   };
 
-  // const handleEmojiSelect = (emoji: any) => {
-  //   if (typeof window !== "undefined") {
-  //     const quillEditor = document.querySelector(".ql-editor") as HTMLElement;
-  //     if (quillEditor) {
-  //       const currentText = quillEditor.innerHTML;
-  //       setValue(currentText + emoji.emoji);
-  //       setInitialValues((prevValues: any) => ({
-  //         ...prevValues,
-  //         content: currentText + emoji.emoji,
-  //       }));
-  //     }
-  //   }
-  // };
-  const handleEmojiSelect = (emoji: any, content: any) => {
-    if (typeof window !== "undefined" && quillRef.current) {
-      const quillInstance = quillRef.current.getEditor();
-      const selection = quillInstance.getSelection(); 
-
-      if (selection) {
-        const cursorPosition = selection.index;
-        quillInstance.insertText(cursorPosition, emoji.emoji);
-
-        quillInstance.setSelection(cursorPosition + emoji.emoji.length);
-      } else {
-        const currentText = quillRef.current.getEditor().root.innerHTML;
-        quillRef.current.getEditor().root.innerHTML = currentText + emoji.emoji;
+  const handleEmojiSelect = (emoji: any) => {
+    if (typeof window !== "undefined") {
+      const quillEditor = document.querySelector(".ql-editor") as HTMLElement;
+      if (quillEditor) {
+        const currentText = quillEditor.innerHTML;
+        setValue(currentText + emoji.emoji);
+        setInitialValues((prevValues: any) => ({
+          ...prevValues,
+          content: currentText + emoji.emoji,
+        }));
       }
     }
   };
+  // const handleEmojiSelect = (emoji: any, content: any) => {
+  //   if (typeof window !== "undefined" && quillRef.current) {
+  //     const quillInstance = quillRef.current.getEditor();
+  //     const selection = quillInstance.getSelection(); 
+
+  //     if (selection) {
+  //       const cursorPosition = selection.index;
+  //       quillInstance.insertText(cursorPosition, emoji.emoji);
+
+  //       quillInstance.setSelection(cursorPosition + emoji.emoji.length);
+  //     } else {
+  //       const currentText = quillRef.current.getEditor().root.innerHTML;
+  //       quillRef.current.getEditor().root.innerHTML = currentText + emoji.emoji;
+  //     }
+  //   }
+  // };
 
   const handleOnClick = (e: React.MouseEvent<SVGElement, MouseEvent>, name: any) => {
     if (name === "image" && !images) {
@@ -489,7 +489,7 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
                   <div className="w-full mb-2">
                     <div className="flex flex-col">
                       <div className="!z-1">
-                        <QuillEditor value={value} setValue={setValue} quillRef={quillRef} />
+                        <QuillEditor value={value} setValue={setValue}  />
                       </div>
 
                       <div className="my-2 relative">
@@ -501,7 +501,7 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
                             <EmojiPicker
                               lazyLoadEmojis={true}
                               className="max-w-[300px] max-h-[350px] !absolute right-0 top-[50%] translate-y-[-50%]"
-                              onEmojiClick={(emoji) => handleEmojiSelect(emoji, value)} // Pass value and emoji
+                              onEmojiClick={(emoji) => handleEmojiSelect(emoji)}
                               searchDisabled
                               autoFocusSearch
                             />
