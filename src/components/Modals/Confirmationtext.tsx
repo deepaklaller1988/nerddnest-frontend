@@ -20,13 +20,13 @@ export default function Confirmationtext({
   const router = useRouter();
   return (
     <div>
-      {heading && <p className="text-black text-3xl text-center">{heading}</p>}
+      {heading && <p className="text-white text-3xl text-center">{heading}</p>}
       <div className="rounded-2xl flex flex-row items-center gap-4 mt-10 border border-blue-500 overflow-hidden">
         <div className="py-8 bg-blue-500 px-2 rounded">
           <IoMdInformationCircleOutline size={40} fill="white" />
         </div>
         <div>
-          <p className="text-black text-xl">{text}</p>
+          <p className="text-white text-xl">{text}</p>
         </div>
       </div>
       <div className="text-center justify-center items-center ">
