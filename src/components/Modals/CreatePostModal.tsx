@@ -489,7 +489,6 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
                   <div className="w-full mb-2">
                     <div className="flex flex-col">
                       <div className="!z-1">
-                        {/* Pass quillRef to the QuillEditor */}
                         <QuillEditor value={value} setValue={setValue} quillRef={quillRef} />
                       </div>
 

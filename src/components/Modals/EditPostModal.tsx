@@ -35,6 +35,8 @@ import { TiArrowSortedDown } from 'react-icons/ti';
 
 const EditPostModal = ({ postId, onClose }: { postId: any; onClose: () => void }) => {
     const { API } = useApi()
+    const quillRef = useRef<any>(null);
+
     const [emoji, setEmoji] = useState(false);
     const [value, setValue] = useState<any>("");
     const [selectedName, setSelectedName] = useState("");
@@ -443,7 +445,7 @@ const EditPostModal = ({ postId, onClose }: { postId: any; onClose: () => void }
                                     <div className="w-full mb-2">
                                         <div className="flex flex-col">
                                             <div className="!z-1">
-                                                <QuillEditor value={value} setValue={setValue}
+                                                <QuillEditor value={value} setValue={setValue} quillRef={quillRef}
                                                 />
                                             </div>
 

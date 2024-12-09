@@ -480,19 +480,7 @@ export default function PostContent() {
                       </div>
                     )}
 
-
-                    <div className="w-full mt-2 flex items-center justify-between gap-2">
-                      <span className="inline-flex items-center gap-2 cursor-pointer">
-                        <span className="bg-blue-500 p-1 rounded-full">
-                          <BiSolidLike className="fill-white" />
-                        </span>{" "}
-                        Marcos, Alvin and 2 Others
-                      </span>
-                      <span className="cursor-pointer hover:text-white">
-                        3 Comments
-                      </span>
-                    </div>
-                    <CommentSection />
+                    <CommentSection data={data} postId={data.id} userId={userId} />
                   </section>
                 </div>
               </section>
