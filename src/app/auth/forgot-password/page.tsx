@@ -19,6 +19,7 @@ export default function ForgotPassword() {
   const [initialValues] = useState<ForgotPasswordFormValues>({
     email: "",
   });
+  
   useEffect(() => {
     setIsClient(true);
   }, []);
