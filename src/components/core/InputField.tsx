@@ -21,18 +21,18 @@ const InputField: React.FC<InputFieldProps> = ({ name, type, placeholder, icon, 
 
   return (
     <>
-    <div className="flex flex-col">
+    <div className="flex flex-col gap-1">
       {label && (
         <label htmlFor={name} className="text-sm font-medium text-gray-700">
           {label}
         </label>
       )}
-      <div className="relative flex items-center border border-white/5 rounded-lg p-2 pl-4">
+      <div className="relative">
         {icon && <div className="">{icon}</div>}
         <Field
           type={type === "password" ? (passwordVisible ? "text" : "password") : type}
           name={name}
-          className="w-full p-2 focus:outline-none bg-white/0 placeholder:text-[var(--foreground)]"
+          className="bg-[var(--bgh)] rounded-lg p-[10px] w-full placeholder:text-[var(--foreground)]"
           placeholder={placeholder}
         />
         {type === "password" && (

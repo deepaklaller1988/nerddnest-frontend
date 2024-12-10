@@ -67,13 +67,13 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup, onAddStory }) => {
   }
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-gray-200 w-full max-w-[600px] h-[90%] rounded-[12px] shadow-2xl overflow-y-auto">
-        <div className="flex justify-between items-center px-6 py-4 bg-gray-50 border-b">
-          <h2 className="text-xl font-bold text-gray-800 text-[var(--highlight-blue)]">
+      <div className="max-h-[80vh] overflow-auto bg-[var(--sections)] border border-white/10 w-full max-w-[600px] rounded-[12px] shadow-lg">
+        <div className="flex items-center justify-between  p-4 border-b border-white/5">
+          <h2 className=" uppercase font-semibold text-center block text-white">
             Create Story
           </h2>
           <button
-            className="bg-gray-200 w-10 h-10 p-0 flex items-center justify-center rounded-full text-[30px] text-gray-600 hover:text-gray-800"
+            className="w-7 h-7 p-0 flex items-center justify-center rounded-full text-[30px] text-gray-600 hover:text-white"
             onClick={togglePopup}
           >
             &times;
@@ -88,22 +88,22 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup, onAddStory }) => {
           {({ values, setFieldValue }) => (
             console.log(values, "="),
             (
-              <Form className="space-y-6 px-8 py-6 bg-gray-200">
-                <div className="bg-white p-8 rounded-xl">
-                  <h3 className="text-center text-lg font-semibold mb-4 text-[var(--highlight-blue)]">
+              <Form className="space-y-6 p-4">
+                <div className="">
+                  <h3 className="text-center text-lg font-semibold mb-4 text-white">
                     Story Cover
                   </h3>
-                  <div className="border-2 border-dashed bg-gray-100 border-gray-300 rounded-full w-36 h-36 mx-auto flex items-center justify-center mb-4">
+                  <div className="p-5 border-2 border-dashed bg-gray-100/10 border-gray-300/20 rounded-full w-36 h-36 mx-auto flex items-center justify-center mb-4">
                     <label
                       htmlFor="storyCoverImage"
                       className="text-center text-gray-500 cursor-pointer hover:text-green-600"
                     >
-                      <p className="text-sm text-[var(--highlight-blue)]">
+                      <p className="text-sm text-white">
                         Drag & Drop your file
                       </p>
-                      <p className="text-sm text-[var(--highlight-blue)]">
+                      <p className="text-sm text-white">
                         or{" "}
-                        <u className="text-[var(--highlight-blue)]">Browse</u>
+                        <u className="text-white">Browse</u>
                       </p>
                       <Field
                         type="file"
@@ -120,10 +120,10 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup, onAddStory }) => {
                   </div>
                   <p className="text-center">Recommended sizes: 180x180 px.</p>
 
-                  <div className="mt-4">
+                  <div className="mt-4 flex flex-col gap-1">
                     <label
                       htmlFor="storyCoverTitle"
-                      className="block text-md font-medium text-[var(--highlight-blue)]"
+                      className="block text-md font-medium text-white"
                     >
                       Story Cover Title
                     </label>
@@ -141,10 +141,10 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup, onAddStory }) => {
                       {values.stories.map((story, index) => (
                         <div
                           key={index}
-                          className="bg-white p-8 rounded-xl mb-4 border border-gray-300"
+                          className="rounded-lg mb-4"
                         >
                           <div className="flex justify-between items-center">
-                            <h3 className="text-lg font-semibold text-[var(--highlight-blue)] mb-4">
+                            <h3 className="text-lg font-semibold text-white mb-4">
                               Story {index + 1}
                             </h3>
                             <div className="flex gap-4">
@@ -170,10 +170,10 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup, onAddStory }) => {
                             </div>
                           </div>
 
-                          <div className="mt-4">
+                          <div className="mt-4 flex flex-col gap-1">
                             <label
                               htmlFor={`stories[${index}]?.storyLinkText`}
-                              className="block text-md font-medium text-[var(--highlight-blue)]"
+                              className="block text-md font-medium text-white"
                             >
                               Story Link Text
                             </label>
@@ -187,10 +187,10 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup, onAddStory }) => {
 
                           {!story.isCollapsed && (
                             <>
-                              <div className="mt-4">
+                              <div className="mt-4 flex flex-col gap-1">
                                 <label
                                   htmlFor={`stories[${index}].storyLink`}
-                                  className="block text-md font-medium text-[var(--highlight-blue)]"
+                                  className="block text-md font-medium text-white"
                                 >
                                   Story Link
                                 </label>
@@ -201,28 +201,28 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup, onAddStory }) => {
                                 />
                               </div>
 
-                              <div className="mt-4">
+                              <div className="mt-4 flex flex-col gap-1">
                                 <label
                                   htmlFor={`stories[${index}].storyMedia`}
-                                  className="block text-md font-medium text-[var(--highlight-blue)]"
+                                  className="block text-md font-medium text-white"
                                 >
                                   Story Media (Image/Video)
                                 </label>
-                                <div className="bg-gray-50 p-8 rounded-xl shadow-md">
-                                  <div className="p-6 bg-gray-100 rounded-xl border-dashed border-2 border-gray-300">
+                                <div className="">
+                                  <div className="p-6 rounded-xl border-dashed border-2 border-white/10">
                                     <label
                                       htmlFor={`file-upload-${index}`}
-                                      className="cursor-pointer text-[var(--highlight-blue)] py-4 px-6 rounded-md mt-4 block text-center transition-all "
+                                      className="cursor-pointer py-4 px-6 rounded-md mt-4 flex flex-col gap-1 block text-center transition-all "
                                     >
-                                      <span className="text-sm text-[var(--highlight)]">
+                                      <span className="text-sm ">
                                         Drag & Drop your file here or
                                       </span>
-                                      <span className="text-sm mt-2 ml-1 text-[var(--highlight)] underline">
+                                      <span className="text-lg mt-2 ml-1 text-white underline">
                                         Browse
                                       </span>
                                     </label>
                                   </div>
-                                  <p className="text-black mt-6 text-sm">
+                                  <p className=" mt-2 text-sm">
                                     Allowed types: .jpg, .jpeg, .png, .gif,
                                     .mp4, .mov, .wmv, .avi, .mpeg, .3gp.
                                   </p>
@@ -244,10 +244,10 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup, onAddStory }) => {
                                 />
                               </div>
 
-                              <div className="mt-4">
+                              <div className="mt-4 flex flex-col gap-1">
                                 <label
                                   htmlFor={`stories[${index}].duration`}
-                                  className="block text-md font-medium text-[var(--highlight-blue)]"
+                                  className="block text-md font-medium text-white"
                                 >
                                   Duration (seconds)
                                 </label>
@@ -259,17 +259,17 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup, onAddStory }) => {
                                 />
                               </div>
 
-                              <div className="mt-4">
+                              <div className="mt-4 flex flex-col gap-1">
                                 <label
                                   htmlFor={`stories[${index}].visibility`}
-                                  className="block text-md font-medium text-[var(--highlight-blue)]"
+                                  className="block text-md font-medium text-white"
                                 >
                                   Visibility
                                 </label>
                                 <Field
                                   as="select"
                                   name={`stories[${index}].visibility`}
-                                  className="w-full mt-1 border border-gray-300 rounded-lg p-4"
+                                  className="bg-[var(--bgh)] rounded-lg p-[10px] w-full placeholder:text-[var(--foreground)]"
                                 >
                                   <option value="Everyone">Everyone</option>
                                   <option value="Friends">Friends</option>
@@ -281,7 +281,7 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup, onAddStory }) => {
                         </div>
                       ))}
 
-                      <div className="flex flex-row items-center gap-2">
+                      <div className="flex flex-row items-center gap-2 mt-2">
                         <Button
                           type="button"
                           label="Add Another Story"
