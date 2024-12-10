@@ -1,23 +1,49 @@
 "use client";
 import dynamic from "next/dynamic";
 import FeedSearchBar from "../SearchBar/FeedSearchBar";
+import { useState } from "react";
 const PostContent = dynamic(() => import('./PostContent'), { ssr: false });
 
-
 export default function Feeds() {
+  const [view,setView] = useState("all")
+
+  const handleViewChange = (view: string) => {
+    setView(view);
+  };
+
   return (
+    // <div className="mt-4">
+    //   <div className="-mb-3 w-full rounded-[12px] bg-[var(--sections)] border border-white/5 p-4 py-3 pb-6 flex items-center gap-4 justify-between">
+    //     <section className="flex gap-10 cursor-pointer">
+    //       <span className=" text-white border-b-2 border-white">
+    //         All Updates
+    //       </span>
+    //       <span>Likes</span>
+    //     </section>
+    //     <FeedSearchBar />
+    //   </div>
+    //   <PostContent/>
+    // </div>
     <div className="mt-4">
-      <div className="-mb-3 w-full rounded-[12px] bg-[var(--sections)] border border-white/5 p-4 py-3 pb-6 flex items-center gap-4 justify-between">
-        <section className="flex gap-10 cursor-pointer">
-          <span className=" text-white border-b-2 border-white">
-            All Updates
-          </span>
-          <span>Likes</span>
-        </section>
-        <FeedSearchBar />
-      </div>
-      <PostContent/>
+    <div className="-mb-3 w-full rounded-[12px] bg-[var(--sections)] border border-white/5 p-4 py-3 pb-6 flex items-center gap-4 justify-between">
+      <section className="flex gap-10 cursor-pointer">
+        <span
+          className={`text-white  ${view === "all" ? "border-b-2 border-white" : ""}`}
+          onClick={() => handleViewChange("all")}
+        >
+          All Updates
+        </span>
+        <span
+          className={`text-white ${view === "likes" ? "border-b-2 border-white" : ""}`}
+          onClick={() => handleViewChange("likes")}
+        >
+          Likes
+        </span>
+      </section>
+      <FeedSearchBar />
     </div>
+    {view === "all" ? <PostContent filter="all" /> : <PostContent filter="likes" />}
+  </div>
   );
 }
 

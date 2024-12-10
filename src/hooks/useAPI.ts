@@ -8,7 +8,7 @@ export const useApi = () => {
     get: async (url: string, body?: any ) => {
       try {
         const response = await dynamicRequest({ method: 'GET', url, body }).unwrap();
-        return { success: true, data: response.data };
+        return { success: true, data: response.data ,count:response.count};
       } catch (error: FetchBaseQueryError | Error | any) {  // Specify FetchBaseQueryError or a fallback Error
         return { success: false, error: error.data?.error || error };
       }

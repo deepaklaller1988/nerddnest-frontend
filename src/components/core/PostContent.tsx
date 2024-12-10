@@ -1,32 +1,38 @@
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
-import { LuPin } from "react-icons/lu";
-import { MdMoreHoriz, MdOutlineModeComment } from "react-icons/md";
-import { TiArrowSortedDown } from "react-icons/ti";
-
 import { useSelector } from "react-redux";
 import { useApi } from "@/hooks/useAPI";
+
+import Image from "next/image";
+import Loader from "../Loaders/Loader";
+import { LuPin } from "react-icons/lu";
+import { timeAgo } from "@/utils/timeAgo";
+import { BiSolidLike } from "react-icons/bi";
+
+import CommentSection from "./CommentSection";
+import { useRouter } from "next/navigation";
+import { TiArrowSortedDown } from "react-icons/ti";
+import EditPostModal from "../Modals/EditPostModal";
 import DeletePopup from "../Modals/DeleteConfirmation";
+import { IoDocumentTextOutline } from "react-icons/io5";
+import { capitalizeName } from "@/utils/capitalizeName";
 import { toasterError, toasterSuccess } from "./Toaster";
 import { PostActionsMenu } from "@/lib/MenuBar/PostActionsMenu ";
-import { FeedVisiblityMenu } from "@/lib/MenuBar/FeedVisibiltyMenu";
-import Image from "next/image";
-import { timeAgo } from "@/utils/timeAgo";
-import { IoDocumentTextOutline } from "react-icons/io5";
-import { useRouter } from "next/navigation";
-import { capitalizeName } from "@/utils/capitalizeName";
 import { selectPostedData } from '../../redux/slices/data.slice';
-import Loader from "../Loaders/Loader";
-import EditPostModal from "../Modals/EditPostModal";
-import { BiSolidLike } from "react-icons/bi";
-import CommentSection from "./CommentSection";
+import { MdMoreHoriz, MdOutlineModeComment } from "react-icons/md";
+import { FeedVisiblityMenu } from "@/lib/MenuBar/FeedVisibiltyMenu";
 
+type LikeData = {
+  count: number;
+  users: { firstname: string; lastname: string; handle: string }[]; 
+};
 
-export default function PostContent() {
+export default function PostContent({ filter }: any) {
   const { API } = useApi()
   const router = useRouter()
   const userId = useSelector((state: any) => state.auth.id);
+  const postedData = useSelector(selectPostedData);
   const postVisibilityRef = useRef<HTMLDivElement | null>(null);
   const postActionsRef = useRef<HTMLDivElement | null>(null);
   const [page, setPage] = useState(1);
@@ -41,24 +47,24 @@ export default function PostContent() {
   const [deleteItemId, setDeleteItemId] = useState<number | null>(null);
   const [openPostVisibilityIndex, setOpenPostVisibiltyIndex] = useState<number | null>(null);
   const [openPostActionMenuIndex, setOpenPostActionMenuIndex] = useState<number | null>(null);
+  const [likesData, setLikesData] = useState<{ [key: string]: LikeData }>({});
+
   const [currentPostId, setCurrentPostId] = useState<number | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  const toggleCommentSection = (index:any) => {
+  const toggleCommentSection = (index: any) => {
     setActiveCommentIndex(activeCommentIndex === index ? null : index);
   };
 
   const openEditModal = (postId: number) => {
     setCurrentPostId(postId);
-    setIsEditModalOpen(true); // Open the modal
+    setIsEditModalOpen(true);
   };
 
   const closeEditModal = () => {
     setIsEditModalOpen(false);
     setCurrentPostId(null);
   };
-  const postedData = useSelector(selectPostedData);
-
   useEffect(() => {
     if (userId) {
       getAllPosts()
@@ -98,7 +104,6 @@ export default function PostContent() {
   }, [openPostVisibilityIndex, openPostActionMenuIndex]);
 
   const getAllPosts = async () => {
-    if (loading) return;
     setLoading(true);
 
     const { success, error, data } = await API.get(
@@ -111,9 +116,14 @@ export default function PostContent() {
           ...post,
           isCommentingEnabled: post.is_commenting_enabled,
           pinned: post.is_pinned,
+          likes_count: post.like_count,
+          comments_count: post.comments_count,
+          isLikedByUser: post.likes.some((like: any) => like.user_id === userId),
         })),
       ]);
-
+      data.forEach((post: any) => {
+        getAllLikes(post.id);
+      });
     } else {
       console.log(error);
     }
@@ -144,22 +154,37 @@ export default function PostContent() {
       setIsVisibilityLoader(false);
     }
   };
-
   const handleItemClick = async (id: any, userId: any, name: any) => {
     setOpenPostVisibiltyIndex(null);
     await updateVisibilty(id, userId, name);
   };
-
   const likePost = async (postId: any) => {
     const currentLikedState = likedPosts[postId] || false;
     const { success, data, error } = await API.post("posts/like", { postId, userId });
-
     if (success) {
       setLikedPosts((prevState: any) => ({
         ...prevState,
         [postId]: !currentLikedState,
       }));
-      // getAllLikes(postId)
+
+      getAllLikes(postId);
+    } else {
+      console.error(error);
+    }
+  };
+  console.log(likesData,"like")
+  const getAllLikes = async (postId: any) => {
+    const { success, data, error ,count} = await API.get(`posts/get-likes?postId=${postId}`);
+    if (success) {
+      setLikesData((prevState) => ({
+        ...prevState,
+        [postId]: {
+          count: count,
+          users: data?.map((like:any) => like.user),
+        },
+      }));
+    
+      
     } else {
       console.error(error);
     }
@@ -167,7 +192,6 @@ export default function PostContent() {
   const handleImageClick = (id: number) => {
     router.push(`/postdetails?id=${id}`);
   };
-
   const handleMouseLeave = () => setHoveredIndex(null);
   const handleMouseEnter = (index: number) => setHoveredIndex(index);
 
@@ -176,11 +200,9 @@ export default function PostContent() {
     setIsDeletePopupOpen(true);
     setOpenPostActionMenuIndex(null)
   };
-
   const handleClosePopup = () => {
     setIsDeletePopupOpen(false);
   };
-
   const handleToggleCommenting = async (data: any) => {
     const newState = !data.isCommentingEnabled;
     try {
@@ -235,7 +257,6 @@ export default function PostContent() {
       console.error("API Error:", error);
     }
   };
-
   const handleConfirmDelete = async () => {
     if (deleteItemId === null) return;
 
@@ -255,12 +276,19 @@ export default function PostContent() {
       setDeleteItemId(null);
     }
   };
-
-
   const getVisibilityIcon = (visibility: any) => {
     const selectedItem = FeedVisiblityMenu.find(item => item.name === visibility);
     return selectedItem ? selectedItem.Icon : null;
   };
+
+  const updateCommentCount = (postId: any, newCount: any) => {
+    setPostData((prevPosts: any) =>
+      prevPosts.map((post: any) =>
+        post.id === postId ? { ...post, comments_count: newCount } : post
+      )
+    );
+  };
+
   return (
     <>
       <div className="w-full flex flex-col gap-4 mb-4">
@@ -279,11 +307,13 @@ export default function PostContent() {
             <EditPostModal
               postId={currentPostId!}
               onClose={closeEditModal}
+              
             />
           </div>
         )}
 
-        {PostData && PostData.map((data: any, index: any) => {
+        {PostData && PostData.length > 0 ? (PostData.map((data: any, index: any) => {
+
           const postTypeMap: any = {
             content: "Shared an Update",
             image: "Posted an Image",
@@ -487,29 +517,54 @@ export default function PostContent() {
                         <span className="bg-blue-500 p-1 rounded-full">
                           <BiSolidLike className="fill-white" />
                         </span>{" "}
-                        Marcos, Alvin and 2 Others
+                        {likesData[data.id]?.count > 0 ? (
+                          <>
+                            {likesData[data.id]?.users.slice(0, 2).map((user: any, index: number) => (
+                              <span key={index}>{user.firstname}</span>
+                            ))}
+                            {likesData[data.id]?.users.length > 2 && (
+                              <span>and {likesData[data.id]?.users.length - 2} others</span>
+                            )}
+                          </>
+                        ) : (
+                          "Be the first to like this"
+                        )}
                       </span>
-                      <span className="cursor-pointer hover:text-white">
-                        3 Comments
-                      </span>
+                      {data?.isCommentingEnabled && (
+                        <span className="cursor-pointer hover:text-white">
+                          {data?.comments_count ? (
+                            <span>
+                              {data?.comments_count} <span className="ml-1">Comments</span>
+                            </span>
+                          ) : ""}
+                        </span>
+                      )}
                     </div>
+
                     <div className="w-full border-t border-gray-500/20 py-4">
                       <section className="w-full flex items-center gap-2 justify-between">
                         <button
                           onClick={() => likePost(data.id)}
-                          className={`flex items-center gap-2 ${likedPosts[data.id] ? "text-green-600" : ""}`}
+                          className={`flex items-center gap-2 ${likedPosts[data.id] ? "text-green-600" : "fill-gray-400"}`}
                         >
                           <BiSolidLike
-                            className={`w-5 h-5 ${likedPosts[data.id] ? 'fill-green-600' : 'fill-gray-400'}`}
-                            onClick={() => likePost(data.id)}
+                            className={`w-5 h-5 ${likedPosts[data.id] ? "fill-green-600" : "fill-gray-400"}`}
                           />
                           Like
                         </button>
-                        <button className="flex items-center gap-2" onClick={() => toggleCommentSection(index)}>
+                        {data?.isCommentingEnabled && <button className="flex items-center gap-2" onClick={() => toggleCommentSection(index)}>
                           <MdOutlineModeComment className="w-5 h-5" /> Comment
-                        </button>
+                        </button>}
                       </section>
-                      <CommentSection  isActive={activeCommentIndex === index} id={data.id} data={PostData} user_id={data.user_id}/>
+                      {!data?.isCommentingEnabled && <div className="-mb-3 mt-4 w-full rounded-[12px] bg-[var(--sections)] border border-white/5 p-4 py-3 pb-6 flex items-center gap-4 justify-between">
+
+                        <span className="text-white/50">You turned off commenting for this post</span>
+                      </div>
+                      }
+                      {data.isCommentingEnabled && (<CommentSection isActive={activeCommentIndex === index} id={data.id} data={PostData} user_id={data.user_id}
+                        commentsCount={data.comments_count}
+                        updateCommentsCount={updateCommentCount}
+                      />)}
                     </div>
                   </section>
                 </div>
@@ -517,7 +572,9 @@ export default function PostContent() {
               {loading && <Loader />}
             </div>
           );
-        })}
+        })) : <div className="-mb-3 mt-4 w-full rounded-[12px] bg-[var(--sections)] border border-white/5 p-4 py-3 pb-6 flex items-center gap-4 justify-between">
+          <span className="text-white/50">Sorry, there was no activity found.</span>
+        </div>}
       </div>
     </>
   );

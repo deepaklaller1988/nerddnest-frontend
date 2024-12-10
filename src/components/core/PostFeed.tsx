@@ -1,7 +1,8 @@
-"use client";
+
+
 import dynamic from 'next/dynamic';
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { MdOutlineLinkedCamera } from "react-icons/md";
 import { HiOutlineVideoCamera } from "react-icons/hi2";
 import { IoDocumentAttachOutline } from "react-icons/io5";
@@ -15,17 +16,23 @@ import { useSelector } from 'react-redux';
 
 export default function PostFeed() {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [isClient, setIsClient] = useState(false)
   const [popupType, setPopupType] = useState<string | null>(null);
   const popupRef = useRef<HTMLDivElement>(null);
-  const firstName = useSelector((state: any) => state.auth.firstName);
-  const lastName = useSelector((state: any) => state.auth.lastName);
+  const firstName = useSelector((state: any) => state.auth.firstName) || "";
+  const lastName = useSelector((state: any) => state.auth.lastName) || "";
 
   const handleClick = (type: string) => {
     setPopupType(type);
     setIsPopupOpen(true);
   };
 
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+
   return (
+    isClient ?
     <>
       {isPopupOpen && (
         <div
@@ -47,7 +54,6 @@ export default function PostFeed() {
                 className="w-full block h-full"
                 // src="/dp.jpg"
                 src="/profile-avatar-legacy-50.png"
-
                 alt="user"
               />
             </span>
@@ -55,7 +61,7 @@ export default function PostFeed() {
               onClick={() => handleClick("text")}
               className="w-full bg-[var(--bgh)] p-2 px-5 rounded-full flex items-center text-[var(--foreground)]"
             >
-              {`Share what's on your mind, ${capitalizeName(firstName || '')} ${capitalizeName(lastName || '')} ...` }
+              {`Share what's on your mind, ${capitalizeName(firstName)} ${capitalizeName(lastName)} ...` }
 
             </div>
           </section>
@@ -79,5 +85,6 @@ export default function PostFeed() {
         </div>
       </div>
     </>
+    :""
   );
 }

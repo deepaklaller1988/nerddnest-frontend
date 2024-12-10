@@ -5,7 +5,7 @@ import { useState, useEffect, useRef } from 'react';
 import PopupHeader from '../Header/PopupHeader';
 import Image from 'next/image';
 import { capitalizeName } from '@/utils/capitalizeName';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import QuillEditor from '../core/QuillEditor';
 import EmojiPicker from 'emoji-picker-react';
 import { FiFile } from "react-icons/fi";
@@ -24,18 +24,21 @@ import { MdOutlineLinkedCamera } from "react-icons/md";
 import { HiOutlineVideoCamera } from "react-icons/hi2";
 import { IoDocumentAttachOutline, IoDocumentTextSharp } from "react-icons/io5";
 import VisibilityPopup from './CreatePostVisibilty';
+import { setPostedData } from '../../redux/slices/data.slice';
 
 import MiniLoader from '../Loaders/Miniloader';
-import { toasterInfo } from '../core/Toaster';
+import { toasterInfo, toasterSuccess } from '../core/Toaster';
 import { BsEmojiSmile } from 'react-icons/bs';
 import { GoGlobe } from 'react-icons/go';
 import { CiCamera, CiVideoOff, CiVideoOn } from 'react-icons/ci';
 import { TiArrowSortedDown } from 'react-icons/ti';
 
 
-const EditPostModal = ({ postId, onClose }: { postId: any; onClose: () => void }) => {
+const EditPostModal = ({ postId, onClose,
+}: { postId: any; onClose: () => void }) => {
     const { API } = useApi()
     const quillRef = useRef<any>(null);
+    const dispatch = useDispatch();
 
     const [emoji, setEmoji] = useState(false);
     const [value, setValue] = useState<any>("");
@@ -389,13 +392,42 @@ const EditPostModal = ({ postId, onClose }: { postId: any; onClose: () => void }
         );
     };
 
-    const handleSubmit = () => { }
+    // const closePopup = () => {
+    //     setIsPopupOpen(false);
+    //   };
 
+    const handleSubmit = async (e: any) => {
+        if (!(value || initialValues.mediaUrl && initialValues.mediaUrl.length > 0)) {
+          toasterInfo("Please add some content or upload media before posting.", 3000, "id");
+          return;
+        }
+    
+        try {
+          const payload = {
+            userId: userId,
+            // postType: type,
+            content: value,
+            mediaUrl: initialValues.mediaUrl,
+            sharedLink: initialValues.sharedLink || "",
+            visibility: selectedVisibility ? selectedVisibility.id : initialValues.visibility,
+          };
+          const response = await API.post("posts/update", payload);
+          if (response.success) {
+            const newPost = response.data;
+            toasterSuccess("Post Updated successfully!", 2000);
+            // closePopup();
+            dispatch(setPostedData(newPost));
+          }
+    
+        } catch (error) {
+          // toasterInfo("There was an issue submitting your post.");
+        }
+      };    
     return (
         <>
             <Formik
                 initialValues={{ postType: "", content: "", mediaUrl: [], sharedLink: "", type: "" }}
-                onSubmit={(e: any) => handleSubmit()}
+                onSubmit={(e: any) => handleSubmit(e)}
             >
                 {({ errors, isSubmitting }: any) => (
                     <Form>
@@ -445,7 +477,7 @@ const EditPostModal = ({ postId, onClose }: { postId: any; onClose: () => void }
                                     <div className="w-full mb-2">
                                         <div className="flex flex-col">
                                             <div className="!z-1">
-                                                <QuillEditor value={value} setValue={setValue} quillRef={quillRef}
+                                                <QuillEditor value={value} setValue={setValue} 
                                                 />
                                             </div>
 
