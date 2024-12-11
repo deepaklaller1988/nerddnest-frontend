@@ -526,3 +526,22 @@ section.stack.stack4 section span {
   background: #302e3f;
   padding: 3px;
 }
+
+.uploaded-media .media-item {
+  position: relative;
+}
+
+.uploaded-media .media-item button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background-color: rgba(255, 0, 0, 0.7);
+  color: white;
+  padding: 5px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.uploaded-media .media-item button:hover {
+  background-color: red;
+}
