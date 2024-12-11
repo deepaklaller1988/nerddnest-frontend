@@ -10,9 +10,9 @@ import QuillEditor from '../core/QuillEditor';
 import EmojiPicker from 'emoji-picker-react';
 import { FiFile } from "react-icons/fi";
 import { RxCross2 } from "react-icons/rx";
-import { FaCamera } from "react-icons/fa";
+import { FaCamera, FaCaretDown } from "react-icons/fa";
 import { FaVideo } from "react-icons/fa";
-import { PiGifFill } from "react-icons/pi";
+import { PiClockFill, PiGifFill } from "react-icons/pi";
 
 import { MdInsertChart } from "react-icons/md";
 import { TbFileTypeXls } from "react-icons/tb";
@@ -33,15 +33,16 @@ import { GoGlobe } from 'react-icons/go';
 import { CiCamera, CiVideoOff, CiVideoOn } from 'react-icons/ci';
 import { TiArrowSortedDown } from 'react-icons/ti';
 import { CgLayoutGrid } from 'react-icons/cg';
-
+import SchedulePostPopup from './SchedulePostModal';
 
 const EditPostModal = ({ postId, onClose,
 }: { postId: any; onClose: () => void }) => {
     const { API } = useApi()
-    const quillRef = useRef<any>(null);
     const dispatch = useDispatch();
 
     const [emoji, setEmoji] = useState(false);
+    const [isClient, setIsClient] = useState(false)
+
     const [value, setValue] = useState<any>("");
     const [selectedName, setSelectedName] = useState("");
 
@@ -53,6 +54,8 @@ const EditPostModal = ({ postId, onClose,
 
     const [isUploadLoading, setIsUploadLoading] = useState(false);
     const [toggleVisibilityPopup, setToggleVisibilityPopup] = useState(false);
+    const [isSchedulePopupOpen, setSchedulePopupOpen] = useState(false);
+    const [scheduleTime, setScheduledTime] = useState("");
 
     const [images, setImages] = useState<File[]>([]);
     const [videos, setVideos] = useState<File[]>([]);
@@ -64,11 +67,18 @@ const EditPostModal = ({ postId, onClose,
         mediaUrl: [],
         sharedLink: "",
         post_type: "",
-        visibilty: "public"
+        visibilty: "public",
+        isScheduled: "",
+        schedule_time: "",
+        initialDate: "",
+        initialTime: ""
     });
 
     const [currentPostType, setCurrentPostType] = useState("");
 
+    useEffect(() => {
+        setIsClient(true)
+    }, [])
 
     const [selectedVisibility, setSelectedVisibility] = useState<{
         icon: string | null;
@@ -88,13 +98,25 @@ const EditPostModal = ({ postId, onClose,
         const { success, error, data } = await API.get(`posts/fetch-by-id?id=${postId}`);
         if (success) {
             setInitialValues({
-                content: data.content,
-                mediaUrl: data.media_url,
-                sharedLink: data.sharedLink,
-                post_type: data.post_type,
-                visibility: data.visibility
+                content: data?.content,
+                mediaUrl: data?.media_url || "",
+                sharedLink: data?.sharedLink || "",
+                post_type: data?.post_type || "",
+                visibility: data.visibility,
+                isScheduled: data?.is_scheduled || "",
+                time: data?.schedule_time || ""
             })
-            setValue(data.content);
+            setValue(data?.content);
+            const scheduleDate = new Date(data?.schedule_time);
+            const formattedDate = scheduleDate.toISOString().split('T')[0];
+            const formattedTime = scheduleDate.toISOString().split('T')[1].slice(0, 5);
+
+            setInitialValues((prevValues: any) => ({
+                ...prevValues,
+                initialDate: formattedDate,
+                initialTime: formattedTime,
+            }));
+
             if (data.media_url) {
                 if (data.post_type === 'image') {
                     setImages(data.media_url);
@@ -123,24 +145,26 @@ const EditPostModal = ({ postId, onClose,
             setCurrentPostType(name)
             setInitialValues((prevValues: any) => ({
                 ...prevValues,
-                post_type:name
-    
+                post_type: name
+
             }));
 
         } else if (name === "video" && !videos) {
             setSelectedName("video");
             setInitialValues((prevValues: any) => ({
                 ...prevValues,
-                post_type:name
-    
-            }));        }
+                post_type: name
+
+            }));
+        }
         else {
             setSelectedName(name);
             setInitialValues((prevValues: any) => ({
                 ...prevValues,
-                post_type:name
-    
-            }));        }
+                post_type: name
+
+            }));
+        }
     };
 
     useEffect(() => {
@@ -235,7 +259,7 @@ const EditPostModal = ({ postId, onClose,
             if (quillEditor) {
                 const currentText = quillEditor.innerHTML;
                 setValue(currentText + emoji.emoji);
-                
+
             }
         }
     };
@@ -315,7 +339,7 @@ const EditPostModal = ({ postId, onClose,
         setInitialValues((prevValues: any) => ({
             ...prevValues,
             mediaUrl: prevValues.mediaUrl.filter((_: any, i: any) => i !== index),
-            post_type:""
+            post_type: ""
 
         }));
     };
@@ -410,7 +434,8 @@ const EditPostModal = ({ postId, onClose,
         );
     };
 
-    const handleSubmit = async (e: any) => {
+    const handleSubmit = async () => {
+        console.log(initialValues, value, "value======================")
         if (!(value || initialValues.mediaUrl && initialValues.mediaUrl.length > 0)) {
             toasterInfo("Please add some content or upload media before posting.", 3000, "id");
             return;
@@ -426,8 +451,13 @@ const EditPostModal = ({ postId, onClose,
                 sharedLink: initialValues.sharedLink || "",
                 visibility: selectedVisibility ? selectedVisibility.id : initialValues.visibility,
             };
-            const response = await API.put("posts/update", payload);
-            if (response.success) {
+            let response;
+
+            if (initialValues.isScheduled) {
+                response = await API.put("posts/update-scheduled-post", payload);
+            } else {
+                response = await API.put("posts/update", payload);
+            } if (response.success) {
                 const newPost = response.data;
                 toasterSuccess("Post Updated successfully!", 2000);
                 onClose();
@@ -437,152 +467,186 @@ const EditPostModal = ({ postId, onClose,
         } catch (error) {
         }
     };
-    console.log(initialValues.post_type ,"===========ini")
     return (
         <>
-            <Formik
-                initialValues={{ postType: "", content: "", mediaUrl: [], sharedLink: "", type: "" }}
-                onSubmit={(e: any) => handleSubmit(e)}
-            >
-                {({ errors, isSubmitting }: any) => (
-                    <Form>
-                        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-                            <div className="max-h-[80vh] overflow-auto bg-[var(--sections)] border border-white/10 w-full max-w-[600px] rounded-[12px] shadow-lg">
-                                <PopupHeader title={"Edit a Post"} onClick={onClose} />
-                                <div className="p-4">
-                                    <div className="flex items-center mb-4 gap-2">
-                                        <Image
-                                            src="/profile-avatar-legacy-50.png"
-                                            alt="Image"
-                                            height={40}
-                                            width={40}
-                                            className="rounded-full"
-                                        />
-                                        <div className="flex flex-col">
-                                            <span className="text-white font-semibold">
-                                                {capitalizeName(firstName)} {capitalizeName(lastName)}
-                                            </span>
-                                            <div className="text-[13px] text-gray-500/50 flex items-center gap-2 cursor-pointer" onClick={toggleVisibility}>
-                                                <div>
-                                                    {(selectedVisibility && selectedVisibility.id === "Group") ? (
-                                                        <Image
-                                                            src={typeof selectedVisibility.icon === 'string' ? selectedVisibility.icon : '/profile-avatar-legacy-50.png'}
-                                                            height={15}
-                                                            width={15}
-                                                            alt="Group"
-                                                        />
-                                                    ) : selectedVisibility && selectedVisibility.icon && typeof selectedVisibility.icon === 'string' ? (
-                                                        <Image
-                                                            src={selectedVisibility.icon}
-                                                            height={15}
-                                                            width={15}
-                                                            alt="Icon"
-                                                        />
-                                                    ) : (
-                                                        <GoGlobe />
-                                                    )}
-
-
-                                                </div>
-                                                <p className="text-sm">{selectedVisibility ? selectedVisibility.name : initialValues.visibility ? initialValues.visibility : "Public"}</p>
-                                                <TiArrowSortedDown />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="w-full mb-2">
-                                        <div className="flex flex-col">
-                                            <div className="!z-1">
-                                                <QuillEditor value={value} setValue={setValue}
-                                                />
-                                            </div>
-
-                                            <div className="my-2 relative">
-                                                <button type="button" onClick={handleEmojis}>
-                                                    <BsEmojiSmile className="w-6 h-6" />
-                                                </button>
-                                                {emoji && (
-                                                    <div ref={emojiPickerRef}>
-                                                        <EmojiPicker
-                                                            lazyLoadEmojis={true}
-                                                            className="max-w-[300px] max-h-[350px] !absolute right-0 top-[50%] translate-y-[-50%]"
-                                                            onEmojiClick={handleEmojiSelect}
-                                                            searchDisabled
-                                                            autoFocusSearch
-                                                        />
+            {isClient ? (
+                <>
+                    <SchedulePostPopup
+                        isOpen={isSchedulePopupOpen}
+                        onClose={() => setSchedulePopupOpen(false)}
+                        onScheduleComplete={(scheduleTime: any) => setScheduledTime(scheduleTime)}
+                        initialDate={initialValues?.initialDate ? initialValues?.initialDate : ""}
+                        initialTime={initialValues?.initialTime ? initialValues?.initialTime : ""}
+                        isScheduling={true}
+                    />
+                    <Formik
+                        initialValues={initialValues}
+                        onSubmit={handleSubmit}
+                    >
+                        {({ errors, isSubmitting }: any) => (
+                            <>
+                                <Form>
+                                    <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+                                        <div className="max-h-[80vh] overflow-auto bg-[var(--sections)] border border-white/10 w-full max-w-[600px] rounded-[12px] shadow-lg">
+                                            <PopupHeader title={initialValues?.isScheduled ? "Edit Scheduled Post" : "Edit a Post"} onClick={onClose} />
+                                            <div className="p-4">
+                                                <div className="flex items-center mb-4 gap-2">
+                                                    <Image
+                                                        src="/profile-avatar-legacy-50.png"
+                                                        alt="Image"
+                                                        height={40}
+                                                        width={40}
+                                                        className="rounded-full"
+                                                    />
+                                                    <div className="flex flex-col">
+                                                        <span className="text-white font-semibold">
+                                                            {capitalizeName(firstName)} {capitalizeName(lastName)}
+                                                        </span>
+                                                        <div className="text-[13px] text-gray-500/50 flex items-center gap-2 cursor-pointer" onClick={toggleVisibility}>
+                                                            <div>
+                                                                {(selectedVisibility && selectedVisibility.id === "Group") ? (
+                                                                    <Image
+                                                                        src={typeof selectedVisibility.icon === 'string' ? selectedVisibility.icon : '/profile-avatar-legacy-50.png'}
+                                                                        height={15}
+                                                                        width={15}
+                                                                        alt="Group"
+                                                                    />
+                                                                ) : selectedVisibility && selectedVisibility.icon && typeof selectedVisibility.icon === 'string' ? (
+                                                                    <Image
+                                                                        src={selectedVisibility.icon}
+                                                                        height={15}
+                                                                        width={15}
+                                                                        alt="Icon"
+                                                                    />
+                                                                ) : (
+                                                                    <GoGlobe />
+                                                                )}
+                                                            </div>
+                                                            <p className="text-sm">{selectedVisibility ? selectedVisibility.name : initialValues?.visibility ? initialValues?.visibility : "Public"}</p>
+                                                            <TiArrowSortedDown />
+                                                        </div>
                                                     </div>
-                                                )}
+                                                </div>
+                                                {/* {scheduleTime ? (
+                                                    <p className="text-sm ml-2 mb-2">
+                                                        <span className="text-white/50 font-semibold">Schedule Time: {scheduleTime}</span>
+                                                    </p>
+                                                ) : initialValues?.initialDate ? (
+                                                    <p className="text-sm ml-2 mb-2">
+                                                        <span className="text-white/50 font-semibold">Posting: {initialValues?.initialDate}</span>
+                                                    </p>
+                                                ) : null} */}
+
+                                                <div className="w-full mb-2">
+                                                    <div className="flex flex-col">
+                                                        <div className="!z-1">
+                                                            <QuillEditor value={value} setValue={setValue} />
+                                                        </div>
+                                                        <div className="my-2 relative">
+                                                            <button type="button" onClick={handleEmojis}>
+                                                                <BsEmojiSmile className="w-6 h-6" />
+                                                            </button>
+                                                            {emoji && (
+                                                                <div ref={emojiPickerRef}>
+                                                                    <EmojiPicker
+                                                                        lazyLoadEmojis={true}
+                                                                        className="max-w-[300px] max-h-[350px] !absolute right-0 top-[50%] translate-y-[-50%]"
+                                                                        onEmojiClick={handleEmojiSelect}
+                                                                        searchDisabled
+                                                                        autoFocusSearch
+                                                                    />
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                {((initialValues?.post_type === "image" || currentPostType === "image") ||
+                                                    (initialValues?.post_type === "video" || currentPostType === "video") ||
+                                                    initialValues?.post_type === "document" || currentPostType === "document") && (
+                                                        <div className="border border-white/5 rounded-lg p-2 text-center flex flex-col justify-center items-center bg-white/10">
+                                                            {(initialValues?.post_type === "image" || currentPostType === "image") ? renderFileUploadSection(
+                                                                'images',
+                                                                <CiCamera size={30} />,
+                                                                'Add Photos',
+                                                                'image/*',
+                                                                'image',
+                                                                images
+                                                            ) : null}
+
+                                                            {(initialValues?.post_type === "video" || currentPostType === "video") ? renderFileUploadSection(
+                                                                'video',
+                                                                <CiVideoOn size={30} />,
+                                                                'Add Videos',
+                                                                'video/*',
+                                                                'video',
+                                                                videos
+                                                            ) : null}
+
+                                                            {(initialValues?.post_type === "document" || currentPostType === "document") ? renderFileUploadSection(
+                                                                'document',
+                                                                <IoDocumentAttachOutline size={30} />,
+                                                                'Add Files',
+                                                                '.pdf,.doc,.docx,.txt,.xlsx',
+                                                                'document',
+                                                                files
+                                                            ) : null}
+                                                        </div>
+                                                    )}
+                                                <div className="pt-4 flex justify-between border-t border-gray-500/10">
+                                                    <IconSection selectedName={selectedName} type={currentPostType} />
+                                                    <div className="flex items-center gap-1">
+                                                        {initialValues?.isScheduled &&
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => setSchedulePopupOpen(true)}
+                                                                className="text-white px-2 py-2 rounded-md flex items-center gap-1"
+                                                            >
+                                                                <span>
+                                                                    <PiClockFill size={20} />
+                                                                </span>
+                                                                <span>
+                                                                    <FaCaretDown size={15} />
+                                                                </span>
+                                                            </button>
+                                                        }
+                                                        <button
+                                                            type="submit"
+                                                            disabled={isSubmitting || Object.keys(errors).length > 0}
+                                                            className={`${isSubmitting || Object.keys(errors).length > 0
+                                                                ? "bg-gray-400"
+                                                                : "bg-[var(--highlght-hover)]"
+                                                                } text-white rounded-md px-3 py-2`}
+                                                        >
+                                                            {initialValues && initialValues?.isScheduled ? "Schedule Post" : "Update Post"}
+                                                        </button>
+                                                    </div>
+                                                </div>
                                             </div>
+
                                         </div>
                                     </div>
+                                </Form>
 
-                                    {((initialValues.post_type === "image" || currentPostType==="image")||
-                                        (initialValues.post_type === "video" ||currentPostType === "video")||
-                                        initialValues.post_type === "document"||currentPostType=== "document") && (
-                                            <div className="border border-white/5 rounded-lg p-2 text-center flex flex-col justify-center items-center bg-white/10">
-                                                {(initialValues.post_type === "image" ||currentPostType==="image")? renderFileUploadSection(
-                                                    'images',
-                                                    <CiCamera size={30} />,
-                                                    'Add Photos',
-                                                    'image/*',
-                                                    'image',
-                                                    images
-                                                ) : null}
+                            </>
+                        )}
+                    </Formik>
 
-                                                {(initialValues.post_type === "video" ||currentPostType === "video")? renderFileUploadSection(
-                                                    'video',
-                                                    <CiVideoOn size={30} />,
-                                                    'Add Videos',
-                                                    'video/*',
-                                                    'video',
-                                                    videos
-                                                ) : null}
+                    {toggleVisibilityPopup && (
+                        <VisibilityPopup
+                            toggleVisibilityPopup={() => setToggleVisibilityPopup(false)}
+                            groups={["Support"]}
+                            sendSelectedIcon={(option: any) => handleSelectedIcon(option)}
+                            selectedVisibility={selectedVisibility}
+                        />
+                    )}
 
-                                                {(initialValues.post_type === "document"||currentPostType=== "document") ? renderFileUploadSection(
-                                                    'document',
-                                                    <IoDocumentAttachOutline size={30} />,
-                                                    'Add Files',
-                                                    '.pdf,.doc,.docx,.txt,.xlsx',
-                                                    'document',
-                                                    files
-                                                ) : null}
-                                            </div>
-                                        )}
-                                    {/* {selectedName == "gif" && <GifSearch />} */}
-                                    <div className="pt-4 flex justify-between border-t border-gray-500/10">
-                                        <IconSection selectedName={selectedName} type={currentPostType}  // Use the dynamic currentPostType here
-                                            />
-                                        <div className="flex items-center gap-1">
 
-                                            <button
-                                                type="submit"
-                                                disabled={isSubmitting || Object.keys(errors).length > 0}
-                                                className={`${isSubmitting || Object.keys(errors).length > 0
-                                                    ? "bg-gray-400"
-                                                    : "bg-[var(--highlght-hover)]"
-                                                    } text-white rounded-md px-3 py-2`}
-                                            >
-                                                {"Update Post"}
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </Form>
-                )}
-            </Formik>
-
-            {toggleVisibilityPopup && (
-                <VisibilityPopup
-                    toggleVisibilityPopup={() => setToggleVisibilityPopup(false)}
-                    groups={["Support"]}
-                    sendSelectedIcon={(option: any) => handleSelectedIcon(option)}
-                    selectedVisibility={selectedVisibility}
-                />
-            )}
+                </>
+            ) : ("")}
         </>
     );
+
 
 };
 

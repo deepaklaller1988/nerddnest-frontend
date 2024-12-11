@@ -202,7 +202,7 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
       }
     }
   };
-console.log(images,initialValues.media_url,"=")  
+// console.log(images,initialValues.media_url,"=")  
   const handleMediaTypeSelection = (type: string) => {
     // Trigger corresponding file input based on selected media type
     if (type === 'image' && imageInputRef.current) {

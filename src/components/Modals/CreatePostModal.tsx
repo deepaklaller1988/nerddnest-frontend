@@ -431,7 +431,7 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
 
   const closePollModal = () => {
     setIsPollPopupOpen(false);
-    setSelectedName(""); 
+    setSelectedName("");
     setPopupType("")
 
   };
@@ -489,7 +489,7 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
                   <div className="w-full mb-2">
                     <div className="flex flex-col">
                       <div className="!z-1">
-                        <QuillEditor value={value} setValue={setValue}  />
+                        <QuillEditor value={value} setValue={setValue} />
                       </div>
 
                       <div className="my-2 relative">
@@ -573,17 +573,21 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
                     </div>
                   </div>
                 </div>
-                <SchedulePostPopup
-                  isOpen={isSchedulePopupOpen}
-                  onClose={() => setSchedulePopupOpen(false)}
-                  onScheduleComplete={(scheduleTime: any) => setScheduledTime(scheduleTime)} />
+
               </div>
             </div>
           </Form>
         )}
       </Formik>
+
+      <SchedulePostPopup
+        isOpen={isSchedulePopupOpen}
+        onClose={() => setSchedulePopupOpen(false)}
+        onScheduleComplete={(scheduleTime: any) => setScheduledTime(scheduleTime)}
+        isScheduling={false}
+      />
       {isPollPopupOpen && (
-        <PollModal onClose={closePollModal}/>
+        <PollModal onClose={closePollModal} />
       )}
       {toggleVisibilityPopup && (
         <VisibilityPopup

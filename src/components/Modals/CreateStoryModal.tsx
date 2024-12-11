@@ -86,7 +86,6 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup, onAddStory }) => {
           onSubmit={handleAddStory}
         >
           {({ values, setFieldValue }) => (
-            console.log(values, "="),
             (
               <Form className="space-y-6 p-4">
                 <div className="">

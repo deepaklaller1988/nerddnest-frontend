@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+"use client"
+import React, { useEffect, useState } from "react";
 import Button from "../Buttons/Button";
 import { MdOutlineArrowRightAlt } from "react-icons/md";
 import ViewAllScheduleModal from "./ViewAllScheduleModal";
@@ -19,16 +20,29 @@ type SchedulePostPopupProps = {
   isOpen: boolean;
   onClose: () => void;
   onScheduleComplete: (scheduleTime: string) => void;
+  isScheduling:boolean
+  initialDate?:any,
+  initialTime?:any
+
 };
 
-const SchedulePostPopup = ({ isOpen, onClose, onScheduleComplete }: SchedulePostPopupProps) => {
+const SchedulePostPopup = ({ isOpen, onClose, onScheduleComplete,isScheduling,initialDate ,initialTime}: SchedulePostPopupProps) => {
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [period, setPeriod] = useState("AM");
   const [isViewPopupOpen, setViewPopupOpen] = useState(false);
 
-  if (!isOpen) return null;
+  useEffect(() => {
+  if (isScheduling && initialDate && initialTime) {
+    setDate(initialDate);
+    setTime(initialTime);
+  }
+}, [isScheduling, initialDate,initialTime]);
 
+
+  if (!isOpen) return null;
+  const today = new Date().toISOString().split("T")[0];
+  
   const handleSchedule = () => {
     if (!date || !time) {
       alert("Please fill in both date and time.");
@@ -48,6 +62,7 @@ const SchedulePostPopup = ({ isOpen, onClose, onScheduleComplete }: SchedulePost
             Schedule Post
           </h3>
           <button
+          type="button"
             className="w-7 h-7 p-0 flex items-center justify-center rounded-full text-[30px] text-gray-600 hover:text-white"
             onClick={onClose}
           >
@@ -65,6 +80,7 @@ const SchedulePostPopup = ({ isOpen, onClose, onScheduleComplete }: SchedulePost
             <input
               type="date"
               value={date}
+              min={today} 
               onChange={(e) => setDate(e.target.value)}
               className="bg-white/10 placeholder:text-[var(--foreground)] rounded-full p-[10px] w-full"
             />
@@ -91,6 +107,7 @@ const SchedulePostPopup = ({ isOpen, onClose, onScheduleComplete }: SchedulePost
                   AM
                 </button>
                 <button
+                  type="button"
 
                   className={`px-4 py-2 rounded-full ${period === "PM"
                     ? "bg-[var(--highlight-blue)] text-white"
@@ -104,8 +121,8 @@ const SchedulePostPopup = ({ isOpen, onClose, onScheduleComplete }: SchedulePost
             </div>
           </div>
 
-          <div className="flex cursor-pointer" onClick={() => setViewPopupOpen(true)}>
-            <p className="text-white pb-2">View all scheduled posts </p>
+         {!initialDate &&  <div className="flex cursor-pointer" onClick={() => setViewPopupOpen(true)}>
+            <div className="text-white pb-2">View all scheduled posts </div>
             <MdOutlineArrowRightAlt
               className="ml-1 mt-0.5 text-[var(--highlight)]"
               size={20}
@@ -113,6 +130,7 @@ const SchedulePostPopup = ({ isOpen, onClose, onScheduleComplete }: SchedulePost
 
             />
           </div>
+          }
         </div>
         <div className="border-t border-white/5 flex gap-2 justify-end p-4">
           <Button
@@ -132,7 +150,9 @@ const SchedulePostPopup = ({ isOpen, onClose, onScheduleComplete }: SchedulePost
 
         {isViewPopupOpen && <ViewAllScheduleModal
           isViewPopupOpen={isViewPopupOpen}
-          onClose={() => setViewPopupOpen(false)}
+          onClose={() => setViewPopupOpen(false)
+          }
+
         />}
       </div>
     </div>
