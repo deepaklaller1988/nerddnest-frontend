@@ -6,9 +6,32 @@ import LatestUpdates from '@/components/core/LatestUpdates'
 import Sidebar from '@/components/core/Sidebar'
 import AddStory from '@/components/core/AddStory'
 import PostFeed from '@/components/core/PostFeed'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 
 export default function Home() {
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const [token, setToken] = useState<string | null>(null);
+
+  const [loading, setLoading] = useState(true); 
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedToken = localStorage.getItem("accessToken");
+      setToken(storedToken);
+      setLoading(false);  
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!loading && !token && !pathname.startsWith("/auth")) {
+      router.push("/auth/login");
+    }
+  }, [token, loading, pathname, router]);
+  
   return (
     <div className='w-full pt-8'>
       <div className='w-full max-w-[1230px] py-3 px-4 m-auto'>

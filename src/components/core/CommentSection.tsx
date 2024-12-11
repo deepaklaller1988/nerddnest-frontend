@@ -24,7 +24,6 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
   const [activeReplyId, setActiveReplyId] = useState<string | null>(null);
   const [likeComment, setLikeComment] = useState(false)
   const [deleteButtonIndex, setDeleteButtonIndex] = useState<number | null>(null);
-  
   useEffect(() => {
     if (isActive && textareaRef.current) {
       textareaRef.current.focus();
@@ -118,9 +117,15 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
     }
   };
 
-  const handleLikeComments = async () => {
-
+  const handleLikeComments = async (commentId:any) => {
+    const { success, data, error } = await API.post("posts/like-comment", { commentId, userId });
+    if (success) {
+      setLikeComment(true)
+    }
+    else{}
   }
+
+
 
   return (
     <>
@@ -148,18 +153,19 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
                         <p>{commentData.comment}</p>
                       </span>
                       <div className="w-full flex items-center gap-3 mt-2">
-                        <span className="cursor-pointer text-green-600 hover:underline" onClick={handleLikeComments}>
+                        <span className="cursor-pointer text-green-600 hover:underline" onClick={()=>handleLikeComments(commentData.id)}>
                           Like
                         </span>
-                        <span className="cursor-pointer hover:underline" onClick={() => setActiveReplyId(commentData.id)}>
+                        <span className="cursor-pointer hover:underline" onClick={() => setActiveReplyId(commentData.commenter.id)}>
                           Reply
                         </span>
                         <span className="text-sm text-white/30">
                           {new Date(commentData.createdAt).toLocaleDateString()}
                         </span>
-                        <span className="bg-blue-500 p-1 rounded-full">
+                        {likeComment && (   <span className="bg-blue-500 p-1 rounded-full">
                           <BiSolidLike className="fill-white" />
-                        </span>
+                          
+                        </span>)}
                       </div>
                     </div>
 

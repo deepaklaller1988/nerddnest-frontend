@@ -25,7 +25,7 @@ import { FeedVisiblityMenu } from "@/lib/MenuBar/FeedVisibiltyMenu";
 
 type LikeData = {
   count: number;
-  users: { firstname: string; lastname: string; handle: string }[]; 
+  users: { firstname: string; lastname: string; handle: string }[];
 };
 
 export default function PostContent({ filter }: any) {
@@ -67,9 +67,9 @@ export default function PostContent({ filter }: any) {
   };
   useEffect(() => {
     if (userId) {
-      getAllPosts()
+      getAllPosts(filter)
     }
-  }, [userId, postedData, page])
+  }, [userId, filter, postedData, page])
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -103,11 +103,13 @@ export default function PostContent({ filter }: any) {
     };
   }, [openPostVisibilityIndex, openPostActionMenuIndex]);
 
-  const getAllPosts = async () => {
+  const getAllPosts = async (filter: string) => {
     setLoading(true);
-
+    const url = filter === "likes"
+      ? `posts/get-user-liked-posts?userId=${userId}`
+      : `posts/fetch?userId=${userId}&page=${page}`;
     const { success, error, data } = await API.get(
-      `posts/fetch?userId=${userId}&page=${page}`
+      url
     );
 
     if (success) {
@@ -118,7 +120,6 @@ export default function PostContent({ filter }: any) {
           pinned: post.is_pinned,
           likes_count: post.like_count,
           comments_count: post.comments_count,
-          isLikedByUser: post.likes.some((like: any) => like.user_id === userId),
         })),
       ]);
       data.forEach((post: any) => {
@@ -129,6 +130,7 @@ export default function PostContent({ filter }: any) {
     }
     setLoading(false);
   };
+
   const updateVisibilty = async (id: any, userId: any, visibility: any) => {
     setIsVisibilityLoader(true);
     try {
@@ -158,6 +160,29 @@ export default function PostContent({ filter }: any) {
     setOpenPostVisibiltyIndex(null);
     await updateVisibilty(id, userId, name);
   };
+
+  useEffect(() => {
+    const fetchUserLikes = async () => {
+      try {
+        const response = await API.get(`posts/get-user-liked-posts?userId=${userId}`);
+        if (response.success) {
+          const likedPostIds = response.data.map((like: any) => like.id);
+          const likedPostsState = likedPostIds.reduce((acc: any, postId: any) => {
+            acc[postId] = true;
+            return acc;
+          }, {});
+          setLikedPosts(likedPostsState);
+        } else {
+          console.error('Error fetching liked posts:', response.error);
+        }
+      } catch (error) {
+        console.error('Error fetching liked posts:', error);
+      }
+    };
+
+    fetchUserLikes();
+  }, [userId]);
+
   const likePost = async (postId: any) => {
     const currentLikedState = likedPosts[postId] || false;
     const { success, data, error } = await API.post("posts/like", { postId, userId });
@@ -172,26 +197,26 @@ export default function PostContent({ filter }: any) {
       console.error(error);
     }
   };
-  console.log(likesData,"like")
+
   const getAllLikes = async (postId: any) => {
-    const { success, data, error ,count} = await API.get(`posts/get-likes?postId=${postId}`);
+    const { success, data, error, count } = await API.get(`posts/get-likes?postId=${postId}`);
     if (success) {
       setLikesData((prevState) => ({
         ...prevState,
         [postId]: {
           count: count,
-          users: data?.map((like:any) => like.user),
+          users: data?.map((like: any) => like.user),
         },
       }));
-    
-      
     } else {
       console.error(error);
     }
   };
+
   const handleImageClick = (id: number) => {
     router.push(`/postdetails?id=${id}`);
   };
+
   const handleMouseLeave = () => setHoveredIndex(null);
   const handleMouseEnter = (index: number) => setHoveredIndex(index);
 
@@ -200,9 +225,11 @@ export default function PostContent({ filter }: any) {
     setIsDeletePopupOpen(true);
     setOpenPostActionMenuIndex(null)
   };
+
   const handleClosePopup = () => {
     setIsDeletePopupOpen(false);
   };
+
   const handleToggleCommenting = async (data: any) => {
     const newState = !data.isCommentingEnabled;
     try {
@@ -229,6 +256,7 @@ export default function PostContent({ filter }: any) {
       console.error("API Error:", error);
     }
   };
+  
   const handleTogglePin = async (data: any) => {
     const newState = !data.pinned;
     try {
@@ -249,7 +277,7 @@ export default function PostContent({ filter }: any) {
         );
         setOpenPostActionMenuIndex(null)
         toasterSuccess(newState ? "Pinned Post SuccessFully." : "UnPin Post SuccessFully.", 1000, "id")
-        getAllPosts()
+        getAllPosts(filter)
       } else {
         console.error(error);
       }
@@ -264,7 +292,7 @@ export default function PostContent({ filter }: any) {
       const response = await API.delete(`posts/delete`, { id: deleteItemId });
       if (response.success) {
         toasterSuccess("Post has been deleted successfully");
-        getAllPosts()
+        getAllPosts(filter)
       } else {
         toasterError("Failed to delete the post");
       }
@@ -307,7 +335,7 @@ export default function PostContent({ filter }: any) {
             <EditPostModal
               postId={currentPostId!}
               onClose={closeEditModal}
-              
+
             />
           </div>
         )}
@@ -520,7 +548,7 @@ export default function PostContent({ filter }: any) {
                         {likesData[data.id]?.count > 0 ? (
                           <>
                             {likesData[data.id]?.users.slice(0, 2).map((user: any, index: number) => (
-                              <span key={index}>{user.firstname}</span>
+                              <span key={index}> {user.id === userId ? "You" : user.firstname}</span>
                             ))}
                             {likesData[data.id]?.users.length > 2 && (
                               <span>and {likesData[data.id]?.users.length - 2} others</span>

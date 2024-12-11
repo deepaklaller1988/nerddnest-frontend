@@ -32,6 +32,7 @@ import { BsEmojiSmile } from 'react-icons/bs';
 import { GoGlobe } from 'react-icons/go';
 import { CiCamera, CiVideoOff, CiVideoOn } from 'react-icons/ci';
 import { TiArrowSortedDown } from 'react-icons/ti';
+import { CgLayoutGrid } from 'react-icons/cg';
 
 
 const EditPostModal = ({ postId, onClose,
@@ -66,6 +67,8 @@ const EditPostModal = ({ postId, onClose,
         visibilty: "public"
     });
 
+    const [currentPostType, setCurrentPostType] = useState("");
+
 
     const [selectedVisibility, setSelectedVisibility] = useState<{
         icon: string | null;
@@ -73,18 +76,17 @@ const EditPostModal = ({ postId, onClose,
         id: any
     } | null>(null);
 
+
     useEffect(() => {
         if (postId) {
             getPostData();
         }
     }, [postId]);
 
-    console.log(images, "================");
 
     const getPostData = async () => {
         const { success, error, data } = await API.get(`posts/fetch-by-id?id=${postId}`);
         if (success) {
-            console.log(data);
             setInitialValues({
                 content: data.content,
                 mediaUrl: data.media_url,
@@ -118,14 +120,27 @@ const EditPostModal = ({ postId, onClose,
     const handleOnClick = (e: React.MouseEvent<SVGElement, MouseEvent>, name: any) => {
         if (name === "image" && !images) {
             setSelectedName("image");
+            setCurrentPostType(name)
+            setInitialValues((prevValues: any) => ({
+                ...prevValues,
+                post_type:name
+    
+            }));
+
         } else if (name === "video" && !videos) {
             setSelectedName("video");
-            // setPopupType("video");
-        }
+            setInitialValues((prevValues: any) => ({
+                ...prevValues,
+                post_type:name
+    
+            }));        }
         else {
             setSelectedName(name);
-            // setPopupType(name)
-        }
+            setInitialValues((prevValues: any) => ({
+                ...prevValues,
+                post_type:name
+    
+            }));        }
     };
 
     useEffect(() => {
@@ -220,10 +235,7 @@ const EditPostModal = ({ postId, onClose,
             if (quillEditor) {
                 const currentText = quillEditor.innerHTML;
                 setValue(currentText + emoji.emoji);
-                // setInitialValues((prevValues: any) => ({
-                //     ...prevValues,
-                //     content: currentText + emoji.emoji,
-                // }));
+                
             }
         }
     };
@@ -250,7 +262,7 @@ const EditPostModal = ({ postId, onClose,
             const newFiles = Array.from(e.target.files);
 
             if (newFiles.length + getFileCount(name) <= 10) {
-                const fileTypeMapping: { [key: string]: React.Dispatch<React.SetStateAction<File[]>> } = {
+                const fileTypeMapping: { [key: string]: React.Dispatch<React.SetStateAction<any[]>> } = {
                     images: setImages,
                     video: setVideos,
                     document: setFiles,
@@ -264,26 +276,31 @@ const EditPostModal = ({ postId, onClose,
                     setIsUploadLoading(false);
 
                     if (setFileHandler) {
-                        setFileHandler((prevFiles) => [...prevFiles, ...newFiles]);
+                        // Update the state with the previous files + newly uploaded files
+                        setFileHandler((prevFiles) => [
+                            ...prevFiles,
+                            ...uploadData, // Assuming uploadData contains the new URLs of uploaded files
+                        ]);
                     }
 
+                    // Update the media URL in the initial values (for submit)
                     setInitialValues((prevValues: any) => ({
                         ...prevValues,
-                        mediaUrl: uploadData,
+                        mediaUrl: [
+                            ...(prevValues.mediaUrl || []), // Existing media URLs
+                            ...uploadData, // Newly uploaded media URLs
+                        ],
                     }));
-
                 } catch (error) {
                     setIsUploadLoading(false);
                     toasterInfo("An error occurred while uploading the file. Please try again.");
                 }
-
             } else {
                 setIsUploadLoading(false);
                 toasterInfo("Unable to upload the file. You are allowed to upload only 10 files at a time.", 1000, "id");
             }
         }
     };
-
     const handleFileDelete = (index: number, type: 'images' | 'video' | 'document') => {
         if (type === 'images') {
             setImages((prevFiles) => prevFiles.filter((_, i) => i !== index));
@@ -298,6 +315,8 @@ const EditPostModal = ({ postId, onClose,
         setInitialValues((prevValues: any) => ({
             ...prevValues,
             mediaUrl: prevValues.mediaUrl.filter((_: any, i: any) => i !== index),
+            post_type:""
+
         }));
     };
 
@@ -350,12 +369,11 @@ const EditPostModal = ({ postId, onClose,
                 ) : filesList.length > 0 ? (
                     <div className="relative mt-4 grid grid-cols-4 gap-4 uploaded-data">
                         {filesList.map((file, index) => (
-                            console.log(file),
                             <div key={index} className="relative uploaded-dataInner">
-                                {fileType === "image" && file instanceof File ? (
+                                {fileType === "image" ? (
                                     <Image
                                         // Using createObjectURL only if file is an instance of File
-                                        src={URL.createObjectURL(file)}
+                                        src={file instanceof File ? URL.createObjectURL(file) : file}
                                         alt="uploaded"
                                         height={70}
                                         width={100}
@@ -363,12 +381,12 @@ const EditPostModal = ({ postId, onClose,
                                     />
                                 ) : null}
 
-                                {fileType === "video" && file instanceof File ? (
+                                {fileType === "video" ? (
                                     <video
                                         controls
                                         className="object-cover rounded-lg w-40 h-30"
                                     >
-                                        <source src={URL.createObjectURL(file)} type="video/mp4" />
+                                        <source src={file instanceof File ? URL.createObjectURL(file) : file} type="video/mp4" />
                                         Your browser does not support the video tag.
                                     </video>
                                 ) : null}
@@ -392,37 +410,34 @@ const EditPostModal = ({ postId, onClose,
         );
     };
 
-    // const closePopup = () => {
-    //     setIsPopupOpen(false);
-    //   };
-
     const handleSubmit = async (e: any) => {
         if (!(value || initialValues.mediaUrl && initialValues.mediaUrl.length > 0)) {
-          toasterInfo("Please add some content or upload media before posting.", 3000, "id");
-          return;
+            toasterInfo("Please add some content or upload media before posting.", 3000, "id");
+            return;
         }
-    
+
         try {
-          const payload = {
-            userId: userId,
-            // postType: type,
-            content: value,
-            mediaUrl: initialValues.mediaUrl,
-            sharedLink: initialValues.sharedLink || "",
-            visibility: selectedVisibility ? selectedVisibility.id : initialValues.visibility,
-          };
-          const response = await API.post("posts/update", payload);
-          if (response.success) {
-            const newPost = response.data;
-            toasterSuccess("Post Updated successfully!", 2000);
-            // closePopup();
-            dispatch(setPostedData(newPost));
-          }
-    
+            const payload = {
+                id: postId,
+                userId: userId,
+                postType: initialValues.post_type,
+                content: value,
+                mediaUrl: initialValues.mediaUrl,
+                sharedLink: initialValues.sharedLink || "",
+                visibility: selectedVisibility ? selectedVisibility.id : initialValues.visibility,
+            };
+            const response = await API.put("posts/update", payload);
+            if (response.success) {
+                const newPost = response.data;
+                toasterSuccess("Post Updated successfully!", 2000);
+                onClose();
+                dispatch(setPostedData(newPost));
+            }
+
         } catch (error) {
-          // toasterInfo("There was an issue submitting your post.");
         }
-      };    
+    };
+    console.log(initialValues.post_type ,"===========ini")
     return (
         <>
             <Formik
@@ -469,7 +484,7 @@ const EditPostModal = ({ postId, onClose,
 
 
                                                 </div>
-                                                <p className="text-sm">{initialValues.visibility ? initialValues.visibility : "Public"}</p>
+                                                <p className="text-sm">{selectedVisibility ? selectedVisibility.name : initialValues.visibility ? initialValues.visibility : "Public"}</p>
                                                 <TiArrowSortedDown />
                                             </div>
                                         </div>
@@ -477,7 +492,7 @@ const EditPostModal = ({ postId, onClose,
                                     <div className="w-full mb-2">
                                         <div className="flex flex-col">
                                             <div className="!z-1">
-                                                <QuillEditor value={value} setValue={setValue} 
+                                                <QuillEditor value={value} setValue={setValue}
                                                 />
                                             </div>
 
@@ -500,11 +515,11 @@ const EditPostModal = ({ postId, onClose,
                                         </div>
                                     </div>
 
-                                    {(initialValues.post_type === "image" ||
-                                        initialValues.post_type === "video" ||
-                                        initialValues.post_type === "document") && (
+                                    {((initialValues.post_type === "image" || currentPostType==="image")||
+                                        (initialValues.post_type === "video" ||currentPostType === "video")||
+                                        initialValues.post_type === "document"||currentPostType=== "document") && (
                                             <div className="border border-white/5 rounded-lg p-2 text-center flex flex-col justify-center items-center bg-white/10">
-                                                {initialValues.post_type === "image" ? renderFileUploadSection(
+                                                {(initialValues.post_type === "image" ||currentPostType==="image")? renderFileUploadSection(
                                                     'images',
                                                     <CiCamera size={30} />,
                                                     'Add Photos',
@@ -513,7 +528,7 @@ const EditPostModal = ({ postId, onClose,
                                                     images
                                                 ) : null}
 
-                                                {initialValues.post_type === "video" ? renderFileUploadSection(
+                                                {(initialValues.post_type === "video" ||currentPostType === "video")? renderFileUploadSection(
                                                     'video',
                                                     <CiVideoOn size={30} />,
                                                     'Add Videos',
@@ -522,7 +537,7 @@ const EditPostModal = ({ postId, onClose,
                                                     videos
                                                 ) : null}
 
-                                                {initialValues.post_type === "document" ? renderFileUploadSection(
+                                                {(initialValues.post_type === "document"||currentPostType=== "document") ? renderFileUploadSection(
                                                     'document',
                                                     <IoDocumentAttachOutline size={30} />,
                                                     'Add Files',
@@ -534,7 +549,8 @@ const EditPostModal = ({ postId, onClose,
                                         )}
                                     {/* {selectedName == "gif" && <GifSearch />} */}
                                     <div className="pt-4 flex justify-between border-t border-gray-500/10">
-                                        <IconSection selectedName={selectedName} type={initialValues.post_type} />
+                                        <IconSection selectedName={selectedName} type={currentPostType}  // Use the dynamic currentPostType here
+                                            />
                                         <div className="flex items-center gap-1">
 
                                             <button

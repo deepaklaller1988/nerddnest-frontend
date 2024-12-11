@@ -11,14 +11,14 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
   const router = useRouter();
   const pathname = usePathname();
 
-  const [token, setToken] = useState<string | null>(null);
+  // const [token, setToken] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const storedToken = localStorage.getItem("accessToken");
-      setToken(storedToken);
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (typeof window !== "undefined") {
+  //     const storedToken = localStorage.getItem("accessToken");
+  //     setToken(storedToken);
+  //   }
+  // }, []);
 
   // useEffect(() => {
   //   if (token && pathname.startsWith("/auth")) {
