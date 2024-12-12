@@ -121,8 +121,8 @@ const SchedulePostPopup = ({ isOpen, onClose, onScheduleComplete,isScheduling,in
             </div>
           </div>
 
-         {!initialDate &&  <div className="flex cursor-pointer" onClick={() => setViewPopupOpen(true)}>
-            <div className="text-white pb-2">View all scheduled posts </div>
+         {!initialDate &&  <div className="flex cursor-pointer" >
+            <div className="text-white pb-2" onClick={() => setViewPopupOpen(true)}>View all scheduled posts </div>
             <MdOutlineArrowRightAlt
               className="ml-1 mt-0.5 text-[var(--highlight)]"
               size={20}

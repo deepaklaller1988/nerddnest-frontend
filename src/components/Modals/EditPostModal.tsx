@@ -34,6 +34,7 @@ import { CiCamera, CiVideoOff, CiVideoOn } from 'react-icons/ci';
 import { TiArrowSortedDown } from 'react-icons/ti';
 import { CgLayoutGrid } from 'react-icons/cg';
 import SchedulePostPopup from './SchedulePostModal';
+import { logLocalTime } from '@/utils/timeAgo';
 
 const EditPostModal = ({ postId, onClose,
 }: { postId: any; onClose: () => void }) => {
@@ -467,6 +468,8 @@ const EditPostModal = ({ postId, onClose,
         } catch (error) {
         }
     };
+    console.log(initialValues?.initialDate,"dats")
+    console.log(logLocalTime(initialValues?.initialDate),"dats")
     return (
         <>
             {isClient ? (

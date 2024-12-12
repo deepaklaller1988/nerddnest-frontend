@@ -255,8 +255,12 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name } = e.target;
+    console.log(name)
     if (e.target.files) {
+    console.log(e.target.files)
+
       const newFiles = Array.from(e.target.files);
+      console.log(newFiles)
 
       if (newFiles.length + getFileCount(name) <= 10) {
         const fileTypeMapping: { [key: string]: React.Dispatch<React.SetStateAction<File[]>> } = {

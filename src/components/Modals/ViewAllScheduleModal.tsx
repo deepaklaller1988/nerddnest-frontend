@@ -7,6 +7,7 @@ import DeletePopup from "./DeleteConfirmation";
 import { toasterError, toasterSuccess } from "../core/Toaster";
 import EditPostModal from "./EditPostModal";
 import { FeedVisiblityMenu } from "@/lib/MenuBar/FeedVisibiltyMenu";
+import { DateFormatter } from "@/utils/timeAgo";
 type ViewAllScheduleModalProps = {
     isViewPopupOpen: any
     onClose: () => void;
@@ -120,7 +121,7 @@ const ViewAllScheduleModal = ({ onClose }: ViewAllScheduleModalProps) => {
                                                     <b className="text-white font-semibold">{post.user.firstname} {post.user.lastname}</b> Posted an update
                                                 </p>
                                                 <p className="text-[12px] text-white">
-                                                    <b className="font-semibold text-white">Schedule for:</b> {new Date(post.schedule_time).toLocaleString()}
+                                                    <b className="font-semibold text-white">Schedule for:</b> {DateFormatter(post.schedule_time)}
                                                     {/* {visibilityIcon && <visibilityIcon className="fill-white inline-block ml-1" />} */}
                                                     {visibilityIcon && React.createElement(visibilityIcon, { className: "fill-white inline-block ml-1" })}
 

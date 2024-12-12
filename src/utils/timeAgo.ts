@@ -16,4 +16,23 @@ export const timeAgo = (date: any): string => {
       return `${days} day${days > 1 ? 's' : ''} ago`;
     }
   };
-  
+
+  export const DateFormatter = ( date:any) => {
+    const formattedDate = new Date(date).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric"
+    });
+    return formattedDate
+  }
+
+  export const  logLocalTime=(time:any) =>{
+    // Create a Date object from the UTC time
+    const date = new Date(time);
+
+    // Format the time in 12-hour format (AM/PM)
+    const options:any = { hour: 'numeric', minute: 'numeric', hour12: true };
+    const localTime = date.toLocaleString('en-US', options);
+
+   return localTime
+}

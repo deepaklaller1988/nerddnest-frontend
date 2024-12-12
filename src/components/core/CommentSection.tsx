@@ -15,6 +15,8 @@ import { toasterError, toasterInfo, toasterSuccess } from "./Toaster";
 import { FaTrash } from "react-icons/fa6";
 import { uploadMultiFile } from "./UploadFile";
 import { CgLayoutGrid } from "react-icons/cg";
+import MiniLoader from "../Loaders/Miniloader";
+import { RxCross2 } from "react-icons/rx";
 
 const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount }: any) => {
   const { API } = useApi();
@@ -29,8 +31,6 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
   const [images, setImages] = useState<File[]>([]);
   const [videos, setVideos] = useState<File[]>([]);
   const [files, setFiles] = useState<File[]>([]);
-  const [mediaType, setMediaType] = useState<string | null>(null);
-
   const [isUploadLoading, setIsUploadLoading] = useState(false);
   const [initialValues, setInitialValues] = useState<any>({ mediaUrl: [] });
   const imageInputRef = useRef<HTMLInputElement | null>(null);
@@ -72,15 +72,23 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
   };
 
   const postComment = async (comment: string) => {
-    if (!comment.trim()) return;
-    try {
-      const { success, error } = await API.post("posts/comment", {
+    if (!comment.trim() && images.length === 0 && videos.length === 0 && files.length === 0) {
+      toasterError("Please enter a comment or add media."); // Notify the user
+      return; 
+    }     
+    try{
+     const { success, error } = await API.post("posts/comment", {
         postId: id,
         commenterId: userId,
         comment,
+        contentType:images.length > 0?"images":videos.length > 0 ?"video":files.length > 0?"files":"text",
+        mediaUrl:initialValues.mediaUrl?initialValues.mediaUrl:""
       });
       if (success) {
         setComment("");
+        setImages([])
+        setVideos([])
+        setFiles([])
         getAllCommentData(id);
         updateCommentsCount(id, commentsCount + 1);
       } else {
@@ -148,66 +156,52 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
   };
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name } = e.target;
+    console.log(name)
     if (e.target.files) {
+      console.log(e.target.files)
+
       const newFiles = Array.from(e.target.files);
-  
+      console.log(newFiles)
+
       if (newFiles.length + getFileCount(name) <= 10) {
         const fileTypeMapping: { [key: string]: React.Dispatch<React.SetStateAction<File[]>> } = {
           images: setImages,
           video: setVideos,
           document: setFiles,
         };
-  
+
         const setFileHandler = fileTypeMapping[name];
-  
+
         try {
-          setIsUploadLoading(true); // Start loading state
-  
-          // Upload files and get media URLs
+          setIsUploadLoading(true);
           const uploadData = await uploadMultiFile(newFiles, API);
-  
-          setIsUploadLoading(false); // Stop loading state
-  
-          // Update the state for the appropriate file type
+          setIsUploadLoading(false);
+
           if (setFileHandler) {
-            setFileHandler((prevFiles) => [
-              ...prevFiles,
-              ...newFiles,
-            ]);
+            setFileHandler((prevFiles) => [...prevFiles, ...newFiles]);
           }
-  
-          // Update initialValues with the uploaded media URLs
+
           setInitialValues((prevValues: any) => ({
             ...prevValues,
-            mediaUrl: [...prevValues.mediaUrl, ...uploadData], // Assuming `uploadData` contains the URLs of the uploaded media
+            mediaUrl: uploadData,
           }));
           
-          // For file previews (if the uploadData returns URLs or paths to the media)
-          if (name === "images") {
-            setImages((prev) => [...prev, ...uploadData]);  // Assuming uploadData contains image URLs
-          } else if (name === "video") {
-            setVideos((prev) => [...prev, ...uploadData]);  // Assuming uploadData contains video URLs
-          } else if (name === "document") {
-            setFiles((prev) => [...prev, ...uploadData]);  // Assuming uploadData contains document URLs
-          }
-  
+
         } catch (error) {
-          setIsUploadLoading(false); // Stop loading state in case of error
+          setIsUploadLoading(false);
           toasterInfo("An error occurred while uploading the file. Please try again.");
         }
+
       } else {
-        // If the total files exceed 10, show a toaster message
-        setIsUploadLoading(false); // Stop loading state
+        setIsUploadLoading(false);
         toasterInfo("Unable to upload the file. You are allowed to upload only 10 files at a time.", 1000, "id");
       }
     }
   };
-// console.log(images,initialValues.media_url,"=")  
   const handleMediaTypeSelection = (type: string) => {
-    // Trigger corresponding file input based on selected media type
     if (type === 'image' && imageInputRef.current) {
       imageInputRef.current.click(); // Open image file selection dialog
-    } else if (type === 'video' && videoInputRef.current) {
+    } else if (type === 'videos' && videoInputRef.current) {
       videoInputRef.current.click(); // Open video file selection dialog
     } else if (type === 'files' && fileInputRef.current) {
       fileInputRef.current.click(); // Open document file selection dialog
@@ -217,13 +211,12 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
   const handleDeleteMedia = (type: string, index: number) => {
     if (type === 'images') {
       setImages(images.filter((_, i) => i !== index)); // Remove image
-    } else if (type === 'videos') {
+    } else if (type === 'video') {
       setVideos(videos.filter((_, i) => i !== index)); // Remove video
     } else if (type === 'files') {
       setFiles(files.filter((_, i) => i !== index)); // Remove file
     }
   };
-  
 
   return (
     <>
@@ -248,7 +241,37 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
                             {commentData.commenter?.firstname || "Anonymous"}
                           </b>
                         </p>
-                        <p>{commentData.comment}</p>
+                
+                        {/* <p>{commentData.comment}</p> */}
+                        {commentData.content_type=="text"&&<p>{commentData.comment}</p>} 
+                               {commentData.content_type=="images" && 
+                                      <div className="relative mt-4 grid grid-cols-4 gap-4 uploaded-data">
+                                      {commentData.media_url?.length > 0 && commentData.media_url?.map((image:any, index:any) => (
+                                        <div key={index} className="relative uploaded-dataInner">
+                                            <img
+                                              src={image}
+                                              alt={`uploaded-image-${index}`}
+                                              className="object-cover rounded-lg w-40 h-30"
+                                            />
+                                      
+                                         
+                                        </div>
+                                      ))}
+                        
+                                    </div>
+                               }
+                                  {commentData.content_type === "video" && (
+                      <div className="relative mt-4 grid grid-cols-4 gap-4 uploaded-data">
+                        {commentData.media_url.map((videoUrl:any, index:any) => (
+                          <div key={index} className="relative uploaded-dataInner">
+                            <video controls className="object-cover rounded-lg w-40 h-30">
+                              <source src={videoUrl} type="video/mp4" />
+                              Your browser does not support the video tag.
+                            </video>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                       </span>
                       <div className="w-full flex items-center gap-3 mt-2">
                         <span className="cursor-pointer text-green-600 hover:underline" onClick={() => handleLikeComments(commentData.id)}>
@@ -345,13 +368,13 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
                   <IoPaperPlaneSharp className="fill-white" onClick={() => postComment(comment)} />
                 </button>
                 <section className="p-4 pt-0 flex gap-4">
-                  <span className="cursor-pointer">
+                  <span className={`cursor-pointer ${(videos.length > 0 || files.length > 0) ? 'opacity-50 cursor-not-allowed' : ''}`}>
                     <MdOutlineLinkedCamera className="w-6 h-6 fill-green-600" onClick={() => handleMediaTypeSelection("image")} />
                   </span>
-                  <span className="cursor-pointer">
-                    <HiOutlineVideoCamera className="w-6 h-6 stroke-yellow-500" onClick={() => handleMediaTypeSelection("video")} />
+                  <span className={`cursor-pointer ${(images.length > 0 || files.length > 0) ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                    <HiOutlineVideoCamera className="w-6 h-6 stroke-yellow-500" onClick={() => handleMediaTypeSelection("videos")} />
                   </span>
-                  <span className="cursor-pointer">
+                  <span className={`cursor-pointer ${(images.length > 0 || videos.length > 0) ? 'opacity-50 cursor-not-allowed' : ''}`}>
                     <IoDocumentAttachOutline className="w-6 h-6 stroke-rose-500" onClick={() => handleMediaTypeSelection("files")} />
                   </span>
                   <span className="cursor-pointer">
@@ -359,6 +382,7 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
                   </span>
                   <input
                     type="file"
+                    name="images"
                     ref={imageInputRef}
                     accept="image/*"
                     multiple
@@ -370,91 +394,88 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
                     ref={videoInputRef}
                     accept="video/*"
                     multiple
+                    name="video"
                     className="hidden"
                     onChange={handleFileChange}
                   />
                   <input
                     type="file"
+                    name="file"
                     ref={fileInputRef}
                     accept="*/*"
                     multiple
                     className="hidden"
                     onChange={handleFileChange}
                   />
-                       
+
 
                 </section>
-                {isUploadLoading && <div className="spinner">Uploading...</div>}
-                <div className="uploaded-media">
-  <div className="media-preview">
-    {images.length > 0 && (
-      <div className="media-item">
-        {images.map((image, index) => (
-          <div key={index} className="media-image relative">
-            <img
-              src={URL.createObjectURL(image)}
-              alt={`uploaded-image-${index}`}
-              className="uploaded-image"
-            />
-            <button
-              className="absolute top-2 right-2 text-white bg-red-500 rounded-full p-1"
-              onClick={() => handleDeleteMedia('images', index)}
-            >
-              <FaTrash />
-            </button>
-          </div>
-        ))}
-      </div>
-    )}
-
-    {videos.length > 0 && (
-      <div className="media-item">
-        {videos.map((video, index) => (
-          <div key={index} className="media-video relative">
-            <video
-              controls
-              src={URL.createObjectURL(video)}
-              className="uploaded-video"
-            ></video>
-            <button
-              className="absolute top-2 right-2 text-white bg-red-500 rounded-full p-1"
-              onClick={() => handleDeleteMedia('videos', index)}
-            >
-              <FaTrash />
-            </button>
-          </div>
-        ))}
-      </div>
-    )}
-
-    {files.length > 0 && (
-      <div className="media-item">
-        {files.map((file, index) => (
-          <div key={index} className="media-file relative">
-            <a
-              href={URL.createObjectURL(file)}
-              download={file.name}
-              className="download-link"
-            >
-              {file.name}
-            </a>
-            <button
-              className="absolute top-2 right-2 text-white bg-red-500 rounded-full p-1"
-              onClick={() => handleDeleteMedia('files', index)}
-            >
-              <FaTrash />
-            </button>
-          </div>
-        ))}
-      </div>
-    )}
-  </div>
-</div>
 
               </section>
             </section>
+            {isUploadLoading && <MiniLoader />}
+            <div className="relative mt-4 grid grid-cols-4 gap-4 uploaded-data">
+              {images.length > 0 && images.map((image, index) => (
+                <div key={index} className="relative uploaded-dataInner">
+                  {image instanceof File ? (
+                    <img
+                      src={URL.createObjectURL(image)}
+                      alt={`uploaded-image-${index}`}
+                      className="object-cover rounded-lg w-40 h-30"
+                    />
+                  ) : (
+                    ""
+                  )}
+                  <RxCross2
+                    onClick={() => handleDeleteMedia('images', index)}
+                    className="absolute top-0 right-0 text-red-500 cursor-pointer w-6 h-6 bg-white rounded-full z-10"
+                  />
+                </div>
+              ))}
+
+            </div>
+            <div className="relative mt-4 grid grid-cols-4 gap-4 uploaded-data">
+
+              {videos.length > 0 && videos.map((video, index) => (
+                <div key={index} className="relative uploaded-dataInner">
+                  {video instanceof File ? (
+                    <video
+                      controls
+                      src={URL.createObjectURL(video)}
+                      className="object-cover rounded-lg w-40 h-30"
+                    ></video>
+                  ) : ("")}
+                  <RxCross2
+                    onClick={() => handleDeleteMedia('video', index)}
+                    className="absolute top-0 right-0 text-red-500 cursor-pointer w-6 h-6 bg-white rounded-full z-10"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="relative mt-4 grid grid-cols-4 gap-4 uploaded-data">
+
+            {files.length > 0 && files.map((file, index) => (
+              <div className="relative uploaded-dataInner">
+                {file instanceof File ? (
+                  <a
+                    href={URL.createObjectURL(file)}
+                    download={file.name}
+                    className="download-link"
+                  >
+                    {file.name}
+                  </a>) : ("")}
+
+                <RxCross2
+                  onClick={() => handleDeleteMedia('files', index)}
+                  className="absolute top-0 right-0 text-red-500 cursor-pointer w-6 h-6 bg-white rounded-full z-10"
+                />
+              </div>
+            ))}
           </div>
         </div>
+
       )}
     </>
   );
