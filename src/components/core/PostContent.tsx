@@ -366,7 +366,7 @@ export default function PostContent({ filter }: any) {
                     </span>
                     <span className="w-full">
                       <p className="text-[12px]">
-                        <b className="text-white font-[600] mr-1">
+                        <b className="text-white font-[600] mr-1" onClick={()=>router.push(`/users?id=${data?.user?.id}`)}>
                           {capitalizeName(data?.user?.firstname)} {capitalizeName(data?.user?.lastname)}
                         </b>
                         {postDescription}

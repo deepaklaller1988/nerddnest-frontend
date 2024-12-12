@@ -3,7 +3,6 @@ import { MdOutlineComment, MdOutlineCommentsDisabled } from "react-icons/md";
 import { RiUnpinLine } from "react-icons/ri";
 import { FaRegEdit } from "react-icons/fa";
 import { RiNotificationOffLine } from "react-icons/ri";
-import { useState } from "react";
 
 export const PostActionsMenu = ({
   isPinned,

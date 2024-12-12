@@ -1,8 +1,9 @@
+"use client"
 import ProfileDetailCard from '@/components/Cards/ProfileDetailCard'
 import React from 'react'
 import { BiUserPlus } from 'react-icons/bi'
 
-export default function Profile() {
+export default function UserProfile() {
   return (
     <>
       <ProfileDetailCard
