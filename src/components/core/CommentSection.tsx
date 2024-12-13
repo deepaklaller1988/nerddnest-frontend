@@ -18,6 +18,11 @@ import { CgLayoutGrid } from "react-icons/cg";
 import MiniLoader from "../Loaders/Miniloader";
 import { RxCross2 } from "react-icons/rx";
 
+type LikeData = {
+  count: number;
+  users: { firstname: string; lastname: string; handle: string }[];
+};
+
 const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount }: any) => {
   const { API } = useApi();
   const userId = useSelector((state: any) => state.auth.id);
@@ -27,7 +32,8 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
   const [comment, setComment] = useState<string>("");
   const [replyComment, setReplyComment] = useState<string>("");
   const [activeReplyId, setActiveReplyId] = useState<string | null>(null);
-  const [likeComment, setLikeComment] = useState(false)
+  const [likeComment, setLikeComment] = useState<any>(false)
+  const [innerCommentLike, setInnerCommentLike] = useState<{ [key: string]: LikeData }>({});
   const [images, setImages] = useState<File[]>([]);
   const [videos, setVideos] = useState<File[]>([]);
   const [files, setFiles] = useState<File[]>([]);
@@ -51,6 +57,8 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
     }
   }, [id, isActive]);
 
+
+
   const toggleDeleteButton = (index: number) => {
     setDeleteButtonIndex(deleteButtonIndex === index ? null : index);
   };
@@ -62,6 +70,12 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
       );
       if (success) {
         setCommentsData(data);
+        data.forEach((comment: any) => {
+          setLikeComment((prev:any) => ({
+            ...prev,
+            [comment.id]: comment.likes_count > 0, // Set like status based on the count
+          }));
+        });
       } else {
         toasterError(error || "Failed to load comments");
       }
@@ -74,15 +88,15 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
   const postComment = async (comment: string) => {
     if (!comment.trim() && images.length === 0 && videos.length === 0 && files.length === 0) {
       toasterError("Please enter a comment or add media."); // Notify the user
-      return; 
-    }     
-    try{
-     const { success, error } = await API.post("posts/comment", {
+      return;
+    }
+    try {
+      const { success, error } = await API.post("posts/comment", {
         postId: id,
         commenterId: userId,
         comment,
-        contentType:images.length > 0?"images":videos.length > 0 ?"video":files.length > 0?"files":"text",
-        mediaUrl:initialValues.mediaUrl?initialValues.mediaUrl:""
+        contentType: images.length > 0 ? "images" : videos.length > 0 ? "video" : files.length > 0 ? "files" : "text",
+        mediaUrl: initialValues.mediaUrl ? initialValues.mediaUrl : ""
       });
       if (success) {
         setComment("");
@@ -140,13 +154,39 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
     }
   };
 
-  const handleLikeComments = async (commentId: any) => {
+  const handleLikeComments = async (commentId: string) => {
+    const newLikeStatus = !likeComment[commentId];
+
     const { success, data, error } = await API.post("posts/like-comment", { commentId, userId });
     if (success) {
-      setLikeComment(true)
+      // Update the like state for this specific comment
+      setLikeComment((prevState: any) => ({
+        ...prevState,
+        [commentId]: newLikeStatus // Mark this comment as liked
+      }));
+      getAllLikes(commentId)
+      toasterSuccess(data.message,1000,"id")
+    } else {
+      // Handle failure if needed (optional)
     }
-    else { }
-  }
+  };
+
+
+  const getAllLikes = async (commentId: any) => {
+    const { success, data, error, count } = await API.get(`posts/get-likes-comment?commentId=${commentId}`);
+    if (success) {
+      setInnerCommentLike((prevState) => ({
+        ...prevState,
+        [commentId]: {
+          users: data?.map((like: any) => like.user),
+          count: data?.length,
+        },
+      }));
+    } else {
+      console.error(error);
+    }
+  };
+
 
   const getFileCount = (name: string): number => {
     if (name === "images") return images.length;
@@ -185,7 +225,7 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
             ...prevValues,
             mediaUrl: uploadData,
           }));
-          
+
 
         } catch (error) {
           setIsUploadLoading(false);
@@ -241,49 +281,54 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
                             {commentData.commenter?.firstname || "Anonymous"}
                           </b>
                         </p>
-                
+
                         {/* <p>{commentData.comment}</p> */}
-                        {commentData.content_type=="text"&&<p>{commentData.comment}</p>} 
-                               {commentData.content_type=="images" && 
-                                      <div className="relative mt-4 grid grid-cols-4 gap-4 uploaded-data">
-                                      {commentData.media_url?.length > 0 && commentData.media_url?.map((image:any, index:any) => (
-                                        <div key={index} className="relative uploaded-dataInner">
-                                            <img
-                                              src={image}
-                                              alt={`uploaded-image-${index}`}
-                                              className="object-cover rounded-lg w-40 h-30"
-                                            />
-                                      
-                                         
-                                        </div>
-                                      ))}
-                        
-                                    </div>
-                               }
-                                  {commentData.content_type === "video" && (
-                      <div className="relative mt-4 grid grid-cols-4 gap-4 uploaded-data">
-                        {commentData.media_url.map((videoUrl:any, index:any) => (
-                          <div key={index} className="relative uploaded-dataInner">
-                            <video controls className="object-cover rounded-lg w-40 h-30">
-                              <source src={videoUrl} type="video/mp4" />
-                              Your browser does not support the video tag.
-                            </video>
+                        {commentData.content_type == "text" && <p>{commentData.comment}</p>}
+                        {commentData.content_type == "images" &&
+                          <div className="relative mt-4 grid grid-cols-4 gap-4 uploaded-data">
+                            {commentData.media_url?.length > 0 && commentData.media_url?.map((image: any, index: any) => (
+                              <div key={index} className="relative uploaded-dataInner">
+                                <img
+                                  src={image}
+                                  alt={`uploaded-image-${index}`}
+                                  className="object-cover rounded-lg w-40 h-30"
+                                />
+
+
+                              </div>
+                            ))}
+
                           </div>
-                        ))}
-                      </div>
-                    )}
+                        }
+                        {commentData.content_type === "video" && (
+                          <div className="relative mt-4 grid grid-cols-4 gap-4 uploaded-data">
+                            {commentData.media_url.map((videoUrl: any, index: any) => (
+                              <div key={index} className="relative uploaded-dataInner">
+                                <video controls className="object-cover rounded-lg w-40 h-30">
+                                  <source src={videoUrl} type="video/mp4" />
+                                  Your browser does not support the video tag.
+                                </video>
+                              </div>
+                            ))}
+                          </div>
+                        )}
                       </span>
                       <div className="w-full flex items-center gap-3 mt-2">
-                        <span className="cursor-pointer text-green-600 hover:underline" onClick={() => handleLikeComments(commentData.id)}>
-                          Like
+                        <span
+                          className={`cursor-pointer ${likeComment[commentData.id] ? 'text-green-600' : 't'} hover:underline`}
+                          onClick={() => handleLikeComments(commentData.id)}
+                        >
+                          {likeComment[commentData.id] ? 'Unlike' : 'Like'}
                         </span>
+
+
                         <span className="cursor-pointer hover:underline" onClick={() => setActiveReplyId(commentData.commenter.id)}>
                           Reply
                         </span>
                         <span className="text-sm text-white/30">
                           {new Date(commentData.createdAt).toLocaleDateString()}
                         </span>
-                        {likeComment && (<span className="bg-blue-500 p-1 rounded-full">
+                        {likeComment[commentData.id] && (<span className="bg-blue-500 p-1 rounded-full">
                           <BiSolidLike className="fill-white" />
                         </span>)}
                       </div>

@@ -1,62 +1,60 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
-// Define TypeScript interfaces for the GIF data
-interface Gif {
-  media: { gif: { url: string } }[];
-  title: string;
-}
+const GifSearch = () => {
+  const [gifs, setGifs] = useState<any[]>([]);
+  const [searchTerm, setSearchTerm] = useState<string>("funny");  // Default search term
+  const [loading, setLoading] = useState<boolean>(false);
 
-const GifSearch: React.FC = () => {
-  const [query, setQuery] = useState<string>('funny'); // Initial search term
-  const [gifs, setGifs] = useState<Gif[]>([]); // Store fetched GIFs
-  const [loading, setLoading] = useState<boolean>(false); // Track loading state
-
-  const apiKey = 'AIzaSyD6SfBtiJhdkbVWVVDn_Fzf9-bWcqXtyDs'; // Your Tenor API key
-  const apiUrl = 'https://g.tenor.com/v1/search'; // Tenor API URL
-
-  // Fetch GIFs from Tenor using the search query
-  const fetchGifs = async (searchQuery: string) => {
-    setLoading(true); // Set loading to true when fetching starts
-    try {
-      const url = `${apiUrl}?q=${searchQuery}&key=${apiKey}&limit=8`;
-      const response = await fetch(url); // Fetch data from the API
-      const data = await response.json(); // Parse the response as JSON
-
-      setGifs(data.results); // Store the fetched GIFs in state
-    } catch (error) {
-      console.error('Error fetching GIFs:', error); // Handle errors
-    } finally {
-      setLoading(false); // Set loading to false after data is fetched
-    }
-  };
-
-  // Trigger the search whenever the query changes
+  const apiKey = "N3W7Xpoy6m4tIMg93ZppbrWRBcvAKInl"; // Your Giphy API key
+  https://codesandbox.io/p/sandbox/react-giphy-searchbox-l8dxc
+  // Fetch GIFs based on the search term
   useEffect(() => {
-    fetchGifs(query);
-  }, [query]);
+    const fetchGifs = async () => {
+      setLoading(true);
+      try {
+        const response:any = await fetch(
+          `https://api.giphy.com/v1/gifs/search?api_key=${apiKey}&q=${searchTerm}&limit=10`
+        );
+        setGifs(response.data.data);
+      } catch (error) {
+        console.error("Error fetching GIFs:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchGifs();
+  }, [searchTerm]); // This will trigger the effect whenever the search term changes
 
   return (
-    // <div>
-    //   <h1>Search GIFs</h1>
-    //   <input
-    //     type="text"
-    //     value={query}
-    //     onChange={(e) => setQuery(e.target.value)} // Update query on change
-    //     placeholder="Search for GIFs"
-    //   />
-    //   {loading ? (
-    //    "loading"
-    //   ) : (
-    //     <div className="gif-container">
-    //       {gifs.map((gif, index) => (
-    //         <div key={index} className="gif-item">
-    //           <img src={gif.media[0].gif.url} alt={gif.title} />
-    //         </div>
-    //       ))}
-    //     </div>
-    //   )}
-    // </div>
-    <></>
+    <div>
+      <h1>Search for GIFs</h1>
+      <input
+        type="text"
+        placeholder="Search GIFs..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <div className="gif-gallery">
+          {gifs.length > 0 ? (
+            gifs.map((gif: any) => (
+              <div key={gif.id}>
+                <img
+                  src={gif.images.fixed_height.url}
+                  alt={gif.title}
+                  className="gif"
+                />
+              </div>
+            ))
+          ) : (
+            <p>No GIFs found</p>
+          )}
+        </div>
+      )}
+    </div>
   );
 };
 
