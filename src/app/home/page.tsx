@@ -9,6 +9,7 @@ import PostFeed from '@/components/core/PostFeed'
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { usePathname } from 'next/navigation'
+import FriendSuggestion from '@/components/core/FriendSuggestions'
 
 export default function Home() {
   const router = useRouter();
@@ -39,6 +40,7 @@ export default function Home() {
           <section className='flex flex-col gap-5'>
             <Sidebar type="home"/>
             <Connections />
+            <FriendSuggestion/>
           </section>
           <section className='storiesFix'>
             <AddStory/>

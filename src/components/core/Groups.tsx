@@ -19,7 +19,7 @@ const Groups = () => {
     { name: "React Developers", activeSince: "3 days ago" },
     { name: "Node.js Enthusiasts", activeSince: "5 days ago" },
   ];
-  console.log(items.length,)
+  
   return (
     <TabContent
       title="GROUPS"

@@ -81,15 +81,15 @@ export const AddStoryValidationSchema = Yup.object({
       )}`,
       validateFileType
     ),
-  storyCoverTitle: Yup.string()
+    coverTitle: Yup.string()
     .required("Story cover title is required")
     .max(100, "Title must be less than 100 characters"),
   stories: Yup.array()
     .of(
       Yup.object({
-        storyLinkText: Yup.string()
+        storyText: Yup.string()
           .required("Story link text is required")
-          .max(50, "Link text must be less than 50 characters"),
+          .nullable(),
         storyLink: Yup.string()
           .url("Must be a valid URL")
           .required("Story link is required"),
@@ -114,7 +114,7 @@ export const AddStoryValidationSchema = Yup.object({
       if (!value) return true;
       for (let i = 0; i <= value.length; i++) {
         const story = value[i];
-        if (!story.storyLinkText || !story.storyLink || !story.storyMedia) {
+        if (!story.storyText || !story.storyLink || !story.storyMedia) {
           return i === value.length - 1;
         }
       }

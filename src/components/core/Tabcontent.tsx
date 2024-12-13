@@ -21,13 +21,14 @@ const TabContent = <T extends string, Item>({
     router.push("/groups")
   };
 
+
   return (
     <div className="min-w-[280px] max-w-[280px] rounded-[12px] bg-[var(--sections)] border border-white/5 p-4">
       <h2 className="text-[var(--highlight)] font-semibold pb-4 text-white">{title}</h2>
       
       <div className="w-full">
         <section className="border-b border-[var(--foreground)] flex gap-4 mb-4">
-          {tabs.map((tab) => (
+          {tabs && onTabSwitch && tabs.map((tab) => (
             <button
               key={tab.tabName}
               onClick={() => onTabSwitch(tab.tabName)}

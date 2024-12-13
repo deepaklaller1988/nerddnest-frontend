@@ -256,7 +256,7 @@ export default function PostContent({ filter }: any) {
       console.error("API Error:", error);
     }
   };
-  
+
   const handleTogglePin = async (data: any) => {
     const newState = !data.pinned;
     try {
@@ -297,7 +297,6 @@ export default function PostContent({ filter }: any) {
         toasterError("Failed to delete the post");
       }
     } catch (error) {
-      console.error("Delete error:", error);
       toasterError("An error occurred while deleting the post");
     } finally {
       setIsDeletePopupOpen(false);
@@ -366,7 +365,7 @@ export default function PostContent({ filter }: any) {
                     </span>
                     <span className="w-full">
                       <p className="text-[12px]">
-                        <b className="text-white font-[600] mr-1" onClick={()=>router.push(`/users?id=${data?.user?.id}`)}>
+                        <b className="text-white font-[600] mr-1" onClick={() => router.push(`/users?id=${data?.user?.id}`)}>
                           {capitalizeName(data?.user?.firstname)} {capitalizeName(data?.user?.lastname)}
                         </b>
                         {postDescription}
@@ -544,14 +543,19 @@ export default function PostContent({ filter }: any) {
                       <span className="inline-flex items-center gap-2 cursor-pointer">
                         <span className="bg-blue-500 p-1 rounded-full">
                           <BiSolidLike className="fill-white" />
-                        </span>{" "}
+                        </span>
                         {likesData[data.id]?.count > 0 ? (
                           <>
                             {likesData[data.id]?.users.slice(0, 2).map((user: any, index: number) => (
-                              <span key={index}> {user.id === userId ? "You" : user.firstname}</span>
+                              <span key={index}> {user.id === userId ? "You" : capitalizeName(user.firstname)}
+                                {index < 1 && likesData[data.id]?.users.slice(0, 2).length > 1 ? " ," : ""}
+                              </span>
                             ))}
+
                             {likesData[data.id]?.users.length > 2 && (
-                              <span>and {likesData[data.id]?.users.length - 2} others</span>
+                              <span>
+                                and {likesData[data.id]?.users.length - 2} {likesData[data.id]?.users.length - 2 === 1 ? "other" : "others"}
+                              </span>
                             )}
                           </>
                         ) : (
@@ -586,7 +590,7 @@ export default function PostContent({ filter }: any) {
                       </section>
                       {!data?.isCommentingEnabled && <div className="-mb-3 mt-4 w-full rounded-[12px] bg-[var(--sections)] border border-white/5 p-4 py-3 pb-6 flex items-center gap-4 justify-between">
 
-                        <span className="text-white/50">You turned off commenting for this post</span>
+                        <span className="text-white/50">{`${data.user_id === userId ? "You" : `${capitalizeName(data?.user?.firstname)} ${capitalizeName(data?.user?.lastname)}`} turned off commenting for this post`}</span>
                       </div>
                       }
                       {data.isCommentingEnabled && (<CommentSection isActive={activeCommentIndex === index} id={data.id} data={PostData} user_id={data.user_id}

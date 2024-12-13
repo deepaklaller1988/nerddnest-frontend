@@ -30,9 +30,9 @@ export interface TabContentProps<T extends string, Item> {
   items: Item[];
   isLoading: boolean;
   noItemsMessage: string;
-  tabs: { label: string; count: number; tabName: T }[];
-  onTabSwitch: (tab: T) => void;
-  activeTab: T;
+  tabs?: { label: string; count: number; tabName: T }[];
+  onTabSwitch?: (tab: T) => void;
+  activeTab?: T;
   renderItem: (item: Item) => JSX.Element;
   viewAllText: string;
 }

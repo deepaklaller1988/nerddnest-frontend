@@ -255,12 +255,8 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name } = e.target;
-    console.log(name)
     if (e.target.files) {
-    console.log(e.target.files)
-
       const newFiles = Array.from(e.target.files);
-      console.log(newFiles)
 
       if (newFiles.length + getFileCount(name) <= 10) {
         const fileTypeMapping: { [key: string]: React.Dispatch<React.SetStateAction<File[]>> } = {
@@ -370,16 +366,16 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
                   <Image
                     src={URL.createObjectURL(file)}
                     alt="uploaded"
-                    height={70}
+                    height={100}
                     width={100}
-                    className="object-cover rounded-lg w-40 h-30"
+                    className="object-cover rounded-lg w-full h-full"
                   />
                 ) : null}
 
                 {fileType === "video" ? (
                   <video
                     controls
-                    className="object-cover rounded-lg w-40 h-30"
+                    className="object-cover rounded-lg w-full h-full"
                   >
                     <source src={URL.createObjectURL(file)} type="video/mp4" />
                     Your browser does not support the video tag.

@@ -6,12 +6,12 @@ import { BiUserPlus } from 'react-icons/bi'
 export default function UserProfile() {
   return (
     <>
-      <ProfileDetailCard
+      {/* <ProfileDetailCard
         type={"user"}
         name="testing"
         role={"Group"}
         buttonText={"Connect"}
-        buttonIcon={<BiUserPlus size="20" className='fill-white' />} />
+        buttonIcon={<BiUserPlus size="20" className='fill-white' />} /> */}
     </>
   )
 }

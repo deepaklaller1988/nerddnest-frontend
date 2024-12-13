@@ -51,7 +51,6 @@ const SchedulePostPopup = ({ isOpen, onClose, onScheduleComplete,isScheduling,in
     const scheduleTime = combineDateTime(date, time, period);
     onScheduleComplete(scheduleTime);
     onClose();
-    console.log("Scheduling post for:", scheduleTime);
   };
 
   return (

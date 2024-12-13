@@ -71,7 +71,7 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
       if (success) {
         setCommentsData(data);
         data.forEach((comment: any) => {
-          setLikeComment((prev:any) => ({
+          setLikeComment((prev: any) => ({
             ...prev,
             [comment.id]: comment.likes_count > 0, // Set like status based on the count
           }));
@@ -165,7 +165,7 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
         [commentId]: newLikeStatus // Mark this comment as liked
       }));
       getAllLikes(commentId)
-      toasterSuccess(data.message,1000,"id")
+      toasterSuccess(data.message, 1000, "id")
     } else {
       // Handle failure if needed (optional)
     }
@@ -196,12 +196,8 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
   };
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name } = e.target;
-    console.log(name)
     if (e.target.files) {
-      console.log(e.target.files)
-
       const newFiles = Array.from(e.target.files);
-      console.log(newFiles)
 
       if (newFiles.length + getFileCount(name) <= 10) {
         const fileTypeMapping: { [key: string]: React.Dispatch<React.SetStateAction<File[]>> } = {
@@ -275,23 +271,23 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
                   </span>
                   <div className="max-w-full">
                     <div className={`max-w-full ${activeReplyId === commentData.id ? "mainReply" : ""}`}>
-                      <span className="inline-block min-w-[200px] max-w-full bg-gray-500/5 p-4 rounded-[12px]">
+                      <span className="inline-block min-w-[200px] max-w-full bg-gray-500/5 p-2 rounded-[12px]">
                         <p>
-                          <b className="text-[var(--highlight)] font-[600]">
+                          <b className="text-white font-[600]">
                             {commentData.commenter?.firstname || "Anonymous"}
                           </b>
                         </p>
 
                         {/* <p>{commentData.comment}</p> */}
-                        {commentData.content_type == "text" && <p>{commentData.comment}</p>}
+                         <p>{commentData.comment ? commentData.comment :""}</p>
                         {commentData.content_type == "images" &&
-                          <div className="relative mt-4 grid grid-cols-4 gap-4 uploaded-data">
+                          <div className="relative mt-4 grid grid-cols-5 gap-2 uploaded-data">
                             {commentData.media_url?.length > 0 && commentData.media_url?.map((image: any, index: any) => (
                               <div key={index} className="relative uploaded-dataInner">
                                 <img
                                   src={image}
                                   alt={`uploaded-image-${index}`}
-                                  className="object-cover rounded-lg w-40 h-30"
+                                  className="object-cover rounded-lg w-full h-full"
                                 />
 
 
@@ -301,10 +297,10 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
                           </div>
                         }
                         {commentData.content_type === "video" && (
-                          <div className="relative mt-4 grid grid-cols-4 gap-4 uploaded-data">
+                          <div className="relative mt-4 grid grid-cols-5 gap-2 uploaded-data">
                             {commentData.media_url.map((videoUrl: any, index: any) => (
                               <div key={index} className="relative uploaded-dataInner">
-                                <video controls className="object-cover rounded-lg w-40 h-30">
+                                <video controls className="object-cover rounded-lg w-full h-full">
                                   <source src={videoUrl} type="video/mp4" />
                                   Your browser does not support the video tag.
                                 </video>
@@ -335,7 +331,7 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
                     </div>
 
                     {commentData.replies &&
-                      commentData.replies.map((reply: any, index: any) => (
+                      commentData.replies.map((reply: any) => (
                         <div className="flex items-start gap-2 mt-4 innerReply" key={reply.id}>
                           <span className="relative min-w-10 min-h-10 max-w-10 max-h-10 rounded-full block border border-2 border-black/5 border-white">
                             <img
@@ -346,7 +342,7 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
                           </span>
                           <div className="max-w-full">
                             <div className="max-w-full">
-                              <span className="inline-block min-w-[200px] max-w-full bg-gray-500/5 p-4 rounded-[12px]">
+                              <span className="inline-block min-w-[200px] max-w-full bg-gray-500/5 p-2 rounded-[12px]">
                                 <p>
                                   <b>{reply.commenterName || "Anonymous"}</b>
                                 </p>
@@ -373,20 +369,21 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
                       ))}
                   </div>
 
-                  {commentData.commenter_id == userId && <span onClick={() => toggleDeleteButton(index)}
+                  {commentData.commenter_id == userId && <span className="relative w-6" onClick={() => toggleDeleteButton(index)}
                   >
                     <MdMoreHoriz className="w-6 h-6" />
-                  </span>}
-                  {deleteButtonIndex === index && (
-                    <div className="top-0 right-0 justify-center p-1 bg-gray-500/5 text-center shadow-lg">
+                    {deleteButtonIndex === index && (
+                    <div className="absolute w-[80px] bg-white/10 rounded-lg top-5 right-0 justify-center p-1 bg-gray-500/5 text-center shadow-lg">
                       <button
                         onClick={() => handleDelete(commentData.id)}
-                        className="flex items-center text-gray-500 hover:text-gray-700"
+                        className="flex items-center text-white"
                       >
-                        <FaTrash className="fill-gray/80 mr-2" /> Delete
+                        <FaTrash className="fill-white mr-2" /> Delete
                       </button>
                     </div>
                   )}
+                  </span>}
+                  
                 </div>
               </div>
             </div>
@@ -401,7 +398,7 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
                   alt="user"
                 />
               </span>
-              <section className="bg-black/5 rounded-[12px] w-full pt-2 relative">
+              <section className="bg-white/5 rounded-[12px] w-full pt-2 relative">
                 <textarea
                   className="text-white/50 resize-none bg-transparent w-full p-2 px-5 flex items-center text-gray-500/70"
                   ref={textareaRef}
@@ -412,6 +409,67 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
                 <button className="absolute bottom-3 right-3 flex items-center justify-center w-8 h-8 bg-[var(--highlight-blue)] rounded-full">
                   <IoPaperPlaneSharp className="fill-white" onClick={() => postComment(comment)} />
                 </button>
+                <section className="p-2 pb-4">
+                {isUploadLoading && <MiniLoader />}
+            <div className="relative mt-4 grid grid-cols-5 gap-2 uploaded-data">
+              {images.length > 0 && images.map((image, index) => (
+                <div key={index} className="relative uploaded-dataInner">
+                  {image instanceof File ? (
+                    <img
+                      src={URL.createObjectURL(image)}
+                      alt={`uploaded-image-${index}`}
+                      className="object-cover rounded-lg w-full h-full"
+                    />
+                  ) : (
+                    ""
+                  )}
+                  <RxCross2
+                    onClick={() => handleDeleteMedia('images', index)}
+                    className="absolute top-0 right-0 text-red-500 cursor-pointer w-6 h-6 bg-white rounded-full z-10"
+                  />
+                </div>
+              ))}
+
+            </div>
+            <div className="relative mt-4 grid grid-cols-5 gap-2 uploaded-data">
+
+              {videos.length > 0 && videos.map((video, index) => (
+                <div key={index} className="relative uploaded-dataInner">
+                  {video instanceof File ? (
+                    <video
+                      controls
+                      src={URL.createObjectURL(video)}
+                      className="object-cover rounded-lg w-full h-full"
+                    ></video>
+                  ) : ("")}
+                  <RxCross2
+                    onClick={() => handleDeleteMedia('video', index)}
+                    className="absolute top-0 right-0 text-red-500 cursor-pointer w-6 h-6 bg-white rounded-full z-10"
+                  />
+                </div>
+              ))}
+            </div>
+            <div className="relative mt-4 grid grid-cols-5 gap-2 uploaded-data">
+
+              {files.length > 0 && files.map((file, index) => (
+                <div key={index} className="relative uploaded-dataInner">
+                  {file instanceof File ? (
+                    <a
+                      href={URL.createObjectURL(file)}
+                      download={file.name}
+                      className="download-link"
+                    >
+                      {file.name}
+                    </a>) : ("")}
+
+                  <RxCross2
+                    onClick={() => handleDeleteMedia('files', index)}
+                    className="absolute top-0 right-0 text-red-500 cursor-pointer w-6 h-6 bg-white rounded-full z-10"
+                  />
+                </div>
+              ))}
+            </div>
+                </section>
                 <section className="p-4 pt-0 flex gap-4">
                   <span className={`cursor-pointer ${(videos.length > 0 || files.length > 0) ? 'opacity-50 cursor-not-allowed' : ''}`}>
                     <MdOutlineLinkedCamera className="w-6 h-6 fill-green-600" onClick={() => handleMediaTypeSelection("image")} />
@@ -458,66 +516,6 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
 
               </section>
             </section>
-            {isUploadLoading && <MiniLoader />}
-            <div className="relative mt-4 grid grid-cols-4 gap-4 uploaded-data">
-              {images.length > 0 && images.map((image, index) => (
-                <div key={index} className="relative uploaded-dataInner">
-                  {image instanceof File ? (
-                    <img
-                      src={URL.createObjectURL(image)}
-                      alt={`uploaded-image-${index}`}
-                      className="object-cover rounded-lg w-40 h-30"
-                    />
-                  ) : (
-                    ""
-                  )}
-                  <RxCross2
-                    onClick={() => handleDeleteMedia('images', index)}
-                    className="absolute top-0 right-0 text-red-500 cursor-pointer w-6 h-6 bg-white rounded-full z-10"
-                  />
-                </div>
-              ))}
-
-            </div>
-            <div className="relative mt-4 grid grid-cols-4 gap-4 uploaded-data">
-
-              {videos.length > 0 && videos.map((video, index) => (
-                <div key={index} className="relative uploaded-dataInner">
-                  {video instanceof File ? (
-                    <video
-                      controls
-                      src={URL.createObjectURL(video)}
-                      className="object-cover rounded-lg w-40 h-30"
-                    ></video>
-                  ) : ("")}
-                  <RxCross2
-                    onClick={() => handleDeleteMedia('video', index)}
-                    className="absolute top-0 right-0 text-red-500 cursor-pointer w-6 h-6 bg-white rounded-full z-10"
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="relative mt-4 grid grid-cols-4 gap-4 uploaded-data">
-
-            {files.length > 0 && files.map((file, index) => (
-              <div className="relative uploaded-dataInner">
-                {file instanceof File ? (
-                  <a
-                    href={URL.createObjectURL(file)}
-                    download={file.name}
-                    className="download-link"
-                  >
-                    {file.name}
-                  </a>) : ("")}
-
-                <RxCross2
-                  onClick={() => handleDeleteMedia('files', index)}
-                  className="absolute top-0 right-0 text-red-500 cursor-pointer w-6 h-6 bg-white rounded-full z-10"
-                />
-              </div>
-            ))}
           </div>
         </div>
 

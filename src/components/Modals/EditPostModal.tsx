@@ -436,7 +436,6 @@ const EditPostModal = ({ postId, onClose,
     };
 
     const handleSubmit = async () => {
-        console.log(initialValues, value, "value======================")
         if (!(value || initialValues.mediaUrl && initialValues.mediaUrl.length > 0)) {
             toasterInfo("Please add some content or upload media before posting.", 3000, "id");
             return;
@@ -468,8 +467,7 @@ const EditPostModal = ({ postId, onClose,
         } catch (error) {
         }
     };
-    console.log(initialValues?.initialDate,"dats")
-    console.log(logLocalTime(initialValues?.initialDate),"dats")
+
     return (
         <>
             {isClient ? (

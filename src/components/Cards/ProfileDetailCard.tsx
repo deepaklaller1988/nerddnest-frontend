@@ -6,12 +6,15 @@ import { FaCamera } from 'react-icons/fa6'
 import { MdMoreHoriz, MdOutlineExitToApp } from 'react-icons/md'
 import NavigationUserMenu from "../../lib/MenuBar/NavigateUserMenu"
 import FriendsContent from '../Profile/FriendsContent'
+import { useSelector } from 'react-redux'
 
 export default function ProfileDetailCard({ data, type, name, role, buttonText, buttonIcon, onButtonClick }: any) {
     const [openActionsMenu, setOpenActionsMenu] = useState(false)
+    const userId = useSelector((state: any) => state.auth.id);
+
     const [hoveredItem, setHoveredItem] = useState<string | null>(null);
-    const [activeTab, setActiveTab] = useState('feed');
-    const [activeMenuItem, setActiveMenuItem] = useState<string>('');
+    const [activeTab, setActiveTab] = useState('Friends');
+    const [activeMenuItem, setActiveMenuItem] = useState('Friends');
 
     const toggleActionsMenu = () => {
         setOpenActionsMenu(prevState => !prevState);
@@ -26,21 +29,17 @@ export default function ProfileDetailCard({ data, type, name, role, buttonText, 
         { id: 'discussions', label: 'Discussions' },
         { id: 'manage', label: 'Manage' },
     ];
-
     const handleTabClick = (tabId: any, itemId: any) => {
         setActiveTab(tabId);
         setActiveMenuItem(tabId);
-
-        console.log(`Active Tab: ${tabId}`);
     };
-
     const handleMouseLeave = () => setHoveredItem(null);
     const handleMouseEnter = (label: string) => setHoveredItem(label);
 
     const renderDynamicContent = () => {
         switch (activeMenuItem) {
             case 'Friends':
-                return <><FriendsContent/></>;
+                return <><FriendsContent /></>;
             case 'photos':
                 return <div>Photos Content</div>;
             case 'videos':
@@ -60,7 +59,6 @@ export default function ProfileDetailCard({ data, type, name, role, buttonText, 
         }
     };
 
-    console.log(activeMenuItem,"activeMenuItem========")
     return (
         <div className='w-full pt-8'>
             <div className='w-full max-w-[1230px] py-3 px-4 m-auto'>
@@ -88,8 +86,11 @@ export default function ProfileDetailCard({ data, type, name, role, buttonText, 
                                     </span>}
                                 </section>
                                 <section>
-                                    <h5 className='text-[25px] text-white font-semibold'>{capitalizeName(data.firstname)} {capitalizeName(data.lastname)}<b className='relative top-[-2px] font-normal text-[12px] p-1 px-2 rounded-full text-white bg-[var(--highlight)]'>{role}</b></h5>
-                                    <p><span className=''>Public</span><b className='font-bold text-[20px] px-1 relative -top-[2] text-gray-500/50'>.</b><span className=''>Group</span><b className='font-bold text-[20px] px-1 relative -top-[2] text-gray-500/50'>.</b><span className=''>Active 16 hours ago</span></p>
+                                    <h5 className='text-[25px] text-white font-semibold'>{capitalizeName(data.firstname)} {capitalizeName(data.lastname)}<b className='relative top-[-2px] font-normal text-[12px] p-1 px-2 rounded-full text-white bg-[var(--highlight)] ml-4'>Member</b></h5>
+                                    <p>
+                                        <span className=''>Public</span>
+                                        <b className='font-bold text-[20px] px-1 relative -top-[2] text-gray-500/50'>.</b>
+                                        <span className='ml-2'>Member</span><b className='font-bold text-[20px] px-1 relative -top-[2] text-gray-500/50'>.</b><span className=''>Active 16 hours ago</span></p>
                                     {/* <p className='text-white mt-2'>Printing and typesetting industry.</p>
                                     <div className='mt-2 flex gap-2 items-center'>
                                         <div className='w-8 h-8 rounded-full overflow-hidden border-2 border-white/10'>
@@ -99,38 +100,41 @@ export default function ProfileDetailCard({ data, type, name, role, buttonText, 
                                     </div> */}
 
                                     <div className='mt-2 flex gap-2 items-center'>
-                                        <p>1   <b className='text-normal text-[12px] text-white'>Followers</b></p>
+                                        <p>0<b className='text-normal text-[12px] text-white ml-2'>Followers</b></p>
 
-                                        <p>4   <b className='text-normal text-[12px] text-white'>Following</b></p>
+                                        <p>0<b className='text-normal text-[12px] text-white ml-2'>Following</b></p>
                                     </div>
                                 </section>
                             </div>
-                            <div className='flex gap-2 mt-4'>
-                                <button
-                                    onClick={onButtonClick}
-                                    className={`${type === 'user' ? 'bg-[var(--highlight)]' : 'bg-red-500'} text-white font-bold p-2 rounded-lg flex gap-1 items-center justify-center`}
-                                >
-                                    {buttonIcon ? buttonIcon : <MdOutlineExitToApp size="20" className="fill-white" />}
-                                    <span
-                                        className="text-white"
-                                        onMouseEnter={(e) => {
-                                            const target = e.target as HTMLElement;
-                                            if (data?.request_status === 'Pending') target.textContent = 'Cancel Request';
-                                        }}
-                                        onMouseLeave={(e) => {
-                                            const target = e.target as HTMLElement;
-                                            if (data?.request_status === 'Pending') target.textContent = 'Request Sent';
-                                        }}
-                                    >
-                                        {data?.request_status === 'Pending' ? 'Request Sent' : buttonText}
-                                    </span>
-                                </button>
+                            {data.id !== userId &&
 
-                                <button className='p-2 px-3 rounded-lg bg-black/50'>
-                                    {/* <HiBell className='hidden' /><HiBellSlash className='fill-white' /> */}
-                                    <MdMoreHoriz className='fill-white' onClick={toggleActionsMenu} />
-                                </button>
-                            </div>
+                                <div className='flex gap-2 mt-4'>
+                                    <button
+                                        onClick={onButtonClick}
+                                        className={`${type === 'user' ? 'bg-[var(--highlight)]' : 'bg-red-500'} text-white font-bold p-2 rounded-lg flex gap-1 items-center justify-center`}
+                                    >
+                                        {buttonIcon ? buttonIcon : <MdOutlineExitToApp size="20" className="fill-white" />}
+                                        <span
+                                            className="text-white"
+                                            onMouseEnter={(e) => {
+                                                const target = e.target as HTMLElement;
+                                                if (data?.request_status === 'Pending') target.textContent = 'Cancel Request';
+                                            }}
+                                            onMouseLeave={(e) => {
+                                                const target = e.target as HTMLElement;
+                                                if (data?.request_status === 'Pending') target.textContent = 'Request Sent';
+                                            }}
+                                        >
+                                            {data?.request_status === 'Pending' ? 'Request Sent' : buttonText}
+                                        </span>
+                                    </button>
+
+                                    <button className='p-2 px-3 rounded-lg bg-black/50'>
+                                        {/* <HiBell className='hidden' /><HiBellSlash className='fill-white' /> */}
+                                        <MdMoreHoriz className='fill-white' onClick={toggleActionsMenu} />
+                                    </button>
+                                </div>
+                            }
                             {openActionsMenu && (
                                 <div data-popup-type="postactions" className="!z-10 shadow-[0_-5px_25px_-15px_rgba(0,0,0,0.3)]  min-w-[210px] py-2 rounded-lg bg-[var(--bgh)] absolute mt-5 right-0">
 
@@ -167,7 +171,7 @@ export default function ProfileDetailCard({ data, type, name, role, buttonText, 
                 </div>
             </div>
 
-            {activeMenuItem && (
+            {activeMenuItem && data.id == userId && (
                 <>
                     {renderDynamicContent()}
                 </>
