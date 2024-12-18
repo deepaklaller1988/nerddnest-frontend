@@ -81,15 +81,14 @@ export const AddStoryValidationSchema = Yup.object({
       )}`,
       validateFileType
     ),
-    coverTitle: Yup.string()
+  coverTitle: Yup.string()
     .required("Story cover title is required")
     .max(100, "Title must be less than 100 characters"),
   stories: Yup.array()
     .of(
       Yup.object({
-        storyText: Yup.string()
-          .required("Story link text is required")
-          .nullable(),
+        storyText: Yup.string().required('Story text is required'),
+
         storyLink: Yup.string()
           .url("Must be a valid URL")
           .required("Story link is required"),
@@ -106,22 +105,21 @@ export const AddStoryValidationSchema = Yup.object({
           .required("Duration is required")
           .min(1, "Duration must be at least 1 second"),
         visibility: Yup.string()
-          .oneOf(["Everyone", "Onlyme", "Friends"], "Invalid visibility option")
+          .oneOf(["public", "only-me", "friends"], "Invalid visibility option")
           .required("Visibility is required"),
       })
     )
     .test("validateOrder", "Complete the first story first", function (value) {
       if (!value) return true;
-      for (let i = 0; i <= value.length; i++) {
+      for (let i = 0; i < value.length; i++) {
         const story = value[i];
-        if (!story.storyText || !story.storyLink || !story.storyMedia) {
+        if (!story || !story.storyText || !story.storyLink || !story.storyMedia) {
           return i === value.length - 1;
         }
       }
       return true;
     }),
 });
-
 
 // export const validationPostSchema = Yup.object().shape({
 //   content: Yup.string()
@@ -160,7 +158,6 @@ export const AddStoryValidationSchema = Yup.object({
 //     }),
 // });
 
-
 // export const validationPostSchema = Yup.object().shape({
 //   mediaUrl: Yup.array()
 //     .test('images-required', 'At least one image is required', function (value) {
@@ -191,7 +188,6 @@ export const validationPostSchema = Yup.object({
   // }),
 });
 
-  
 // export const validationPostSchema = Yup.object({
 //   content: Yup.string().test(
 //     'content-required-if-no-mediaUrl',

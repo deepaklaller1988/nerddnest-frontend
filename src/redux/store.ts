@@ -3,6 +3,7 @@ import { authApi } from './services/auth';
 import { apiSlice } from './services/api';
 import authReducer from './slices/auth.slice';
 import dataReducer from './slices/data.slice'; 
+import storydataReducer from './slices/data.slice'; 
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     [apiSlice.reducerPath]: apiSlice.reducer,
     auth: authReducer,
     data: dataReducer, 
+    storydata:storydataReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()

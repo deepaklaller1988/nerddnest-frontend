@@ -7,7 +7,6 @@ export default function ForumContent() {
     <Formik
       initialValues={{ agree: false }} // Initial form values
       onSubmit={(values) => {
-        console.log(values); // Handle form submission
       }}
     >
       {() => (

@@ -5,66 +5,141 @@ import { RxCross2 } from "react-icons/rx";
 import Button from "../Buttons/Button";
 import { IoMdAdd, IoMdSend } from "react-icons/io";
 import { HiOutlineChevronUpDown } from "react-icons/hi2";
-import { toasterInfo } from "../core/Toaster";
+import { toasterError, toasterSuccess } from "../core/Toaster";
 import { useApi } from "@/hooks/useAPI";
 import { uploadFile } from "../core/UploadFile";
+import { useState } from "react";
+import { IoCloseCircle } from "react-icons/io5";
+import { useDispatch, useSelector } from "react-redux";
+import { setStoryData } from "../../redux/slices/data.slice";
 
-interface Story {
-  storyLinkText: string;
-  storyLink: string;
-  storyMedia: File | null; // File or null to account for empty values
-  duration: number;
-  visibility: string;
-  isCollapsed: boolean;
-}
 
-interface InitialValues {
-  storyCoverImage: File | null;
-  storyCoverTitle: string;
-  stories: Story[];
-}
-const CreateStoryModal: React.FC<any> = ({ togglePopup, onAddStory }) => {
+const CreateStoryModal: React.FC<any> = ({ togglePopup }) => {
   const { API } = useApi();
+  const dispatch = useDispatch();
+
+  const userId = useSelector((state: any) => state.auth.id);
+  const [coverImage, setCoverImage] = useState<any>(null)
+  const [storyMedia, setStoryMedia] = useState<(string | undefined)[]>([]);
+  const [loadingCoverImage, setLoadingCoverImage] = useState(false);
+  const [loadingstoryMedia, setLoadingstoryMedia] = useState<boolean[]>([]);
+
   const initialValues = {
-    storyCoverImage: null,
-    storyCoverTitle: "",
+    userId: userId,
+    storyCoverImage: "",
+    coverTitle: "",
     stories: [
       {
-        storyLinkText: "",
+        storyText: "",
         storyLink: "",
-        storyMedia: null,
+        storyMedia: "",
         duration: 6,
-        visibility: "Everyone",
+        visibility: "public",
         isCollapsed: false,
       },
     ],
   };
 
-  const handleAddStory = (values: any) => {
-
-    const storyData = {
-      cover: initialValues.storyCoverImage,
-      title: initialValues.storyCoverTitle,
-      stories: initialValues.stories,
+  const handleAddStory = async (values: any, setFieldValue: any) => {
+    const updatedValues = {
+      ...values,
+      storyCoverImage: values.storyCoverImage,
+      mediaUrl: values.storyCoverImage,
+      stories: values.stories.map((story: any) => ({
+        ...story,
+        mediaUrl: story.storyMedia,
+      }))
     };
-    console.log(storyData)
-    onAddStory(storyData);
-    togglePopup();
+
+    try {
+      const { data, success, error } = await API.post("story/create", updatedValues);
+      if (success) {
+        toasterSuccess("Story Created Successfully!", 2000, "id");
+        dispatch(setStoryData(data));
+
+        togglePopup();
+
+      } else {
+        toasterError(error || "Failed to Create Story");
+      }
+    } catch (err) {
+      console.error("Error posting story:", err);
+      toasterError("An error occurred while posting the story");
+    }
   };
 
+  const handleFileChange = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+    setFieldValue: (field: string, value: any) => void,
+    fieldName: string,
+    setLoading: any,
+    index?: number
+  ) => {
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      const file = files[0];
+      try {
+        let uploadData: any;
+        if (fieldName === "storyCoverImage") {
+          setLoading(true);
 
-  const handleChange=async(e:any ,setname:any,name:any)=>{
-    const file = e.target.files?.[0];
-    if (file) {
-        try {
-            const uploadedUrl = await uploadFile(file,API);
-            setname(name, uploadedUrl);
-            toasterInfo("File uploaded successfully");
-        } catch (error) {
-            console.error("Error uploading file:", error);
+          uploadData = await uploadFile(file, API);
+          setLoading(false);
+
+          setFieldValue(fieldName, uploadData);
+          setCoverImage(uploadData);
+        } else if (fieldName.startsWith("stories")) {
+          if (index !== undefined) {
+            setLoading((prevState: boolean[]) => {
+              const updatedState = [...prevState];
+              updatedState[index] = true;
+              return updatedState;
+            });
+            uploadData = await uploadFile(file, API);
+            setFieldValue(`stories[${index}].storyMedia`, uploadData);
+            setLoading((prevState: boolean[]) => {
+              const updatedState = [...prevState];
+              updatedState[index] = false;
+              return updatedState;
+            });
+            setStoryMedia((prevState: any) => {
+              const updatedMedia = [...prevState];
+              updatedMedia[index] = uploadData;
+              return updatedMedia;
+            });
+          }
         }
+      } catch (err) {
+        console.error("Error uploading file:", err);
+      } finally {
+        if (typeof setLoading === 'function' && index !== undefined) {
+          setLoading((prevState: boolean[]) => {
+            const updatedState = [...prevState];
+            updatedState[index] = false;
+            return updatedState;
+          });
+        } else if (typeof setLoading === 'boolean') {
+          setLoading = false;
+        }
+      }
     }
-  }
+  };
+
+  const handleDelete = (setFieldValue: (field: string, value: any) => void, fieldName: string, index?: number) => {
+    if (fieldName === "storyCoverImage") {
+      setFieldValue(fieldName, "");
+      setCoverImage(null);
+    } else if (fieldName.startsWith("stories")) {
+      const storyIndex = index ?? 0;
+      setFieldValue(`stories[${storyIndex}].storyMedia`, "");
+      setStoryMedia((prevMedia: any) => {
+        const updatedMedia = [...prevMedia];
+        updatedMedia[storyIndex] = null;
+        return updatedMedia;
+      });
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div className="max-h-[80vh] overflow-auto bg-[var(--sections)] border border-white/10 w-full max-w-[600px] rounded-[12px] shadow-lg">
@@ -86,49 +161,65 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup, onAddStory }) => {
           onSubmit={handleAddStory}
         >
           {({ values, setFieldValue }) => (
-            console.log(values, "="),
             (
-              <Form className="space-y-6 p-4">
+              <Form className="space-y-6 p-4" onSubmit={(e) => { e.preventDefault(); handleAddStory(values, setFieldValue); }}>
                 <div className="">
                   <h3 className="text-center text-lg font-semibold mb-4 text-white">
                     Story Cover
                   </h3>
-                  <div className="p-5 border-2 border-dashed bg-gray-100/10 border-gray-300/20 rounded-full w-36 h-36 mx-auto flex items-center justify-center mb-4">
-                    <label
-                      htmlFor="storyCoverImage"
-                      className="text-center text-gray-500 cursor-pointer hover:text-green-600"
-                    >
-                      <p className="text-sm text-white">
-                        Drag & Drop your file
-                      </p>
-                      <p className="text-sm text-white">
-                        or{" "}
-                        <u className="text-white">Browse</u>
-                      </p>
-                      <Field
-                        type="file"
-                        name="storyCoverImage"
-                        id="storyCoverImage"
-                        className="hidden"
-                        // onChange={(e: any) =>
-                        //   setFieldValue("storyCoverImage", e.target.files[0])
-                        // }
-                        onChange={(e:any)=>handleChange(e,setFieldValue,"storyCoverImage")}
-                        value={initialValues.storyCoverImage}
-                      />
-                    </label>
+                  <div className="p-5 border-2 border-dashed bg-gray-100/10 border-gray-300/20 rounded-full w-36 h-36 mx-auto flex items-center justify-center mb-4 relative">
+                    {loadingCoverImage ? (
+                      <div className="flex justify-center items-center w-full h-full">
+                        <img src="/spinner.gif" alt="Loading..." className="w-12 h-12" />
+                      </div>
+                    ) : coverImage ? (
+                      <div className="relative w-full h-full">
+                        <img
+                          src={coverImage}
+                          alt="Uploaded Preview"
+                          className="w-full h-full object-cover rounded-full"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleDelete(setFieldValue, "storyCoverImage")}
+                          className="absolute top-0 right-0 bg-red-600 text-white rounded-full p-1 hover:bg-red-800"
+                          title="Remove Image"
+                        >
+                          <IoCloseCircle size={24} />
+                        </button>
+                      </div>
+                    ) : (
+                      <label
+                        htmlFor="storyCoverImage"
+                        className="text-center text-gray-500 cursor-pointer hover:text-green-600 flex flex-col items-center justify-center"
+                      >
+                        <p className="text-sm text-white">Drag & Drop your file</p>
+                        <p className="text-sm text-white">
+                          or <u className="text-white">Browse</u>
+                        </p>
+                        <Field
+                          type="file"
+                          name="storyCoverImage"
+                          id="storyCoverImage"
+                          accept="images/*"
+                          className="hidden"
+                          onChange={(e: any) => handleFileChange(e, setFieldValue, "storyCoverImage", setLoadingCoverImage)}
+                          value={initialValues.storyCoverImage}
+                        />
+                      </label>
+                    )}
                   </div>
                   <p className="text-center">Recommended sizes: 180x180 px.</p>
 
                   <div className="mt-4 flex flex-col gap-1">
                     <label
-                      htmlFor="storyCoverTitle"
+                      htmlFor="coverTitle"
                       className="block text-md font-medium text-white"
                     >
                       Story Cover Title
                     </label>
                     <InputField
-                      name="storyCoverTitle"
+                      name="coverTitle"
                       type="text"
                       placeholder="Enter Story Cover Title"
                     />
@@ -138,7 +229,7 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup, onAddStory }) => {
                 <FieldArray name="stories">
                   {({ push, remove }) => (
                     <div>
-                      {values.stories.map((story, index) => (
+                      {values?.stories?.map((story: any, index: any) => (
                         <div
                           key={index}
                           className="rounded-lg mb-4"
@@ -172,14 +263,14 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup, onAddStory }) => {
 
                           <div className="mt-4 flex flex-col gap-1">
                             <label
-                              htmlFor={`stories[${index}]?.storyLinkText`}
+                              htmlFor={`stories[${index}].storyText`}
                               className="block text-md font-medium text-white"
                             >
                               Story Link Text
                             </label>
 
                             <InputField
-                              name={`stories[${index}]?.storyLinkText`}
+                              name={`stories[${index}].storyText`}
                               type="text"
                               placeholder="Enter link text"
                             />
@@ -209,39 +300,62 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup, onAddStory }) => {
                                   Story Media (Image/Video)
                                 </label>
                                 <div className="">
-                                  <div className="p-6 rounded-xl border-dashed border-2 border-white/10">
-                                    <label
-                                      htmlFor={`file-upload-${index}`}
-                                      className="cursor-pointer py-4 px-6 rounded-md mt-4 flex flex-col gap-1 block text-center transition-all "
-                                    >
-                                      <span className="text-sm ">
-                                        Drag & Drop your file here or
-                                      </span>
-                                      <span className="text-lg mt-2 ml-1 text-white underline">
-                                        Browse
-                                      </span>
-                                    </label>
+                                  <div className="p-6 rounded-xl border-dashed border-2 border-white/10 relative">
+                                    {loadingstoryMedia[index] ? (
+                                      <div className="flex justify-center items-center w-full h-full">
+                                        <img src="/spinner.gif" alt="Loading..." className="w-12 h-12" />
+                                      </div>
+                                    ) : storyMedia && storyMedia[index] ? (
+                                      <div className="relative">
+                                        {storyMedia[index].startsWith("data:video/") ? (
+                                          <video
+                                            src={storyMedia[index]}
+                                            className="w-full h-64 rounded-xl object-cover"
+                                            controls
+                                          />
+                                        ) : (
+                                          <img
+                                            src={storyMedia[index]}
+                                            alt="Uploaded Preview"
+                                            className="w-full h-64 rounded-xl object-cover"
+                                          />
+                                        )}
+                                        <button
+                                          type="button"
+                                          onClick={() => handleDelete(setFieldValue, `stories[${index}].storyMedia`, index)}
+                                          className="absolute top-2 right-2 bg-red-600 text-white rounded-full p-1 hover:bg-red-800"
+                                          title="Remove File"
+                                        >
+                                          <IoCloseCircle size={24} />
+                                        </button>
+                                      </div>
+                                    ) : (
+                                      <label
+                                        htmlFor={`file-upload-${index}`}
+                                        className="cursor-pointer py-4 px-6 rounded-md mt-4 flex flex-col gap-1 block text-center transition-all"
+                                      >
+                                        <span className="text-sm">Drag & Drop your file here or</span>
+                                        <span className="text-lg mt-2 ml-1 text-white underline">
+                                          Browse
+                                        </span>
+                                      </label>
+                                    )}
                                   </div>
-                                  <p className=" mt-2 text-sm">
-                                    Allowed types: .jpg, .jpeg, .png, .gif,
-                                    .mp4, .mov, .wmv, .avi, .mpeg, .3gp.
+                                  <p className="mt-2 text-sm">
+                                    Allowed types: .jpg, .jpeg, .png, .gif, .mp4, .mov, .wmv, .avi, .mpeg,
+                                    .3gp.
                                   </p>
                                 </div>
                                 <Field
                                   type="file"
                                   name={`stories[${index}].storyMedia`}
-                                  onChange={(e: any) =>
-                                    setFieldValue(
-                                      `stories[${index}].storyMedia`,
-                                      e.target.files[0]
-                                    )
-                                  }
-                                  value={
-                                    initialValues?.stories[index]?.storyMedia
-                                  }
-                                  id={`file-upload-${index}`} // Give the input a unique ID
-                                  className="hidden" // The input is hidden, but the label will open the file dialog
+                                  onChange={(e: any) => handleFileChange(e, setFieldValue, `stories[${index}].storyMedia`, setLoadingstoryMedia, index)}  // Pass index here
+                                  accept="image/*,video/*"
+                                  value={initialValues?.stories[index]?.storyMedia || ""}
+                                  id={`file-upload-${index}`}
+                                  className="hidden"
                                 />
+
                               </div>
 
                               <div className="mt-4 flex flex-col gap-1">
@@ -269,11 +383,12 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup, onAddStory }) => {
                                 <Field
                                   as="select"
                                   name={`stories[${index}].visibility`}
+                                  value={values.stories[index].visibility || 'public'}
                                   className="bg-[var(--bgh)] rounded-lg p-[10px] w-full placeholder:text-[var(--foreground)]"
                                 >
-                                  <option value="Everyone">Everyone</option>
-                                  <option value="Friends">Friends</option>
-                                  <option value="Private">Private</option>
+                                  <option value="public">Everyone</option>
+                                  <option value="connections">Friends</option>
+                                  <option value="only-me">Private</option>
                                 </Field>
                               </div>
                             </>
@@ -288,11 +403,11 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup, onAddStory }) => {
                           icon={<IoMdAdd className="fill-white" />}
                           onClick={() => {
                             push({
-                              storyLinkText: "",
+                              storyText: "",
                               storyLink: "",
                               storyMedia: null,
                               duration: 6,
-                              visibility: "Everyone",
+                              visibility: "public",
                               isCollapsed: false,
                             });
                           }}
@@ -318,5 +433,3 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup, onAddStory }) => {
 };
 
 export default CreateStoryModal;
-
-
