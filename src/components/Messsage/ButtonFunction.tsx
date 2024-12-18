@@ -36,9 +36,9 @@ const ButtonFunction: React.FC<ButtonFunctionProps> = ({ marginTop, right, left,
         setType(type)
     };
 
-    const handleDelete = () => {
-        console.log("Delete conversations");
-    };
+    // const handleDelete = () => {
+    //     console.log("Delete conversations");
+    // };
 
     return (
         <>
@@ -61,10 +61,10 @@ const ButtonFunction: React.FC<ButtonFunctionProps> = ({ marginTop, right, left,
                         <button className="flex justify-start gap-3 items-center mt-2 text-white"  onClick={()=>handleOnclick("report")}>
                             <span><FiFlag /></span>Report member
                         </button>
-                        <button className="flex justify-start gap-3 items-center mt-2 text-white">
+                        <button className="flex justify-start gap-3 items-center mt-2 text-white"onClick={()=>handleOnclick("deleteMessage")}>
                             <span><RiDeleteBinLine /></span>Delete your messages
                         </button>
-                        <button className="flex justify-start gap-3 items-center mt-2 text-white">
+                        <button className="flex justify-start gap-3 items-center mt-2 text-white"onClick={()=>handleOnclick("deleteConverstion")}>
                             <span><RiDeleteBinLine /></span>Delete conversation
                         </button>
                     </div>
@@ -74,18 +74,9 @@ const ButtonFunction: React.FC<ButtonFunctionProps> = ({ marginTop, right, left,
             {isPopupOpen && (
                 <PopupBlockReport 
                     handlePopup={() => setIsPopupOpen(false)}
-                    handleDelete={handleDelete}
                     type={type}
                 />
             )}
-            {/* {report && (
-                <PopupBlockReport
-                    message="Report Member"
-                    handlePopup={() => setReport(false)}
-                    handleDelete={handleDelete}
-                    messagebutton='Report'
-                />
-            )} */}
         </>
     );
 };
