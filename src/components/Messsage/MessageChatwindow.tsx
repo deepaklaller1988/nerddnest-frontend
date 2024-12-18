@@ -6,23 +6,11 @@ import { IoDocumentAttachOutline } from "react-icons/io5";
 import { MdOutlineLinkedCamera } from "react-icons/md";
 import { CiFaceSmile } from "react-icons/ci";
 import { IoIosSend } from "react-icons/io";
-import { FaRegEye } from "react-icons/fa6";
-import { FaRegEyeSlash } from "react-icons/fa6";
-import { PiDownloadSimpleThin } from "react-icons/pi";
-import { MdBlockFlipped } from "react-icons/md";
-import { FiFlag } from "react-icons/fi";
-import { RiDeleteBinLine } from "react-icons/ri";
+import ButtonFunction from './ButtonFunction';
+
 
 const MessageChatwindow = () => {
-    const [options, setOptions] = useState<boolean>(false)
-    const [visible, setVisible] = useState(false);
-
-    const handleButtonPopup = () => {
-        setOptions(!options)
-    }
-    const togglePasswordVisibility = () => {
-        setVisible((prevState) => !prevState);
-    };
+  
 
     return (
         <>
@@ -37,19 +25,8 @@ const MessageChatwindow = () => {
                             <p className="">Started Friday</p>
                         </div>
                     </div>
-                    <BsThreeDots onClick={handleButtonPopup} size={26} className="cursor-pointer relative" />
-                </div>
-                {/* options */}
-                {options && (<div className=' w-[250px] h-[200px] absolute mt-16 right-5 !z-10 bg-[var(--bgh)] shadow-[0_-5px_25px_-15px_rgba(0,0,0,0.3)]'>
-                    <div className='flex flex-col px-2 py-2'>
-                        <button className='flex justify-start gap-3 items-center mt-2 text-white' onClick={togglePasswordVisibility}><span className='cursor-pointer' >{visible ? <FaRegEye /> : <FaRegEyeSlash />}</span>Mark as unread</button>
-                        <button className='flex justify-start gap-3 items-center mt-2 text-white'><span><PiDownloadSimpleThin /></span>Archive</button>
-                        <button className='flex justify-start gap-3 items-center mt-2 text-white'><span><MdBlockFlipped /></span>Block member</button>
-                        <button className='flex justify-start gap-3 items-center mt-2 text-white'><span><FiFlag /></span>Report member</button>
-                        <button className='flex justify-start gap-3 items-center mt-2 text-white'><span><RiDeleteBinLine /></span>Delete your messages</button>
-                        <button className='flex justify-start gap-3 items-center mt-2 text-white'><span><RiDeleteBinLine /></span>Delete conversation</button>
-                    </div>
-                </div>)}
+                    <ButtonFunction marginTop='' right='' left='' width='' height=''/>
+                </div>              
 
                 {/* Messages */}
                 <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-4 bg-white/10 border-b border-white/5">
