@@ -265,8 +265,6 @@ export default function PostContent({ filter }: any) {
         userId: userId,
         pinned: newState,
       });
-
-
       if (success) {
         setPostData((prevData: any) =>
           prevData.map((post: any) =>
@@ -285,6 +283,7 @@ export default function PostContent({ filter }: any) {
       console.error("API Error:", error);
     }
   };
+
   const handleConfirmDelete = async () => {
     if (deleteItemId === null) return;
 
@@ -340,7 +339,6 @@ export default function PostContent({ filter }: any) {
         )}
 
         {PostData && PostData.length > 0 ? (PostData.map((data: any, index: any) => {
-
           const postTypeMap: any = {
             content: "Shared an Update",
             image: "Posted an Image",
@@ -430,12 +428,9 @@ export default function PostContent({ filter }: any) {
                           onClick={() =>
                             setOpenPostActionMenuIndex((prev: any) =>
                               prev === index ? null : index
-                            )
-                          }
+                            )}
                         />
                       </span>}
-
-
                       {openPostActionMenuIndex === index && (
                         <div data-popup-type="postactions" className="!z-10 shadow-[0_-5px_25px_-15px_rgba(0,0,0,0.3)] w-full min-w-[210px] py-2 rounded-lg bg-[var(--bgh)] absolute mt-5 right-0">
                           {PostActionsMenu({
@@ -446,9 +441,7 @@ export default function PostContent({ filter }: any) {
                             toggleCommenting: () => handleToggleCommenting(data),
                             deleted: () => handleDeleteClick(data.id),
                             openEditModal: () => openEditModal(data.id)
-
                           }).map(({ icon, label, onClick }, index) => (
-
                             <button
                               key={index}
                               className={`flex gap-2 items-center px-4 py-2 w-full text-left hover:bg-gray-500/10 focus:outline-none ${hoveredIndex === index ? "drop" : ""
@@ -456,8 +449,7 @@ export default function PostContent({ filter }: any) {
                               aria-label={label}
                               onMouseEnter={() => handleMouseEnter(index)}
                               onMouseLeave={handleMouseLeave}
-                              onClick={onClick}
-                            >
+                              onClick={onClick}>
                               {icon} {label}
                             </button>
                           ))}
