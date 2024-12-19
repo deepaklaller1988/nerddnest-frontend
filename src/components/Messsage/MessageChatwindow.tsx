@@ -195,9 +195,9 @@ const MessageChatwindow = () => {
                             </div>
                         </section>
                         <div className="border-t border-gray-500/10 flex justify-between items-center">
-                            <section className="p-4 flex gap-4">
+                            <section className=" flex ">
                                 {isUploadLoading && <MiniLoader />}
-                                <div className="relative mt-4 grid grid-cols-5 gap-2 uploaded-data">
+                                <div className="">
                                     {images.length > 0 && images.map((image, index) => (
                                         <div key={index} className="relative uploaded-dataInner">
                                             {image instanceof File && (
@@ -215,7 +215,7 @@ const MessageChatwindow = () => {
                                     ))}
                                 </div>
                                 {/* Video Files Section */}
-                                <div className="relative mt-4 grid grid-cols-5 gap-2 uploaded-data">
+                                <div className="">
                                     {videos.length > 0 && videos.map((video, index) => (
                                         <div key={index} className="relative uploaded-dataInner">
                                             {video instanceof File && (
@@ -283,7 +283,7 @@ const MessageChatwindow = () => {
                             </section>
 
                             {/* Send Button */}
-                            <section className="p-4 flex gap-4">
+                            <section className="p-4 flex gap-4 items-center">
                                 <div className="">
                                     <button type="button" onClick={handleEmojis}>
                                         <BsEmojiSmile className="w-6 h-6" />
