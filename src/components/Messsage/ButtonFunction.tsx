@@ -36,10 +36,6 @@ const ButtonFunction: React.FC<ButtonFunctionProps> = ({ marginTop, right, left,
         setType(type)
     };
 
-    // const handleDelete = () => {
-    //     console.log("Delete conversations");
-    // };
-
     return (
         <>
             <BsThreeDots onClick={handleButtonPopup} size={26} className="cursor-pointer relative" />
@@ -48,29 +44,28 @@ const ButtonFunction: React.FC<ButtonFunctionProps> = ({ marginTop, right, left,
                     className="absolute mt-[225px] right-5 !z-10 bg-[var(--bgh)] shadow-[0_-5px_25px_-15px_rgba(0,0,0,0.3)]"
                     style={{ marginTop, right, left, width }}
                 >
-                    <div className="flex flex-col px-2 py-2">
-                        <button className="flex justify-start gap-3 items-center mt-2 text-white" onClick={toggleVisibility}>
+                    <div className="!z-10 shadow-[0_-5px_25px_-15px_rgba(0,0,0,0.3)] w-full min-w-[210px] py-2 rounded-lg bg-[var(--bgh)] absolute mt-0 right-0">
+                        <button className={`flex gap-2 items-center px-4 py-2 w-full text-left hover:bg-gray-500/10 focus:outline-none hover:drop`} onClick={toggleVisibility}>
                             <span className="cursor-pointer">{visible ? <FaRegEye /> : <FaRegEyeSlash />}</span>Mark as unread
                         </button>
-                        <button className="flex justify-start gap-3 items-center mt-2 text-white">
+                        <button className="flex gap-2 items-center px-4 py-2 w-full text-left hover:bg-gray-500/10 focus:outline-none hover:drop">
                             <span><PiDownloadSimpleThin /></span>Archive
                         </button>
-                        <button className="flex justify-start gap-3 items-center mt-2 text-white" onClick={()=>handleOnclick("block")}>
+                        <button className="flex gap-2 items-center px-4 py-2 w-full text-left hover:bg-gray-500/10 focus:outline-none hover:drop" onClick={()=>handleOnclick("block")}>
                             <span><MdBlockFlipped /></span>Block member
                         </button>
-                        <button className="flex justify-start gap-3 items-center mt-2 text-white"  onClick={()=>handleOnclick("report")}>
+                        <button className="flex gap-2 items-center px-4 py-2 w-full text-left hover:bg-gray-500/10 focus:outline-none hover:drop"  onClick={()=>handleOnclick("report")}>
                             <span><FiFlag /></span>Report member
                         </button>
-                        <button className="flex justify-start gap-3 items-center mt-2 text-white"onClick={()=>handleOnclick("deleteMessage")}>
+                        <button className="flex gap-2 items-center px-4 py-2 w-full text-left hover:bg-gray-500/10 focus:outline-none hover:drop"onClick={()=>handleOnclick("deleteMessage")}>
                             <span><RiDeleteBinLine /></span>Delete your messages
                         </button>
-                        <button className="flex justify-start gap-3 items-center mt-2 text-white"onClick={()=>handleOnclick("deleteConverstion")}>
+                        <button className="flex gap-2 items-center px-4 py-2 w-full text-left hover:bg-gray-500/10 focus:outline-none hover:drop"onClick={()=>handleOnclick("deleteConverstion")}>
                             <span><RiDeleteBinLine /></span>Delete conversation
                         </button>
                     </div>
                 </div>
             )}
-
             {isPopupOpen && (
                 <PopupBlockReport 
                     handlePopup={() => setIsPopupOpen(false)}

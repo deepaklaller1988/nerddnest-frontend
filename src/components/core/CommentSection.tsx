@@ -194,6 +194,7 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
     if (name === "document") return files.length;
     return 0;
   };
+
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name } = e.target;
     if (e.target.files) {
@@ -227,13 +228,13 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
           setIsUploadLoading(false);
           toasterInfo("An error occurred while uploading the file. Please try again.");
         }
-
       } else {
         setIsUploadLoading(false);
         toasterInfo("Unable to upload the file. You are allowed to upload only 10 files at a time.", 1000, "id");
       }
     }
   };
+
   const handleMediaTypeSelection = (type: string) => {
     if (type === 'image' && imageInputRef.current) {
       imageInputRef.current.click(); // Open image file selection dialog
@@ -262,7 +263,7 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
             <div key={commentData.id} className="w-full py-4">
               <div className="w-full">
                 <div className="flex items-start gap-2">
-                  <span className="relative min-w-10 min-h-10 max-w-10 max-h-10 rounded-full block border border-2 border-black/5 border-white">
+                  <span className="relative min-w-10 min-h-10 max-w-10 max-h-10 rounded-full block  border-2 border-black/5 border-white">
                     <img
                       className="w-full h-full bg-cover rounded-full"
                       src="/logo.png"
@@ -333,7 +334,7 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
                     {commentData.replies &&
                       commentData.replies.map((reply: any) => (
                         <div className="flex items-start gap-2 mt-4 innerReply" key={reply.id}>
-                          <span className="relative min-w-10 min-h-10 max-w-10 max-h-10 rounded-full block border border-2 border-black/5 border-white">
+                          <span className="relative min-w-10 min-h-10 max-w-10 max-h-10 rounded-full block  border-2 border-black/5 border-white">
                             <img
                               className="w-full block h-full bg-cover bg-center overflow-hidden rounded-full"
                               src="/logo.png"
@@ -362,7 +363,7 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
                               </div>
                             </div>
                           </div>
-                          <span onClick={() => handleDelete(reply.id)} className="hover:bg-gray-500/5 relative min-h-10 min-w-10 max-w-10 flex items-center justify-center rounded-lg cursor-pointer block border border-2 border-black/5 border-white">
+                          <span onClick={() => handleDelete(reply.id)} className="hover:bg-gray-500/5 relative min-h-10 min-w-10 max-w-10  items-center justify-center rounded-lg cursor-pointer block border-2 border-black/5 border-white">
                             <MdMoreHoriz className="w-6 h-6" />
                           </span>
                         </div>
@@ -373,7 +374,7 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
                   >
                     <MdMoreHoriz className="w-6 h-6" />
                     {deleteButtonIndex === index && (
-                    <div className="absolute w-[80px] bg-white/10 rounded-lg top-5 right-0 justify-center p-1 bg-gray-500/5 text-center shadow-lg">
+                    <div className="absolute w-[80px]  rounded-lg top-5 right-0 justify-center p-1 bg-gray-500/5 text-center shadow-lg">
                       <button
                         onClick={() => handleDelete(commentData.id)}
                         className="flex items-center text-white"
@@ -398,9 +399,12 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
                   alt="user"
                 />
               </span>
+
+
+              {/* working */}
               <section className="bg-white/5 rounded-[12px] w-full pt-2 relative">
                 <textarea
-                  className="text-white/50 resize-none bg-transparent w-full p-2 px-5 flex items-center text-gray-500/70"
+                  className="resize-none bg-transparent w-full p-2 px-5 flex items-center text-gray-500/70"
                   ref={textareaRef}
                   value={comment}
                   onChange={(e) => setComment(e.target.value)}
@@ -432,7 +436,6 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
 
             </div>
             <div className="relative mt-4 grid grid-cols-5 gap-2 uploaded-data">
-
               {videos.length > 0 && videos.map((video, index) => (
                 <div key={index} className="relative uploaded-dataInner">
                   {video instanceof File ? (
@@ -450,7 +453,6 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
               ))}
             </div>
             <div className="relative mt-4 grid grid-cols-5 gap-2 uploaded-data">
-
               {files.length > 0 && files.map((file, index) => (
                 <div key={index} className="relative uploaded-dataInner">
                   {file instanceof File ? (
@@ -515,6 +517,8 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
                 </section>
 
               </section>
+
+              {/* done */}
             </section>
           </div>
         </div>

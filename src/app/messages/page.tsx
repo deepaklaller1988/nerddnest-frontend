@@ -13,7 +13,7 @@ const ChatInterface = () => {
 
         {/* Chat Window */}
         <MessageChatwindow />
-      </div>
+      </div>  
     </div>
   );
 };

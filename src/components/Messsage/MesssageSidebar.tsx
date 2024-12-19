@@ -28,7 +28,7 @@ const MesssageSidebar = () => {
                     
                     <p className="text-xs absolute bottom-0 right-0">Tuesday</p>
                   </div>
-               <ButtonFunction marginTop='220px' right='' left='150px' width='225px' height=''/>
+               <ButtonFunction marginTop='20px' right='' left='150px' width='225px' height=''/>
                 </div>
               </div>
               <div className="space-y-2 border-b border-white/5 border-r-4 hover:bg-white/5 bg-white/10 duration-[.3s]">
