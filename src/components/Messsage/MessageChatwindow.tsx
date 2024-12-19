@@ -12,6 +12,8 @@ import { MdOutlineLinkedCamera } from 'react-icons/md';
 import { IoDocumentAttachOutline } from 'react-icons/io5';
 import { BiBarChartSquare } from 'react-icons/bi';
 import CreatePostPopup from '../Modals/CreatePostModal';
+import { BsEmojiSmile } from 'react-icons/bs';
+import EmojiPicker from 'emoji-picker-react';
 
 const MessageChatwindow = () => {
     const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -21,16 +23,16 @@ const MessageChatwindow = () => {
     const [files, setFiles] = useState<File[]>([]);
     const [isUploadLoading, setIsUploadLoading] = useState(false);
     const [initialValues, setInitialValues] = useState<{ mediaUrl: string[] }>({ mediaUrl: [] });
-      const [popupType, setPopupType] = useState<string | null>(null);
-        const [isPopupOpen, setIsPopupOpen] = useState(false);
-      
-    
+    const [popupType, setPopupType] = useState<string | null>(null);
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const [emoji, setEmoji] = useState(false);
+    const [value, setValue] = useState<any>("");
     const { API } = useApi();
     const imageInputRef = useRef<HTMLInputElement | null>(null);
     const videoInputRef = useRef<HTMLInputElement | null>(null);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
-      const popupRef = useRef<HTMLDivElement>(null);
-    
+    const popupRef = useRef<HTMLDivElement>(null);
+    const emojiPickerRef = useRef<HTMLDivElement>(null);
 
     const handleDeleteMedia = (type: 'images' | 'video' | 'files', index: number) => {
         if (type === 'images') {
@@ -99,173 +101,213 @@ const MessageChatwindow = () => {
     const handleClick = (type: string) => {
         setPopupType(type);
         setIsPopupOpen(true);
-      };
+    };
+
+    const handleSend = () => {
+        if (message.trim()) {
+            console.log("Message sent:", message);
+            setMessage("");
+        }
+    };
+
+    const handleEmojis = () => {
+        setEmoji((prev) => !prev);
+    };
+
+    const handleEmojiSelect = (emoji: any) => {
+        if (typeof window !== "undefined") {
+            const quillEditor = document.querySelector(".ql-editor") as HTMLElement;
+            if (quillEditor) {
+                const currentText = quillEditor.innerHTML;
+                setValue(currentText + emoji.emoji);
+                setInitialValues((prevValues: any) => ({
+                    ...prevValues,
+                    content: currentText + emoji.emoji,
+                }));
+            }
+        }
+    };
 
     return (
         <>
-        {/* we can modify it later  */}
-        {isPopupOpen && (
-            <div
-              ref={popupRef}
-              className="fixed inset-0 flex items-center justify-center z-50 bg-gray-800 bg-opacity-50"
-            >
-              <CreatePostPopup setIsPopupOpen={setIsPopupOpen} type={popupType} setPopupType={setPopupType}/>
-            </div>
-          )}
-
-        <div className="flex-1 flex flex-col bg-[var(--sections)]">
-            <div className="flex items-center justify-between gap-6 border-b border-white/5 p-4">
-                <div className="flex gap-3">
-                    <div className="w-14 rounded-full overflow-hidden border-2 border-white">
-                        <img src="dp.jpg" alt="" />
-                    </div>
-                    <div>
-                        <h3 className="capitalize text-lg font-semibold text-white">Avion Astro</h3>
-                        <p className="">Started Friday</p>
-                    </div>
+            {/* we can modify it later  */}
+            {isPopupOpen && (
+                <div
+                    ref={popupRef}
+                    className="fixed inset-0 flex items-center justify-center z-50 bg-gray-800 bg-opacity-50"
+                >
+                    <CreatePostPopup setIsPopupOpen={setIsPopupOpen} type={popupType} setPopupType={setPopupType} />
                 </div>
-                <ButtonFunction marginTop='20px' right='' left='' width='' height='' />
-            </div>
+            )}
 
-            {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-4 bg-white/10 border-b border-white/5">
-                {/* Render Messages */}
-                <div className="w-full receiver">
-                    <div className="inline-flex items-start space-x-3 bg-[var(--sections)] rounded-xl p-4 max-w-[80%]">
-                        <div className="min-w-10 min-h-10 max-w-10 max-h-10 bg-white rounded-full overflow-hidden border border-white">
-                            <img src="dp.jpg" alt="dp" />
+            <div className="flex-1 flex flex-col bg-[var(--sections)]">
+                <div className="flex items-center justify-between gap-6 border-b border-white/5 p-4">
+                    <div className="flex gap-3">
+                        <div className="w-14 rounded-full overflow-hidden border-2 border-white">
+                            <img src="dp.jpg" alt="" />
                         </div>
                         <div>
-                            <p className="text-white">Hi, I am Marcos from Amazon...</p>
-                            <p className="text-xs text-gray-400 text-right relative top-2">4:37 AM</p>
+                            <h3 className="capitalize text-lg font-semibold text-white">Avion Astro</h3>
+                            <p className="">Started Friday</p>
+                        </div>
+                    </div>
+                    <ButtonFunction marginTop='20px' right='' left='' width='' height='' />
+                </div>
+
+                {/* Messages */}
+                <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-4 bg-white/10 border-b border-white/5">
+                    {/* Render Messages */}
+                    <div className="w-full receiver">
+                        <div className="inline-flex items-start space-x-3 bg-[var(--sections)] rounded-xl p-4 max-w-[80%]">
+                            <div className="min-w-10 min-h-10 max-w-10 max-h-10 bg-white rounded-full overflow-hidden border border-white">
+                                <img src="dp.jpg" alt="dp" />
+                            </div>
+                            <div>
+                                <p className="text-white">Hi, I am Marcos from Amazon...</p>
+                                <p className="text-xs text-gray-400 text-right relative top-2">4:37 AM</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Sender Message */}
+                    <div className="w-full sender flex justify-end">
+                        <div className="inline-flex items-start space-x-3 bg-black/20 rounded-xl p-4 max-w-[80%]">
+                            <div>
+                                <p className="text-white">Hi, I am Marcos from Amazon...</p>
+                                <p className="text-xs text-gray-400 text-right relative top-2">4:37 AM</p>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                {/* Sender Message */}
-                <div className="w-full sender flex justify-end">
-                    <div className="inline-flex items-start space-x-3 bg-black/20 rounded-xl p-4 max-w-[80%]">
-                        <div>
-                            <p className="text-white">Hi, I am Marcos from Amazon...</p>
-                            <p className="text-xs text-gray-400 text-right relative top-2">4:37 AM</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* Message Input and Upload Section */}
-            <div className="mt-3">
-                <div className="w-full">
-                    <section className="flex gap-4 cursor-pointer p-4">
-                        <div>
-                            <textarea
-                                className="resize-none bg-transparent w-full p-2 px-5 flex items-center text-gray-500/70"
-                                ref={textareaRef}
-                                value={message}
-                                onChange={(e) => setMessage(e.target.value)}
-                                placeholder="Write a message..."
-                            />
-                        </div>
-                    </section>
-                    <div className="border-t border-gray-500/10 flex justify-between items-center">
-                        <section className="p-4 flex gap-4">
-                            {isUploadLoading && <MiniLoader />}
-                            <div className="relative mt-4 grid grid-cols-5 gap-2 uploaded-data">
-                                {images.length > 0 && images.map((image, index) => (
-                                    <div key={index} className="relative uploaded-dataInner">
-                                        {image instanceof File && (
-                                            <img
-                                                src={URL.createObjectURL(image)}
-                                                alt={`uploaded-image-${index}`}
-                                                className="object-cover rounded-lg w-full h-full"
+                {/* Message Input and Upload Section */}
+                <div className="mt-3">
+                    <div className="w-full">
+                        <section className="flex gap-4 cursor-pointer p-4">
+                            <div>
+                                <textarea
+                                    className="resize-none bg-transparent w-full p-2 px-5 flex items-center text-gray-500/70"
+                                    ref={textareaRef}
+                                    value={message}
+                                    onChange={(e) => setMessage(e.target.value)}
+                                    placeholder="Write a message..."
+                                />
+                            </div>
+                        </section>
+                        <div className="border-t border-gray-500/10 flex justify-between items-center">
+                            <section className="p-4 flex gap-4">
+                                {isUploadLoading && <MiniLoader />}
+                                <div className="relative mt-4 grid grid-cols-5 gap-2 uploaded-data">
+                                    {images.length > 0 && images.map((image, index) => (
+                                        <div key={index} className="relative uploaded-dataInner">
+                                            {image instanceof File && (
+                                                <img
+                                                    src={URL.createObjectURL(image)}
+                                                    alt={`uploaded-image-${index}`}
+                                                    className="object-cover rounded-lg w-full h-full"
+                                                />
+                                            )}
+                                            <RxCross2
+                                                onClick={() => handleDeleteMedia('images', index)}
+                                                className="absolute top-0 right-0 text-red-500 cursor-pointer w-6 h-6 bg-white rounded-full z-10"
                                             />
-                                        )}
-                                        <RxCross2
-                                            onClick={() => handleDeleteMedia('images', index)}
-                                            className="absolute top-0 right-0 text-red-500 cursor-pointer w-6 h-6 bg-white rounded-full z-10"
-                                        />
-                                    </div>
-                                ))}
-                            </div>
-                            {/* Video Files Section */}
-                            <div className="relative mt-4 grid grid-cols-5 gap-2 uploaded-data">
-                                {videos.length > 0 && videos.map((video, index) => (
-                                    <div key={index} className="relative uploaded-dataInner">
-                                        {video instanceof File && (
-                                            <video
-                                                controls
-                                                src={URL.createObjectURL(video)}
-                                                className="object-cover rounded-lg w-full h-full"
-                                            ></video>
-                                        )}
-                                        <RxCross2
-                                            onClick={() => handleDeleteMedia('video', index)}
-                                            className="absolute top-0 right-0 text-red-500 cursor-pointer w-6 h-6 bg-white rounded-full z-10"
-                                        />
-                                    </div>
-                                ))}
-                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                                {/* Video Files Section */}
+                                <div className="relative mt-4 grid grid-cols-5 gap-2 uploaded-data">
+                                    {videos.length > 0 && videos.map((video, index) => (
+                                        <div key={index} className="relative uploaded-dataInner">
+                                            {video instanceof File && (
+                                                <video
+                                                    controls
+                                                    src={URL.createObjectURL(video)}
+                                                    className="object-cover rounded-lg w-full h-full"
+                                                ></video>
+                                            )}
+                                            <RxCross2
+                                                onClick={() => handleDeleteMedia('video', index)}
+                                                className="absolute top-0 right-0 text-red-500 cursor-pointer w-6 h-6 bg-white rounded-full z-10"
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
 
-                            {/* Media Buttons */}
-                            <section className="p-4 pt-0 flex gap-4">
-                                <span className={`cursor-pointer ${(videos.length > 0 || files.length > 0) ? 'opacity-50 cursor-not-allowed' : ''}`}>
-                                    <MdOutlineLinkedCamera className="w-6 h-6 fill-green-600" onClick={() => handleMediaTypeSelection("image")} />
-                                </span>
-                                <span className={`cursor-pointer ${(images.length > 0 || files.length > 0) ? 'opacity-50 cursor-not-allowed' : ''}`}>
-                                    <HiOutlineVideoCamera className="w-6 h-6 stroke-yellow-500" onClick={() => handleMediaTypeSelection("videos")} />
-                                </span>
-                                <span className={`cursor-pointer ${(images.length > 0 || videos.length > 0) ? 'opacity-50 cursor-not-allowed' : ''}`}>
-                                    <IoDocumentAttachOutline className="w-6 h-6 stroke-rose-500" onClick={() => handleMediaTypeSelection("files")} />
-                                </span>
-                                <span className="cursor-pointer">
-                                    <HiOutlineGif className="w-6 h-6 stroke-purple-700" />
-                                </span>
-                                   <span className="cursor-pointer">
-                                              <BiBarChartSquare className="w-6 h-6 fill-white" onClick={() => handleClick('poll')}/>
-                                            </span>
+                                {/* Media Buttons */}
+                                <section className="p-4 pt-0 flex gap-4">
+                                    <span className={`cursor-pointer ${(videos.length > 0 || files.length > 0) ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                                        <MdOutlineLinkedCamera className="w-6 h-6 fill-green-600" onClick={() => handleMediaTypeSelection("image")} />
+                                    </span>
+                                    <span className={`cursor-pointer ${(images.length > 0 || files.length > 0) ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                                        <HiOutlineVideoCamera className="w-6 h-6 stroke-yellow-500" onClick={() => handleMediaTypeSelection("videos")} />
+                                    </span>
+                                    <span className={`cursor-pointer ${(images.length > 0 || videos.length > 0) ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                                        <IoDocumentAttachOutline className="w-6 h-6 stroke-rose-500" onClick={() => handleMediaTypeSelection("files")} />
+                                    </span>
+                                    <span className="cursor-pointer">
+                                        <HiOutlineGif className="w-6 h-6 stroke-purple-700" />
+                                    </span>
+                                    <span className="cursor-pointer">
+                                        <BiBarChartSquare className="w-6 h-6 fill-white" onClick={() => handleClick('poll')} />
+                                    </span>
 
-                                {/* File Inputs */}
-                                <input
-                                    type="file"
-                                    name="images"
-                                    ref={imageInputRef}
-                                    accept="image/*"
-                                    multiple
-                                    className="hidden"
-                                    onChange={handleFileChange}
-                                />
-                                <input
-                                    type="file"
-                                    ref={videoInputRef}
-                                    accept="video/*"
-                                    multiple
-                                    name="video"
-                                    className="hidden"
-                                    onChange={handleFileChange}
-                                />
-                                <input
-                                    type="file"
-                                    name="file"
-                                    ref={fileInputRef}
-                                    accept=""
-                                    multiple
-                                    className="hidden"
-                                    onChange={handleFileChange}
-                                />
+                                    {/* File Inputs */}
+                                    <input
+                                        type="file"
+                                        name="images"
+                                        ref={imageInputRef}
+                                        accept="image/*"
+                                        multiple
+                                        className="hidden"
+                                        onChange={handleFileChange}
+                                    />
+                                    <input
+                                        type="file"
+                                        ref={videoInputRef}
+                                        accept="video/*"
+                                        multiple
+                                        name="video"
+                                        className="hidden"
+                                        onChange={handleFileChange}
+                                    />
+                                    <input
+                                        type="file"
+                                        name="file"
+                                        ref={fileInputRef}
+                                        accept=""
+                                        multiple
+                                        className="hidden"
+                                        onChange={handleFileChange}
+                                    />
+                                </section>
                             </section>
-                        </section>
 
-                        {/* Send Button */}
-                        <section className="p-4 flex gap-4">
-                            <CiFaceSmile className="w-6 h-6 fill-green-800 mt-1" />
-                            <div className="p-1 bg-blue-800 rounded-full">
-                                <IoIosSend className="w-6 h-6 fill-white" />
-                            </div>
-                        </section>
+                            {/* Send Button */}
+                            <section className="p-4 flex gap-4">
+                                <div className="">
+                                    <button type="button" onClick={handleEmojis}>
+                                        <BsEmojiSmile className="w-6 h-6" />
+                                    </button>
+                                    {emoji && (
+                                        <div ref={emojiPickerRef}>
+                                            <EmojiPicker
+                                                lazyLoadEmojis={true}
+                                                className="max-w-[300px] max-h-[350px] !absolute right-0 top-[50%] translate-y-[-50%]"
+                                                onEmojiClick={(emoji) => handleEmojiSelect(emoji)}
+                                                searchDisabled
+                                                autoFocusSearch
+                                            />
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="p-1 bg-blue-800 rounded-full">
+                                    <IoIosSend onClick={handleSend} className="w-6 h-6 fill-white" />
+                                </div>
+                            </section>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
         </>
     );
 };
