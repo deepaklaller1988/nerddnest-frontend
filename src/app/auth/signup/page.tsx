@@ -1,6 +1,6 @@
 "use client";
 
-import {  toasterSuccess } from "@/components/core/Toaster";
+import { toasterSuccess } from "@/components/core/Toaster";
 import AuthForm from "@/components/Forms/AuthForm";
 import useTitle from "@/hooks/useTitle";
 import { SignupFormValues } from "@/types/authInterfaces";
@@ -26,7 +26,7 @@ const Signup = () => {
   const [successMsg, setSuccessMsg] = useState("");
   const [isClient, setIsClient] = useState(false);
   const [isLoading, setLoading] = useState(false);
- 
+
   const initialValues: SignupFormValues = {
     email: "",
     confirmemail: "",
@@ -48,21 +48,21 @@ const Signup = () => {
   }, [type, token]);
 
   const handleSubmit = async (values: typeof initialValues) => {
-    setLoading(true); 
-    const { success, data, error } = await API.post("auth/register", values);setLoading(false);
-    setLoading(false); 
+    setLoading(true);
+    const { success, data, error } = await API.post("auth/register", values); setLoading(false);
+    setLoading(false);
     const errorMessage = getErrorMessage(error?.code);
     setErrorMessage(errorMessage);
     if (success) {
       setSuccessMsg(data?.message);
       toasterSuccess("Registration successful", 1000, "id");
       setIsRegistered(true);
-    } 
+    }
   };
 
   const getVerifiedUser = async () => {
     setLoading(true);
-    const { success, error,data} = await API.get(
+    const { success, error, data } = await API.get(
       `auth/verify-account?type=${type}&token=${token}`
     );
     const errorMessage = getErrorMessage(error?.code);
@@ -70,8 +70,8 @@ const Signup = () => {
     if (errorMessage == "Token Expired") {
     }
     if (success) {
-      dispatch(setAuth({ accessToken: data.accessToken}));
-      dispatch(setUserId({ id: data.id, userId:data.userId,firstName:data.firstName,lastName:data.lastName}));
+      dispatch(setAuth({ accessToken: data.accessToken }));
+      dispatch(setUserId({ image:data.image, id: data.id, userId: data.userId, firstName: data.firstName, lastName: data.lastName }));
       setIsActivated(true);
       setSuccessMsg(
         "Your Account is Successfully Verified! Click on Ok Button"
@@ -108,7 +108,7 @@ const Signup = () => {
 
 const SignupWithSuspense = () => {
   return (
-    <Suspense fallback={<div><Loader/></div>}>
+    <Suspense fallback={<div><Loader /></div>}>
       <Signup />
     </Suspense>
   );

@@ -7,6 +7,7 @@ interface AuthState {
   id: number | null;
   firstName: string | null;
   lastName: string | null;
+  image?:string |null
 }
 
 const initialState: AuthState = {
@@ -23,6 +24,9 @@ const initialState: AuthState = {
   lastName: typeof window !== "undefined" && localStorage.getItem("user")
     ? JSON.parse(localStorage.getItem("user")!).lastName
     : null,
+    image :typeof window !== "undefined" && localStorage.getItem("user")
+    ? JSON.parse(localStorage.getItem("user")!).image
+    : null,
 };
 
 const authSlice = createSlice({
@@ -35,11 +39,13 @@ const authSlice = createSlice({
         localStorage.setItem("accessToken", action.payload.accessToken);
       }
     },
-    setUserId(state, action: PayloadAction<{ id: number; userId: string; firstName: string; lastName: string }>) {
+   
+    setUserId(state, action: PayloadAction<{image?:any,id: number; userId: string; firstName: string; lastName: string }>) {
       state.id = action.payload.id;
       state.userId = action.payload.userId;
       state.firstName = action.payload.firstName;
       state.lastName = action.payload.lastName;
+      state.image = action.payload.image;
       if (typeof window !== "undefined") {
         localStorage.setItem(
           "user",
@@ -48,6 +54,7 @@ const authSlice = createSlice({
             userId: action.payload.userId,
             firstName: action.payload.firstName,
             lastName: action.payload.lastName,
+            image: action.payload.image,
           })
         );
       }
@@ -57,15 +64,17 @@ const authSlice = createSlice({
       state.userId = null;
       state.id = null;
       state.firstName = null;
+      state.image = null;
       state.lastName = null;
       if (typeof window !== "undefined") {
         localStorage.removeItem("accessToken");
         localStorage.removeItem("user");
+        localStorage.removeItem("image");
       }
     },
   },
 });
 
-export const { setAuth, setUserId, clearAuth } = authSlice.actions;
+export const { setAuth ,setUserId, clearAuth } = authSlice.actions;
 export const isAuthenticated = (state: RootState) => !!state.auth.accessToken;
 export default authSlice.reducer;

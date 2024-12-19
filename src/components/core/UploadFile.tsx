@@ -11,6 +11,37 @@ export const uploadFile = async (file: File,API:any) => {
     }
   };
 
+  export const uploadProfileImage = async (file: File, userId: number, API: any) => {
+    try {
+        const formData = new FormData();
+        formData.append("file", file);
+
+        const { success, data, error } = await API.postFile("file/upload", formData); // Upload the file
+
+        if (!success) {
+            console.error("File upload failed:", error);
+            throw new Error(error || "File upload failed");
+        }
+
+        const jsonResponse = await API.post("users/upload-profile-image", {
+            userId,
+            profileUrl:data,
+        });
+
+        const { success: jsonSuccess, data: jsonData, error: jsonError } = jsonResponse;
+
+        if (jsonSuccess) {
+            return jsonData;
+        } else {
+            console.error("Profile update failed:", jsonError);
+            throw new Error(jsonError || "Profile update failed");
+        }
+    } catch (error) {
+        console.error("Upload process failed:", error);
+        throw error;
+    }
+};
+
 
   export const uploadMultiFile = async (files: File[], API: any) => {
     const formData = new FormData();

@@ -6,7 +6,6 @@ import useTitle from "@/hooks/useTitle";
 import { forgotValidationSchema } from "@/utils/validationSchemas";
 import { ForgotPasswordFormValues } from "@/types/authInterfaces";
 import { useApi } from "@/hooks/useAPI";
-import { useDispatch } from "react-redux";
 import { getErrorMessage } from "@/utils/errorHandler";
 
 export default function ForgotPassword() {

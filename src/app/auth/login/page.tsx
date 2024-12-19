@@ -39,7 +39,7 @@ const Login = () => {
     setLoading(false);
     if (success) {
       dispatch(setAuth({ accessToken: data.accessToken}));
-      dispatch(setUserId({ id: data.id, userId:data.userId,firstName:data.firstName,lastName:data.lastName}));
+      dispatch(setUserId({image:data.image, id: data.id, userId:data.userId,firstName:data.firstName,lastName:data.lastName}));
       toasterSuccess("Login successful", 1000, "id");
       router.push("/home");
     } 

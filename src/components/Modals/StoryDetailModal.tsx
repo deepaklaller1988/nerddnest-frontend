@@ -1,23 +1,26 @@
+import dynamic from "next/dynamic";
 import React, { useEffect, useState } from "react";
-import Stories from "react-insta-stories";
+const Stories = dynamic(() => import('react-insta-stories'), { ssr: false });
 
 interface StoryDetailModalProps {
   stories: any[];
-  selectedStory: number;
   togglePopup: () => void;
-  alldata: any;
+  alldata: any[];
+  selectedStory: any
 }
 
 const StoryDetailModal: React.FC<StoryDetailModalProps> = ({
   stories,
-  selectedStory,
   togglePopup,
   alldata,
+  selectedStory
 }) => {
-  const [currentIndex, setCurrentIndex] = useState(selectedStory);
-  const [currentUserIndex, setCurrentUserIndex] = useState(0);
 
-  const formattedStories: any[] = stories.flatMap((story, userIndex) =>
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentUserIndex, setCurrentUserIndex] = useState(selectedStory.index);
+  const [story,setStory]=useState(stories)
+
+  const formattedStories: any[] = story.flatMap((story) =>
     story.stories.map((item: any) => ({
       url: item.media_url || "",
       header: {
@@ -26,57 +29,42 @@ const StoryDetailModal: React.FC<StoryDetailModalProps> = ({
         profileImage: story.user?.image || "/profile-avatar-legacy-50.png",
       },
       duration: item.duration ? item.duration * 1000 : 5000,
-      userIndex,
     }))
   );
 
-  // Move to the next user or story automatically when the current story ends
   const goToNextUser = () => {
-    if (currentIndex + 1 < formattedStories.length) {
-      setCurrentIndex(currentIndex + 1); // Move to the next story within the same user
-    } else if (currentUserIndex + 1 < alldata.length) {
-      // If it's the last story of the current user, move to the next user
-      setCurrentUserIndex(currentUserIndex + 1);
-      setCurrentIndex(0); // Start with the first story of the next user
+    if (currentUserIndex + 1 < alldata.length) {
+      setCurrentUserIndex(currentUserIndex + 1);  
+      setCurrentIndex(0); 
+      setStory([alldata[currentUserIndex + 1]]);  
     } else {
-      togglePopup(); // Close the popup if there are no more users
+      togglePopup();  
     }
   };
 
-  // Move to the previous user or story
   const goToPreviousUser = () => {
-    if (currentIndex - 1 >= 0) {
-      setCurrentIndex(currentIndex - 1); // Move to the previous story within the same user
-    } else if (currentUserIndex - 1 >= 0) {
-      // If it's the first story of the current user, move to the previous user
+    if (currentUserIndex - 1 >= 0) {
       setCurrentUserIndex(currentUserIndex - 1);
-      setCurrentIndex(alldata[currentUserIndex - 1].stories.length - 1); // Start with the last story of the previous user
+      setCurrentIndex(alldata[currentUserIndex - 1].stories.length - 1);
+      setStory([alldata[currentUserIndex - 1]]);
+      setCurrentIndex(0); 
     } else {
-      togglePopup(); // Close the popup if there are no previous users
+      togglePopup();
     }
   };
 
-  // Logic to handle when a story ends
   const onStoryEnd = (storyIndex: number) => {
     if (storyIndex + 1 >= alldata[currentUserIndex]?.stories.length) {
-      goToNextUser(); // If the current user's stories are finished, go to the next user
+      goToNextUser();  // Go to the next user when the current user's stories are finished
     } else {
-      setCurrentIndex(storyIndex + 1); // Otherwise, move to the next story automatically
+      setCurrentIndex(storyIndex + 1);  // Move to the next story automatically
     }
   };
 
-  const onAllStoriesEnd = () => {
-    togglePopup(); // Close the popup when all stories are finished
-  };
-
-  useEffect(() => {
-    setCurrentIndex(selectedStory); // Set the selected story as the current index when it changes
-  }, [selectedStory]);
 
   return (
     <div
       className="fixed inset-0 bg-black bg-opacity-90 flex justify-center items-center z-50"
-      onClick={togglePopup}
     >
       <div
         className="w-full max-w-[400px] h-full flex justify-center items-center"
@@ -84,10 +72,10 @@ const StoryDetailModal: React.FC<StoryDetailModalProps> = ({
       >
         <Stories
           stories={formattedStories}
-          defaultInterval={formattedStories[currentIndex]?.duration || 5000}
+          defaultInterval={alldata[currentUserIndex]?.stories[currentIndex]?.duration || 5000}
           currentIndex={currentIndex}
           onStoryEnd={(s: any, storyIndex: any) => onStoryEnd(storyIndex)}
-          onAllStoriesEnd={onAllStoriesEnd}
+          onAllStoriesEnd={togglePopup}
           width="100%"
           height="100%"
         />
@@ -99,21 +87,19 @@ const StoryDetailModal: React.FC<StoryDetailModalProps> = ({
         ✕
       </button>
 
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-4">
-        {/* Previous User Button */}
+      <div className="absolute left-1/2 transform -translate-x-1/2 flex space-x-4 w-full flex justify-between items-center">
         <button
           onClick={goToPreviousUser}
           className="bg-white text-black px-4 py-2 rounded-full"
         >
-          &lt; {/* Left arrow symbol */}
+          &lt;
         </button>
 
-        {/* Next User Button */}
         <button
           onClick={goToNextUser}
           className="bg-white text-black px-4 py-2 rounded-full"
         >
-          &gt; {/* Right arrow symbol */}
+          &gt; 
         </button>
       </div>
     </div>

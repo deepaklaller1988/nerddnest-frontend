@@ -8,7 +8,7 @@ import { HiOutlineChevronUpDown } from "react-icons/hi2";
 import { toasterError, toasterSuccess } from "../core/Toaster";
 import { useApi } from "@/hooks/useAPI";
 import { uploadFile } from "../core/UploadFile";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoCloseCircle } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { setStoryData } from "../../redux/slices/data.slice";
@@ -21,6 +21,7 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup }) => {
   const userId = useSelector((state: any) => state.auth.id);
   const [coverImage, setCoverImage] = useState<any>(null)
   const [storyMedia, setStoryMedia] = useState<(string | undefined)[]>([]);
+  const [storyData, setStoriesData] = useState<(string | undefined)[]>([]);
   const [loadingCoverImage, setLoadingCoverImage] = useState(false);
   const [loadingstoryMedia, setLoadingstoryMedia] = useState<boolean[]>([]);
 
@@ -38,6 +39,39 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup }) => {
         isCollapsed: false,
       },
     ],
+  };
+
+  useEffect(() => {
+    if (userId) {
+      getStoryData()
+
+    }
+  }, [userId])
+
+  const getStoryData = async () => {
+    if (userId) {
+      const { success, error, data } = await API.get(`story/get-story-covers?userId=${userId}`);
+      if (success) {
+        setStoriesData(data)
+      }
+      else {
+        console.log(error);
+      }
+    }
+  };
+
+  const handleDeleteStories = async (deleteItemId: any) => {
+    try {
+      const response = await API.delete(`story/delete-story-covers`, { id: deleteItemId, userId });
+      if (response.success) {
+        toasterSuccess("Story has been deleted successfully");
+        getStoryData()
+      } else {
+        toasterError("Failed to delete the post");
+      }
+    } catch (error) {
+      toasterError("An error occurred while deleting the post");
+    }
   };
 
   const handleAddStory = async (values: any, setFieldValue: any) => {
@@ -154,6 +188,33 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup }) => {
             &times;
           </button>
         </div>
+
+        {storyData && storyData.map((item: any, index: any) => (
+          <div className="mt-4"  key={index}>
+            <div className="gap-2 flex flex-row bg-[var(--bgh)] rounded-lg p-[10px] w-full placeholder:text-[var(--foreground)]">
+              <img
+                src={item?.media_url}
+                alt="Profile Image"
+                className="w-10 h-10 rounded-full object-cover"
+              />
+
+              <div className="flex-grow">
+                <p className="font-semibold text-white">Name: <span className="font-normal">{item?.cover_title}</span></p>
+                <p className="text-sm text-gray-500">Date: {item.createdAt?.substring(0, 10)}</p>
+              </div>
+
+              <button
+                className="text-gray-400 hover:text-gray-600 focus:outline-none"
+                aria-label="Close"
+                onClick={() => handleDeleteStories(item.id)}
+              >
+                <IoCloseCircle size={24} />
+              </button>
+
+            </div>
+          </div>
+
+        ))}
 
         <Formik
           initialValues={initialValues}

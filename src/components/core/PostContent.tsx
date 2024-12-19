@@ -340,7 +340,6 @@ export default function PostContent({ filter }: any) {
         )}
 
         {PostData && PostData.length > 0 ? (PostData.map((data: any, index: any) => {
-
           const postTypeMap: any = {
             content: "Shared an Update",
             image: "Posted an Image",
@@ -354,13 +353,14 @@ export default function PostContent({ filter }: any) {
               <section className="w-full bg-[var(--sections)] border border-white/5 rounded-[12px]">
                 <section className="cursor-pointer flex items-start justify-between gap-4 p-4">
                   <div className="flex items-start gap-2">
-                    <span className="relative min-w-10 min-h-10 max-w-10 max-h-10 rounded-full block border border-2 border-black/5 border-white">
+                    <span className="relative min-w-10 min-h-10 max-w-10 max-h-10 overflow-hidden rounded-full block border border-2 border-black/5 border-white">
                       <Image
-                        className="w-full block h-full bg-cover bg-center overflow-hidden rounded-full"
+                        className="relative top-[-1px] left-[-1px] min-w-[33px] block min-h-[34px] rounded-full overflow-hidden object-cover"
                         src={data?.user?.image || "/profile-avatar-legacy-50.png"}
                         alt="logo"
-                        height={20}
-                        width={20}
+                        height={100}
+                        width={800}
+                        quality={100}
                       />
                     </span>
                     <span className="w-full">

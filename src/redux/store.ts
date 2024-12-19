@@ -11,7 +11,7 @@ export const store = configureStore({
     [apiSlice.reducerPath]: apiSlice.reducer,
     auth: authReducer,
     data: dataReducer, 
-    storydata:storydataReducer
+    storydata:storydataReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()

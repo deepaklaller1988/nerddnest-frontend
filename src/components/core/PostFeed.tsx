@@ -21,6 +21,7 @@ export default function PostFeed() {
   const popupRef = useRef<HTMLDivElement>(null);
   const firstName = useSelector((state: any) => state.auth.firstName) || "";
   const lastName = useSelector((state: any) => state.auth.lastName) || "";
+  const image = useSelector((state: any) => state.auth.image) || "";
 
   const handleClick = (type: string) => {
     setPopupType(type);
@@ -52,8 +53,7 @@ export default function PostFeed() {
                 width={80}
                 quality={20}
                 className="w-full block h-full"
-                // src="/dp.jpg"
-                src="/profile-avatar-legacy-50.png"
+                src={image || "/profile-avatar-legacy-50.png"}
                 alt="user"
               />
             </span>

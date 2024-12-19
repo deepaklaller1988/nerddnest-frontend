@@ -1,18 +1,30 @@
 "use client"
 import { UserProfileActionsMenu } from '@/lib/MenuBar/UserProfileActionsMenu'
 import { capitalizeName } from '@/utils/capitalizeName'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FaCamera } from 'react-icons/fa6'
 import { MdMoreHoriz, MdOutlineExitToApp } from 'react-icons/md'
 import NavigationUserMenu from "../../lib/MenuBar/NavigateUserMenu"
 import FriendsContent from '../Profile/FriendsContent'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { uploadProfileImage } from '../core/UploadFile'
+import { useApi } from '@/hooks/useAPI'
+import { setUserId } from "../../redux/slices/auth.slice";
 
-export default function ProfileDetailCard({ data, type, name, role, buttonText, buttonIcon, onButtonClick }: any) {
+import Image from 'next/image'
+
+export default function ProfileDetailCard({ data, type, buttonText, buttonIcon, onButtonClick }: any) {
+    const { API } = useApi()
+    const dispatch = useDispatch();
+
+    const userId = useSelector((state: any) => state.auth.id)
+
     const [openActionsMenu, setOpenActionsMenu] = useState(false)
-    const userId = useSelector((state: any) => state.auth.id);
+    const [loadingProfileImage, setLoadingProfileImage] = useState(false);
 
+    const [profileImage, setUserImage] = useState<string | null>(null);
     const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+
     const [activeTab, setActiveTab] = useState('Friends');
     const [activeMenuItem, setActiveMenuItem] = useState('Friends');
 
@@ -59,6 +71,32 @@ export default function ProfileDetailCard({ data, type, name, role, buttonText, 
         }
     };
 
+    const handleUploadImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        try {
+            setLoadingProfileImage(true);
+
+            const uploadedData = await uploadProfileImage(file, userId, API);
+            setLoadingProfileImage(false);
+            if (uploadedData) {
+                setUserImage(uploadedData.image)
+                dispatch(setUserId({
+                    image: uploadedData.image,
+                    id: data.id,
+                    userId: data.userId,
+                    firstName: data.firstName,
+                    lastName: data.lastName
+                }));                
+
+            }
+        } catch (error) {
+            setLoadingProfileImage(false);
+            console.error("Image upload failed:", error);
+        }
+    };
+
     return (
         <div className='w-full pt-8'>
             <div className='w-full max-w-[1230px] py-3 px-4 m-auto'>
@@ -67,11 +105,11 @@ export default function ProfileDetailCard({ data, type, name, role, buttonText, 
                         <div className='w-full bg-[var(--highlght-hover)] rounded-[12px] overflow-fidden'>
                             <img src='cover-image.png' className='w-full' alt="Cover Image" />
                         </div>
-                        {type !== "user" &&
+                        {data.id == userId && (
                             <span className='absolute left-4 top-4 rounded-lg bg-white p-2'>
                                 <input className='top-0 left-0 absolute w-full h-full opacity-0 cursor-pointer' type="file" />
                                 <FaCamera />
-                            </span>
+                            </span>)
                         }
 
                     </div>
@@ -79,9 +117,18 @@ export default function ProfileDetailCard({ data, type, name, role, buttonText, 
                         <section className='w-full flex gap-4 justify-between items-start p-4 px-8'>
                             <div className='flex gap-6'>
                                 <section className='w-40 h-40 relative rounded-lg overflow-hidden -top-20 border border-white/40'>
-                                    <img src='dp.jpg' className='w-full h-full object-cover runded-lg block' alt="dp" />
-                                    {type !== "user" && <span className='absolute left-4 top-4 rounded-lg bg-white p-2'>
-                                        <input className='top-0 left-0 absolute w-full h-full opacity-0 cursor-pointer' type="file" />
+
+                                    {loadingProfileImage ? (
+                                        <div className="flex justify-center items-center w-full h-full">
+                                            <Image src="/spinner.gif" alt="Loading..." className="w-12 h-12" height={50} width={50} />
+                                        </div>
+                                    ) : (<img
+                                        src={profileImage || 'profile-avatar-legacy-50.png'}
+                                        className='w-full h-full object-cover runded-lg block' alt="dp" />)}
+                                    {data.id == userId && <span className='absolute left-4 top-4 rounded-lg bg-white p-2'>
+                                        <input className='top-0 left-0 absolute w-full h-full opacity-0 cursor-pointer'
+                                            type="file" accept='image/*'
+                                            onChange={handleUploadImage} />
                                         <FaCamera />
                                     </span>}
                                 </section>
