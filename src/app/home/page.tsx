@@ -15,23 +15,23 @@ export default function Home() {
   const router = useRouter();
   const pathname = usePathname();
 
-  // const [token, setToken] = useState<string | null>(null);
+  const [token, setToken] = useState<string | null>(null);
 
-  // const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true); 
 
-  // useEffect(() => {
-  //   if (typeof window !== "undefined") {
-  //     const storedToken = localStorage.getItem("accessToken");
-  //     setToken(storedToken);
-  //     setLoading(false);  
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedToken = localStorage.getItem("accessToken");
+      setToken(storedToken);
+      setLoading(false);  
+    }
+  }, []);
 
-  // useEffect(() => {
-  //   if (!loading && !token && !pathname.startsWith("/auth")) {
-  //     router.push("/auth/login");
-  //   }
-  // }, [token, loading, pathname, router]);
+  useEffect(() => {
+    if (!loading && !token && !pathname.startsWith("/auth")) {
+      router.push("/auth/login");
+    }
+  }, [token, loading, pathname, router]);
   
   return (
     <div className='w-full pt-8'>
