@@ -348,6 +348,29 @@ export default function PostContent({ filter }: any) {
 
           };
           const postDescription = postTypeMap[data?.post_type] || "";
+          const extractURLs = (content: string) => {
+            const urlRegex = /(https?:\/\/[^\s]+)/g;
+            return content.match(urlRegex) || [];
+          };
+
+          // Function to render content with one clickable link
+          const renderContentWithLinks = () => {
+            let content = data.content;
+            const urlsInContent = extractURLs(content);
+
+            if (urlsInContent.length > 0) {
+              const firstUrl = urlsInContent[0]; // Get the first URL
+              content = content.replace(firstUrl, 
+                `<a href="${firstUrl}" target="_blank" rel="noopener noreferrer" class="text-[var(--highlight-blue)]">${firstUrl}</a>`);
+            }
+
+            return content.split('\n').map((line:any, index:any) => (
+              <React.Fragment key={index}>
+                <span dangerouslySetInnerHTML={{ __html: line }} />
+                <br />
+              </React.Fragment>
+            ));
+          };
           return (
             <div key={index}>
               <section className="w-full bg-[var(--sections)] border border-white/5 rounded-[12px]">
@@ -468,11 +491,27 @@ export default function PostContent({ filter }: any) {
                 </section>
                 <div className="w-full px-4 flex flex-col gap-3">
                   <section className="flex flex-col gap-3">
-                    <p>
-                      {data.content}
+                    {/* <p>
+                      {data.content.split('\n').map((line: any, index: any) => (
+                        <React.Fragment key={index}>
+                          {line}
+                          <br />
+                        </React.Fragment>
+                      ))}
+
                     </p>
                     <Link href="" className="text-[var(--highlight-blue)]">
-                    </Link>
+                      {data.shared_link}
+                    </Link> */}
+
+                    <p>
+                      {renderContentWithLinks()}
+                    </p>
+                    {/* {data.shared_link && !data.content.includes(data.shared_link) && (
+                      <Link href={data.shared_link} className="text-[var(--highlight-blue)]">
+                        {data.shared_link}
+                      </Link>
+                    )} */}
 
                     {data?.post_type === "image" && data?.media_url?.length > 0 && (
                       <section className={`stack w-full stack${data.media_url.length === 1 ? '' : data.media_url.length >= 2 && data.media_url.length <= 4 ? data.media_url.length : 4}`}>

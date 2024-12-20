@@ -2,12 +2,15 @@ import React from "react";
 import Menu from "./Menu";
 import MenuList from "@/lib/MenuBar/SideMenu"
 import { MenuItemsProps } from "@/types/sidebarInterfaces";
+import User from "@/lib/MenuBar/SideMenu";
+import { useSelector } from "react-redux";
 
 const MenuItems: React.FC<MenuItemsProps> = ({ toggleSection, openSections, type }) => {
-
+  const userId = useSelector((state: any) => state.auth.id); 
+  const menuList = User.list(userId); 
   return (
     <div>
-      {MenuList.list.map((item, index) => {
+      {menuList.map((item:any, index:any) => {
         if (item.name === "Logout" && type == "home") {
           return null;
         }

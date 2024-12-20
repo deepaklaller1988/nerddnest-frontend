@@ -1,5 +1,6 @@
+import { timeAgo } from "@/utils/timeAgo";
 import dynamic from "next/dynamic";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 const Stories = dynamic(() => import('react-insta-stories'), { ssr: false });
 
 interface StoryDetailModalProps {
@@ -23,13 +24,12 @@ const StoryDetailModal: React.FC<StoryDetailModalProps> = ({
   const formattedStories: any[] = story.flatMap((story) =>
     story.stories.map((item: any) => {
       const isVideo = item.media_url?.includes("videos"); 
-      
       return {
         url: item.media_url || "",
         type: isVideo ? 'video' : 'image', 
         header: {
           heading: `${story.user?.firstname || ""} ${story.user?.lastname || ""}`,
-          subheading: "1 hour ago",
+          subheading: timeAgo (story.createdAt),
           profileImage: story.user?.image || "/profile-avatar-legacy-50.png",
         },
         duration: item.duration ? item.duration * 1000 : 5000,

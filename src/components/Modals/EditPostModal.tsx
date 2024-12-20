@@ -32,15 +32,13 @@ import { BsEmojiSmile } from 'react-icons/bs';
 import { GoGlobe } from 'react-icons/go';
 import { CiCamera, CiVideoOff, CiVideoOn } from 'react-icons/ci';
 import { TiArrowSortedDown } from 'react-icons/ti';
-import { CgLayoutGrid } from 'react-icons/cg';
 import SchedulePostPopup from './SchedulePostModal';
-import { logLocalTime } from '@/utils/timeAgo';
 
 const EditPostModal = ({ postId, onClose,
 }: { postId: any; onClose: () => void }) => {
     const { API } = useApi()
     const dispatch = useDispatch();
-
+    const quillRef = useRef<any>(null);
     const [emoji, setEmoji] = useState(false);
     const [isClient, setIsClient] = useState(false)
 
@@ -254,16 +252,24 @@ const EditPostModal = ({ postId, onClose,
         </div>
     );
 
-    const handleEmojiSelect = (emoji: any) => {
-        if (typeof window !== "undefined") {
-            const quillEditor = document.querySelector(".ql-editor") as HTMLElement;
-            if (quillEditor) {
-                const currentText = quillEditor.innerHTML;
-                setValue(currentText + emoji.emoji);
-
-            }
+    const handleEmojiSelect = (emoji: any, content: any) => {
+        if (typeof window !== "undefined" && quillRef.current) {
+          const quillInstance = quillRef.current.getEditor();
+          let selection = quillInstance.getSelection()
+          if (!selection) {
+            quillInstance.focus();
+            const length = quillInstance.getLength();
+            quillInstance.setSelection(length, 0);
+            selection = quillInstance.getSelection();
+          }
+    
+          if (selection) {
+            const cursorPosition = selection.index;
+            quillInstance.insertText(cursorPosition, emoji.emoji);
+            quillInstance.setSelection(cursorPosition + emoji.emoji.length);
+          }
         }
-    };
+      };
 
     const getFileCount = (name: string): number => {
         switch (name) {
@@ -541,7 +547,7 @@ const EditPostModal = ({ postId, onClose,
                                                 <div className="w-full mb-2">
                                                     <div className="flex flex-col">
                                                         <div className="!z-1">
-                                                            <QuillEditor value={value} setValue={setValue} />
+                                                            <QuillEditor value={value} setValue={setValue} quillRef={quillRef} />
                                                         </div>
                                                         <div className="my-2 relative">
                                                             <button type="button" onClick={handleEmojis}>
@@ -552,7 +558,7 @@ const EditPostModal = ({ postId, onClose,
                                                                     <EmojiPicker
                                                                         lazyLoadEmojis={true}
                                                                         className="max-w-[300px] max-h-[350px] !absolute right-0 top-[50%] translate-y-[-50%]"
-                                                                        onEmojiClick={handleEmojiSelect}
+                                                                        onEmojiClick={(emoji) => handleEmojiSelect(emoji, value)}
                                                                         searchDisabled
                                                                         autoFocusSearch
                                                                     />

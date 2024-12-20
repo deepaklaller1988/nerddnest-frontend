@@ -7,12 +7,12 @@ import { IoMdLogOut } from "react-icons/io"; // Add logout icon
 
 
 export default class User {
-    static list: MenuItem[] = [
-        {
+  static list = (userId: string): any => [
+    {
           name: "Profile",
           icon: CgProfile,
           links: [
-            { name: "View", href: "/profile/view" },
+            { name: "View", href: `users?id=${userId}` },
             { name: "Edit", href: "/profile/edit" },
             { name: "Profile Photo", href: "/profile/photo" },
             { name: "Cover Photo", href: "/profile/cover" },

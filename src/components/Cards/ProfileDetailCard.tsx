@@ -81,6 +81,7 @@ export default function ProfileDetailCard({ data, type, buttonText, buttonIcon, 
                 return null;
         }
     };
+    console.log(data,"data-==========")
 
     const handleUploadImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -88,7 +89,6 @@ export default function ProfileDetailCard({ data, type, buttonText, buttonIcon, 
 
         try {
             setLoadingProfileImage(true);
-
             const uploadedData = await uploadProfileImage(file, userId, API);
             setLoadingProfileImage(false);
             if (uploadedData) {
@@ -97,8 +97,8 @@ export default function ProfileDetailCard({ data, type, buttonText, buttonIcon, 
                     image: uploadedData.image,
                     id: data.id,
                     userId: data.userId,
-                    firstName: data.firstName,
-                    lastName: data.lastName
+                    firstName: data.firstname,
+                    lastName: data.lastname
                 }));                
 
             }

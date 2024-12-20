@@ -54,9 +54,11 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
   const { API } = useApi();
   const emojiPickerRef = useRef<HTMLDivElement>(null);
   const quillRef = useRef<any>(null);
+
   const userId = useSelector((state: any) => state.auth.id);
   const firstName = useSelector((state: any) => state.auth.firstName);
   const lastName = useSelector((state: any) => state.auth.lastName);
+  const image = useSelector((state: any) => state.auth.image);
 
   const [value, setValue] = useState<any>("");
   const [selectedName, setSelectedName] = useState("");
@@ -178,22 +180,27 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
     setEmoji((prev) => !prev);
   };
 
+
   const handleEmojiSelect = (emoji: any, content: any) => {
     if (typeof window !== "undefined" && quillRef.current) {
       const quillInstance = quillRef.current.getEditor();
-      const selection = quillInstance.getSelection(); 
+      let selection = quillInstance.getSelection()
+      if (!selection) {
+        quillInstance.focus();
+        const length = quillInstance.getLength();
+        quillInstance.setSelection(length, 0);
+        selection = quillInstance.getSelection();
+      }
 
       if (selection) {
         const cursorPosition = selection.index;
         quillInstance.insertText(cursorPosition, emoji.emoji);
-
         quillInstance.setSelection(cursorPosition + emoji.emoji.length);
-      } else {
-        const currentText = quillRef.current.getEditor().root.innerHTML;
-        quillRef.current.getEditor().root.innerHTML = currentText + emoji.emoji;
       }
     }
   };
+
+
 
   const handleOnClick = (e: React.MouseEvent<SVGElement, MouseEvent>, name: any) => {
     if (name === "image" && !images) {
@@ -297,7 +304,6 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
     }));
   };
 
-
   const renderFilePreview = (file: File) => {
     const fileExtension = file.name.split('.').pop()?.toLowerCase();
 
@@ -311,6 +317,7 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
 
     return <FiFile className="w-6 h-6 text-gray-600" />;
   };
+
   const renderFileUploadSection = (
     fieldName: any,
     icon: JSX.Element,
@@ -387,19 +394,32 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
     );
   };
 
+  const extractURLs = () => {
+    const plainText = quillRef.current.getEditor().getText().trim(); 
+    const urlRegex = /(https?:\/\/[^\s]+)/g; 
+    const urls = plainText.match(urlRegex)
+
+    return urls || []
+  };
+
   const handleSubmit = async (e: any) => {
     if (!(value || initialValues.mediaUrl && initialValues.mediaUrl.length > 0)) {
       toasterInfo("Please add some content or upload media before posting.", 3000, "id");
       return;
     }
-
+    const plainText = quillRef.current.getEditor().getText().trim(); 
+    const urls = extractURLs();
+    if (urls.length > 1) {
+      toasterInfo("Only one URL can be included in the post. Please remove additional URLs.", 3000, "id");
+      return;
+    }
     try {
       const payload = {
         userId: userId,
         postType: type,
-        content: value,
-        mediaUrl: initialValues.mediaUrl,
-        sharedLink: initialValues.sharedLink || "",
+        content: plainText,
+        mediaUrl: initialValues.mediaUrl,                                           
+        sharedLink: urls ? urls[0] :"",
         visibility: selectedVisibility ? selectedVisibility.id : initialValues.visibility,
         scheduleTime: scheduleTime
       };
@@ -436,7 +456,7 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
                 <div className="p-4">
                   <div className="flex items-center mb-4 gap-2">
                     <Image
-                      src="/profile-avatar-legacy-50.png"
+                      src={image || "/profile-avatar-legacy-50.png"}
                       alt="Image"
                       height={40}
                       width={40}
@@ -465,8 +485,6 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
                           ) : (
                             <GoGlobe />
                           )}
-
-
                         </div>
                         <p className="text-sm">{selectedVisibility && selectedVisibility.name ? selectedVisibility.name : "Public"}</p>
                         <TiArrowSortedDown />

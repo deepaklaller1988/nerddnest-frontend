@@ -116,6 +116,11 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup, handleDeleteStories }) =
       try {
         let uploadData: any;
         if (fieldName === "storyCoverImage") {
+          const validImageTypes = ["image/jpeg", "image/png", "image/gif"];
+          if (!validImageTypes.includes(file.type)) {
+            alert("Please upload a valid image file.");
+            return;
+          }
           setLoading(true);
 
           uploadData = await uploadFile(file, API);
@@ -124,6 +129,13 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup, handleDeleteStories }) =
           setFieldValue(fieldName, uploadData);
           setCoverImage(uploadData);
         } else if (fieldName.startsWith("stories")) {
+
+          const validMediaTypes = ["image/jpg" ,"image/jpeg", "image/png", "image/gif", "video/mp4", "video/mov","video/wmv","video/mpeg","video/3gp"];
+          if (!validMediaTypes.includes(file.type)) {
+            alert("Please upload a valid file (JPEG, PNG, GIF for images; MP4, AVI for videos).");
+            return;
+          }
+  
           if (index !== undefined) {
             setLoading((prevState: boolean[]) => {
               const updatedState = [...prevState];
@@ -200,7 +212,7 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup, handleDeleteStories }) =
               />
 
               <div className="flex-grow">
-                <p className="font-semibold text-white">Name: <span className="font-normal">{item?.cover_title}</span></p>
+                <p className="font-semibold text-white">Name: <span className="font-md ">{item?.cover_title}</span></p>
                 <p className="text-sm text-gray-500">Date: {item.createdAt?.substring(0, 10)}</p>
               </div>
 
@@ -263,7 +275,7 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup, handleDeleteStories }) =
                           type="file"
                           name="storyCoverImage"
                           id="storyCoverImage"
-                          accept="images/*"
+                          accept="image/jpeg, image/png, image/gif"
                           className="hidden"
                           onChange={(e: any) => handleFileChange(e, setFieldValue, "storyCoverImage", setLoadingCoverImage)}
                           value={initialValues.storyCoverImage}

@@ -1,11 +1,11 @@
-import React, { forwardRef } from 'react';
+import React, {  forwardRef } from 'react';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
 
 interface QuillEditorProps {
   value: any;
   setValue: React.Dispatch<React.SetStateAction<any>>;
-  quillRef: React.RefObject<any>;  // Receive quillRef as a prop
+  quillRef: React.RefObject<any>; 
 }
 
 const QuillEditor = forwardRef((props: QuillEditorProps, ref: React.Ref<any>) => {
@@ -18,7 +18,7 @@ const QuillEditor = forwardRef((props: QuillEditorProps, ref: React.Ref<any>) =>
   ];
 
   const handleEditorChange = (content: string) => {
-    const plainText = content.replace(/<[^>]+>/g, '').trim(); 
+    const plainText = content.replace(/<[^>]+>/g, '').trim();
     setValue(plainText);
     setValue(content);
   };
@@ -33,8 +33,8 @@ const QuillEditor = forwardRef((props: QuillEditorProps, ref: React.Ref<any>) =>
       value={value}
       onChange={handleEditorChange}
       modules={modules}
-      className='postEditorText'
-      ref={quillRef || ref}  
+      className="postEditorText"
+      ref={quillRef} 
     />
   );
 });
