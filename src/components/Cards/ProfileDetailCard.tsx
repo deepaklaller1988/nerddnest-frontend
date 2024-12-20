@@ -1,23 +1,25 @@
 "use client"
-import { UserProfileActionsMenu } from '@/lib/MenuBar/UserProfileActionsMenu'
-import { capitalizeName } from '@/utils/capitalizeName'
-import React, { useEffect, useState } from 'react'
-import { FaCamera } from 'react-icons/fa6'
-import { MdMoreHoriz, MdOutlineExitToApp } from 'react-icons/md'
-import NavigationUserMenu from "../../lib/MenuBar/NavigateUserMenu"
-import FriendsContent from '../Profile/FriendsContent'
-import { useDispatch, useSelector } from 'react-redux'
-import { uploadProfileImage } from '../core/UploadFile'
-import { useApi } from '@/hooks/useAPI'
-import { setUserId } from "../../redux/slices/auth.slice";
-
 import Image from 'next/image'
+import React, { useEffect, useState } from 'react'
+
+import { useApi } from '@/hooks/useAPI'
+import { FaCamera } from 'react-icons/fa6'
+import { useDispatch, useSelector } from 'react-redux'
+import { capitalizeName } from '@/utils/capitalizeName'
+import { uploadProfileImage } from '../core/UploadFile'
+import { setUserId } from "../../redux/slices/auth.slice";
+import { MdMoreHoriz, MdOutlineExitToApp } from 'react-icons/md'
+import { UserProfileActionsMenu } from '@/lib/MenuBar/UserProfileActionsMenu'
+
+import FriendsContent from '../Profile/FriendsContent'
+import NavigationUserMenu from "../../lib/MenuBar/NavigateUserMenu"
+
 
 export default function ProfileDetailCard({ data, type, buttonText, buttonIcon, onButtonClick }: any) {
     const { API } = useApi()
     const dispatch = useDispatch();
-
     const userId = useSelector((state: any) => state.auth.id)
+    const image = useSelector((state: any) => state.auth.image) 
 
     const [openActionsMenu, setOpenActionsMenu] = useState(false)
     const [loadingProfileImage, setLoadingProfileImage] = useState(false);
@@ -27,6 +29,10 @@ export default function ProfileDetailCard({ data, type, buttonText, buttonIcon, 
 
     const [activeTab, setActiveTab] = useState('Friends');
     const [activeMenuItem, setActiveMenuItem] = useState('Friends');
+
+    useEffect(()=>{
+        setUserImage(image)
+    },[image])
 
     const toggleActionsMenu = () => {
         setOpenActionsMenu(prevState => !prevState);

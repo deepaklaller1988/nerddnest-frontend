@@ -12,7 +12,8 @@ import { selectStoryData } from '../../redux/slices/data.slice';
 export default function AddStory() {
   const { API } = useApi()
   const userId = useSelector((state: any) => state.auth.id);
-  
+  const image = useSelector((state: any) => state.auth.image) 
+
   const storyData = useSelector(selectStoryData);
 
   const [isCreatePopupOpen, setIsCreatePopupOpen] = useState(false);
@@ -20,7 +21,6 @@ export default function AddStory() {
   const [selectedStory, setSelectedStory] = useState<any>(null);
   const [stories, setStories] = useState<any>([]);
   const [userImage,setUserImage]=useState("")
-  const image = useSelector((state: any) => state.auth.image) 
 
   useEffect(() => {
     setUserImage(image)
@@ -70,11 +70,12 @@ export default function AddStory() {
             onClick={toggleCreatePopup}
           >
             <Image
-              height={50}
-              width={50}
-              className="w-full object-contain"
+              height={100}
+              width={100}
+              className="w-full object-cover min-h-[100px]"
               src={userImage ? userImage:"/profile-avatar-legacy-50.png"}
               alt="dp"
+              quality={100}
               priority 
             />
             <button className="absolute bg-[var(--highlght-hover)] left-0 bottom-0 pt-6 py-3 w-full text-center">
@@ -92,13 +93,13 @@ export default function AddStory() {
               className="relative h-[160px] rounded-[12px] overflow-hidden"
               onClick={() => handleStoryClick(story.id,index)}
             >
-              <Image
+              {/* <Image
                 height={50}
                 width={50}
                 className="w-full h-full object-cover"
                 src={story.media_url || null}
                 alt={"Image"}
-              />
+              /> */}
               <span className="absolute left-2 top-2 min-w-10 min-h-10 max-w-10 max-h-10 rounded-full block border border-2 border-black/5 border-white">
                 <Image
                   height={50}

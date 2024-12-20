@@ -21,16 +21,22 @@ const StoryDetailModal: React.FC<StoryDetailModalProps> = ({
   const [story,setStory]=useState(stories)
 
   const formattedStories: any[] = story.flatMap((story) =>
-    story.stories.map((item: any) => ({
-      url: item.media_url || "",
-      header: {
-        heading: `${story.user?.firstname || ""} ${story.user?.lastname || ""}`,
-        subheading: "1 hour ago",
-        profileImage: story.user?.image || "/profile-avatar-legacy-50.png",
-      },
-      duration: item.duration ? item.duration * 1000 : 5000,
-    }))
+    story.stories.map((item: any) => {
+      const isVideo = item.media_url?.includes("videos"); 
+      
+      return {
+        url: item.media_url || "",
+        type: isVideo ? 'video' : 'image', 
+        header: {
+          heading: `${story.user?.firstname || ""} ${story.user?.lastname || ""}`,
+          subheading: "1 hour ago",
+          profileImage: story.user?.image || "/profile-avatar-legacy-50.png",
+        },
+        duration: item.duration ? item.duration * 1000 : 5000,
+      };
+    })
   );
+  
 
   const goToNextUser = () => {
     if (currentUserIndex + 1 < alldata.length) {

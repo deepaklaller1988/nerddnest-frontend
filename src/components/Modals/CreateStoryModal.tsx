@@ -75,6 +75,15 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup }) => {
   };
 
   const handleAddStory = async (values: any, setFieldValue: any) => {
+    const hasValidStories = values.stories.some(
+      (story: any) => story.storyText || story.storyLink || story.storyMedia
+    );
+  
+    if (!hasValidStories) {
+      toasterError("Please add at least one story before submitting.");
+      return;
+    }
+  
     const updatedValues = {
       ...values,
       storyCoverImage: values.storyCoverImage,
@@ -82,17 +91,15 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup }) => {
       stories: values.stories.map((story: any) => ({
         ...story,
         mediaUrl: story.storyMedia,
-      }))
+      })),
     };
-
+  
     try {
       const { data, success, error } = await API.post("story/create", updatedValues);
       if (success) {
         toasterSuccess("Story Created Successfully!", 2000, "id");
         dispatch(setStoryData(data));
-
         togglePopup();
-
       } else {
         toasterError(error || "Failed to Create Story");
       }
@@ -101,7 +108,7 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup }) => {
       toasterError("An error occurred while posting the story");
     }
   };
-
+  
   const handleFileChange = async (
     e: React.ChangeEvent<HTMLInputElement>,
     setFieldValue: (field: string, value: any) => void,
@@ -173,7 +180,7 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup }) => {
       });
     }
   };
-
+console.log(storyMedia,"storyMedia")
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div className="max-h-[80vh] overflow-auto bg-[var(--sections)] border border-white/10 w-full max-w-[600px] rounded-[12px] shadow-lg">
@@ -190,7 +197,7 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup }) => {
         </div>
 
         {storyData && storyData.map((item: any, index: any) => (
-          <div className="mt-4"  key={index}>
+          <div className="mt-4 px-4"  key={index}>
             <div className="gap-2 flex flex-row bg-[var(--bgh)] rounded-lg p-[10px] w-full placeholder:text-[var(--foreground)]">
               <img
                 src={item?.media_url}
@@ -368,7 +375,7 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup }) => {
                                       </div>
                                     ) : storyMedia && storyMedia[index] ? (
                                       <div className="relative">
-                                        {storyMedia[index].startsWith("data:video/") ? (
+                                        {storyMedia[index].includes("videos") ? (
                                           <video
                                             src={storyMedia[index]}
                                             className="w-full h-64 rounded-xl object-cover"
