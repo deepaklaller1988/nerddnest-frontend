@@ -5,17 +5,18 @@ import { IoIosSend } from "react-icons/io";
 import ButtonFunction from './ButtonFunction';
 import { RxCross2 } from 'react-icons/rx';
 import MiniLoader from '../Loaders/Miniloader';
-import { toasterInfo } from '../core/Toaster';
+import { toasterError, toasterInfo } from '../core/Toaster';
 import { useApi } from "@/hooks/useAPI";
 import { uploadMultiFile } from '../core/UploadFile';
 import { MdOutlineLinkedCamera } from 'react-icons/md';
-import { IoDocumentAttachOutline } from 'react-icons/io5';
+import { IoDocumentAttachOutline, IoPaperPlaneSharp } from 'react-icons/io5';
 import { BiBarChartSquare } from 'react-icons/bi';
 import CreatePostPopup from '../Modals/CreatePostModal';
 import { BsEmojiSmile } from 'react-icons/bs';
 import EmojiPicker from 'emoji-picker-react';
+import { useSelector } from 'react-redux';
 
-const MessageChatwindow = () => {
+const MessageChatwindow = ({ id, data, isActive, commentsCount, updateCommentsCount }: any) => {
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const [message, setMessage] = useState<string>("");
     const [images, setImages] = useState<File[]>([]);
@@ -27,12 +28,16 @@ const MessageChatwindow = () => {
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [emoji, setEmoji] = useState(false);
     const [value, setValue] = useState<any>("");
+    const [messageData, setMessageData] = useState<any>([]);
+    const [messageComment, setMessageComment] = useState<any>(false)
     const { API } = useApi();
     const imageInputRef = useRef<HTMLInputElement | null>(null);
     const videoInputRef = useRef<HTMLInputElement | null>(null);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const popupRef = useRef<HTMLDivElement>(null);
     const emojiPickerRef = useRef<HTMLDivElement>(null);
+    const userId = useSelector((state: any) => state.auth.id);
+
 
     const handleDeleteMedia = (type: 'images' | 'video' | 'files', index: number) => {
         if (type === 'images') {
@@ -128,6 +133,51 @@ const MessageChatwindow = () => {
         }
     };
 
+    const postMessage = async (comment: string) => {
+        if (!comment.trim() && images.length === 0 && videos.length === 0 && files.length === 0) {
+            toasterError("Please enter a message or add media."); // Notify the user
+            return;
+        }
+        try {
+            const { success, error } = await API.post("posts/comment", {
+                postId: id,
+                commenterId: userId,
+                comment,
+                contentType: images.length > 0 ? "images" : videos.length > 0 ? "video" : files.length > 0 ? "files" : "text",
+                mediaUrl: initialValues.mediaUrl ? initialValues.mediaUrl : ""
+            });
+            if (success) {
+                setMessage("");
+                setImages([])
+                setVideos([])
+                setFiles([])
+                getAllMessageData(id);
+                updateCommentsCount(id, commentsCount + 1);
+            } else {
+                toasterError(error || "Failed to send message");
+            }
+        } catch (err) {
+            console.error("Error sending messages:", err);
+            toasterError("An error occurred while sending the message");
+        }
+    };
+
+    const getAllMessageData = async (postId: any) => {
+        try {
+            const { success, error, data } = await API.get(
+                `posts/get-comments?postId=${postId}`
+            );
+            if (success) {
+                setMessageData(data);
+            } else {
+                toasterError(error || "Failed to load messages");
+            }
+        } catch (err) {
+            console.error("Error fetching messages:", err);
+            toasterError("An error occurred while fetching messages");
+        }
+    };
+
     return (
         <>
             {/* we can modify it later  */}
@@ -192,12 +242,15 @@ const MessageChatwindow = () => {
                                     onChange={(e) => setMessage(e.target.value)}
                                     placeholder="Write a message..."
                                 />
+                                {/* <button className="absolute bottom-3 right-3 flex items-center justify-center w-8 h-8 bg-[var(--highlight-blue)] rounded-full">
+                                    <IoPaperPlaneSharp className="fill-white" onClick={() => postMessage(message)} />
+                                </button> */}
                             </div>
                         </section>
                         <div className="border-t border-gray-500/10 flex justify-between items-center">
                             <section className=" flex ">
                                 {isUploadLoading && <MiniLoader />}
-                                <div className="">
+                                <div className="relative mt-4 grid grid-cols-5 gap-2 uploaded-data">
                                     {images.length > 0 && images.map((image, index) => (
                                         <div key={index} className="relative uploaded-dataInner">
                                             {image instanceof File && (
@@ -274,7 +327,7 @@ const MessageChatwindow = () => {
                                         type="file"
                                         name="file"
                                         ref={fileInputRef}
-                                        accept=""
+                                        accept="/*/"
                                         multiple
                                         className="hidden"
                                         onChange={handleFileChange}
@@ -300,8 +353,8 @@ const MessageChatwindow = () => {
                                         </div>
                                     )}
                                 </div>
-                                <div className="p-1 bg-blue-800 rounded-full">
-                                    <IoIosSend onClick={handleSend} className="w-6 h-6 fill-white" />
+                                <div className="p-1 rounded-full">
+                                    <IoIosSend onClick={() => postMessage(message)} className="w-6 h-6 fill-white" />
                                 </div>
                             </section>
                         </div>
