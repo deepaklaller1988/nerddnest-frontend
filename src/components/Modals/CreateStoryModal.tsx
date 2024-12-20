@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setStoryData } from "../../redux/slices/data.slice";
 
 
-const CreateStoryModal: React.FC<any> = ({ togglePopup }) => {
+const CreateStoryModal: React.FC<any> = ({ togglePopup, handleDeleteStories }) => {
   const { API } = useApi();
   const dispatch = useDispatch();
 
@@ -22,8 +22,9 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup }) => {
   const [coverImage, setCoverImage] = useState<any>(null)
   const [storyMedia, setStoryMedia] = useState<(string | undefined)[]>([]);
   const [storyData, setStoriesData] = useState<(string | undefined)[]>([]);
-  const [loadingCoverImage, setLoadingCoverImage] = useState(false);
   const [loadingstoryMedia, setLoadingstoryMedia] = useState<boolean[]>([]);
+  const [loadingCoverImage, setLoadingCoverImage] = useState(false);
+
 
   const initialValues = {
     userId: userId,
@@ -60,30 +61,23 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup }) => {
     }
   };
 
-  const handleDeleteStories = async (deleteItemId: any) => {
-    try {
-      const response = await API.delete(`story/delete-story-covers`, { id: deleteItemId, userId });
-      if (response.success) {
-        toasterSuccess("Story has been deleted successfully");
-        getStoryData()
-      } else {
-        toasterError("Failed to delete the post");
-      }
-    } catch (error) {
-      toasterError("An error occurred while deleting the post");
-    }
+
+  const handleDeleteStory = (storyId: any) => {
+    handleDeleteStories(storyId);
+    getStoryData()
   };
+
 
   const handleAddStory = async (values: any, setFieldValue: any) => {
     const hasValidStories = values.stories.some(
       (story: any) => story.storyText || story.storyLink || story.storyMedia
     );
-  
+
     if (!hasValidStories) {
       toasterError("Please add at least one story before submitting.");
       return;
     }
-  
+
     const updatedValues = {
       ...values,
       storyCoverImage: values.storyCoverImage,
@@ -93,7 +87,7 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup }) => {
         mediaUrl: story.storyMedia,
       })),
     };
-  
+
     try {
       const { data, success, error } = await API.post("story/create", updatedValues);
       if (success) {
@@ -108,7 +102,7 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup }) => {
       toasterError("An error occurred while posting the story");
     }
   };
-  
+
   const handleFileChange = async (
     e: React.ChangeEvent<HTMLInputElement>,
     setFieldValue: (field: string, value: any) => void,
@@ -180,7 +174,7 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup }) => {
       });
     }
   };
-console.log(storyMedia,"storyMedia")
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div className="max-h-[80vh] overflow-auto bg-[var(--sections)] border border-white/10 w-full max-w-[600px] rounded-[12px] shadow-lg">
@@ -197,7 +191,7 @@ console.log(storyMedia,"storyMedia")
         </div>
 
         {storyData && storyData.map((item: any, index: any) => (
-          <div className="mt-4 px-4"  key={index}>
+          <div className="mt-4 px-4" key={index}>
             <div className="gap-2 flex flex-row bg-[var(--bgh)] rounded-lg p-[10px] w-full placeholder:text-[var(--foreground)]">
               <img
                 src={item?.media_url}
@@ -213,7 +207,7 @@ console.log(storyMedia,"storyMedia")
               <button
                 className="text-gray-400 hover:text-gray-600 focus:outline-none"
                 aria-label="Close"
-                onClick={() => handleDeleteStories(item.id)}
+                onClick={() => handleDeleteStory(item.id)}
               >
                 <IoCloseCircle size={24} />
               </button>

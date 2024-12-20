@@ -31,8 +31,13 @@ export default function ProfileDetailCard({ data, type, buttonText, buttonIcon, 
     const [activeMenuItem, setActiveMenuItem] = useState('Friends');
 
     useEffect(()=>{
-        setUserImage(image)
-    },[image])
+        if(data.id==userId){
+            setUserImage(image)
+        }
+        else{
+            setUserImage(data.image)
+        }
+    },[image,data,userId])
 
     const toggleActionsMenu = () => {
         setOpenActionsMenu(prevState => !prevState);
@@ -128,10 +133,12 @@ export default function ProfileDetailCard({ data, type, buttonText, buttonIcon, 
                                         <div className="flex justify-center items-center w-full h-full">
                                             <Image src="/spinner.gif" alt="Loading..." className="w-12 h-12" height={50} width={50} />
                                         </div>
-                                    ) : (<img
+                                    ) : (
+                                    <img
                                         src={profileImage || 'profile-avatar-legacy-50.png'}
                                         className='w-full h-full object-cover runded-lg block' alt="dp" />)}
-                                    {data.id == userId && <span className='absolute left-4 top-4 rounded-lg bg-white p-2'>
+                                    {data.id == userId && 
+                                    <span className='absolute left-4 top-4 rounded-lg bg-white p-2'>
                                         <input className='top-0 left-0 absolute w-full h-full opacity-0 cursor-pointer'
                                             type="file" accept='image/*'
                                             onChange={handleUploadImage} />

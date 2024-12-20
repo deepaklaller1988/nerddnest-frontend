@@ -13,13 +13,16 @@ const CreatePostPopup = dynamic(() => import('../Modals/CreatePostModal'), { ssr
 import Image from "next/image";
 import { capitalizeName } from '@/utils/capitalizeName';
 import { useSelector } from 'react-redux';
+import { useRouter } from 'next/navigation';
 
 export default function PostFeed() {
+  const route=useRouter()
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isClient, setIsClient] = useState(false)
   const [popupType, setPopupType] = useState<string | null>(null);
   const popupRef = useRef<HTMLDivElement>(null);
   const firstName = useSelector((state: any) => state.auth.firstName) || "";
+  const userId = useSelector((state: any) => state.auth.id) || "";
   const lastName = useSelector((state: any) => state.auth.lastName) || "";
   const image = useSelector((state: any) => state.auth.image) || "";
 
@@ -47,7 +50,7 @@ export default function PostFeed() {
       <div className="bg-[var(--sections)] border border-white/5 rounded-[12px] mt-3">
         <div className="w-full">
           <section className="flex gap-4 cursor-pointer p-4">
-            <span className="min-w-12 min-h-12 max-w-12 max-h-12 rounded-full overflow-hidden block">
+            <span onClick={()=>route.push(`/users?id=${userId}`)} className="min-w-12 min-h-12 max-w-12 max-h-12 rounded-full overflow-hidden block">
               <Image
                 height={80}
                 width={80}
