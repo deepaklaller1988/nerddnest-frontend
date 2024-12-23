@@ -1,12 +1,14 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import {  toasterSuccess } from "@/components/core/Toaster";
-import AuthForm from "@/components/Forms/AuthForm";
+
 import useTitle from "@/hooks/useTitle";
+import { useApi } from "@/hooks/useAPI";
+import React, { useEffect, useState } from "react";
+import AuthForm from "@/components/Forms/AuthForm";
+
+import { getErrorMessage } from "@/utils/errorHandler";
+import {  toasterSuccess } from "@/components/core/Toaster";
 import { forgotValidationSchema } from "@/utils/validationSchemas";
 import { ForgotPasswordFormValues } from "@/types/authInterfaces";
-import { useApi } from "@/hooks/useAPI";
-import { getErrorMessage } from "@/utils/errorHandler";
 
 export default function ForgotPassword() {
   useTitle("Lost Password");

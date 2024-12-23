@@ -7,7 +7,7 @@ interface ConfirmationTextProps {
   text: string;
   buttontext?: string;
   type?: string;
-  error?:string
+  error?: string
 }
 
 export default function Confirmationtext({
@@ -30,8 +30,8 @@ export default function Confirmationtext({
         </div>
       </div>
       <div className="text-center justify-center items-center ">
-        
-        {type === "activation"   && !error && (
+
+        {type === "activation" && !error && (
           <button
             className="bg-blue-500 text-white rounded-xl p-4 mt-6"
             onClick={() => router.push("/home")}

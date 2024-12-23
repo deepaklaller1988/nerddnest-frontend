@@ -1,13 +1,13 @@
 "use client";
 
-import { toasterSuccess } from "@/components/core/Toaster";
-import AuthForm from "@/components/Forms/AuthForm";
+import { useApi } from "@/hooks/useAPI";
 import useTitle from "@/hooks/useTitle";
+import { useDispatch } from "react-redux";
+import AuthForm from "@/components/Forms/AuthForm";
 import { SignupFormValues } from "@/types/authInterfaces";
+import { toasterSuccess } from "@/components/core/Toaster";
 import { signupValidationSchema } from "@/utils/validationSchemas";
 import { setAuth, setUserId } from "@/redux/slices/auth.slice";
-import { useApi } from "@/hooks/useAPI";
-import { useDispatch } from "react-redux";
 import { getErrorMessage } from "@/utils/errorHandler";
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";

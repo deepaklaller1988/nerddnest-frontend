@@ -51,14 +51,12 @@ async function handle(res: any) {
   // Nothing to handle
   if (res.status == 200) return res;
 
-  // Error can't be handled by handler
   if (!res.error.code) {
     return toast(`An Error occurred | Code: ${res.status}`);
   }
 
   const error: IErrorHandler | undefined = errorCodes[res.error.code];
 
-  // Error not defined
   if (!error) {
     return toast(`${getErrorMessage(res.error.code)}`);
   }

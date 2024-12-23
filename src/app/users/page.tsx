@@ -1,14 +1,14 @@
 "use client"
-import ProfileDetailCard from '@/components/Cards/ProfileDetailCard'
-import { toasterError, toasterSuccess } from '@/components/core/Toaster';
-import Loader from '@/components/Loaders/Loader';
 import { useApi } from '@/hooks/useAPI';
+import { useSelector } from 'react-redux';
+import { BiUserPlus } from 'react-icons/bi'
+import Loader from '@/components/Loaders/Loader';
 import { useSearchParams } from 'next/navigation';
 import React, { Suspense, useEffect, useState } from 'react'
-import { BiUserPlus } from 'react-icons/bi'
-import { useSelector } from 'react-redux';
+import ProfileDetailCard from '@/components/Cards/ProfileDetailCard'
+import { toasterError, toasterSuccess } from '@/components/core/Toaster';
 
-const UserProfile=()=> {
+const UserProfile = () => {
     const { API } = useApi()
     const searchParams = useSearchParams();
     const friendId = searchParams.get("id");
@@ -42,7 +42,7 @@ const UserProfile=()=> {
                     ...prev,
                     request_status: 'Pending',
                 }));
-                toasterSuccess("Send Friend Request SuccessFully !", 2000, "id")              
+                toasterSuccess("Send Friend Request SuccessFully !", 2000, "id")
             } else {
                 toasterError(error || "Failed to post comment");
             }
@@ -55,8 +55,8 @@ const UserProfile=()=> {
     const cancelRequest = async () => {
         try {
             const { success, error } = await API.delete('friends/cancel-request', {
-                    userId,
-                    friendId
+                userId,
+                friendId
             });
             if (success) {
                 toasterSuccess('Friend request cancelled successfully!', 2000, 'id');
@@ -73,7 +73,7 @@ const UserProfile=()=> {
         }
     };
 
-    const unFriend=async()=>{
+    const unFriend = async () => {
 
     }
 
@@ -84,20 +84,20 @@ const UserProfile=()=> {
                 name="testing"
                 role={"Group"}
                 data={data}
-                buttonText={data?.request_status === 'Pending' ? 'Request Sent' :data?.request_status=== "Accepted" ? "UnFollow": 'Connect'}
+                buttonText={data?.request_status === 'Pending' ? 'Request Sent' : data?.request_status === "Accepted" ? "UnFollow" : 'Connect'}
                 buttonIcon={<BiUserPlus size="20" className='fill-white' />}
-                onButtonClick={data?.request_status === 'Pending' ? cancelRequest :data?.request_status === 'Accepted'? unFriend: connectUser}
-                />
+                onButtonClick={data?.request_status === 'Pending' ? cancelRequest : data?.request_status === 'Accepted' ? unFriend : connectUser}
+            />
         </>
     )
 }
 
 const ProfileWithSuspense = () => {
-  return (
-    <Suspense fallback={<div><Loader/></div>}>
-      <UserProfile />
-    </Suspense>
-  );
+    return (
+        <Suspense fallback={<div><Loader /></div>}>
+            <UserProfile />
+        </Suspense>
+    );
 };
 
 export default ProfileWithSuspense;

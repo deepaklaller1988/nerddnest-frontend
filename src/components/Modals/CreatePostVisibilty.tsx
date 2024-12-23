@@ -87,7 +87,7 @@ const VisibilityPopup: React.FC<VisibilityPopupProps> = ({
       setCurrentSelectedVisibility(selectedVisibility);
       if (selectedVisibility.id === "groups") {
         setSelectedGroup(selectedVisibility);
-        setShowGroupPopup(false); // Don't open the popup automatically if a group is selected
+        setShowGroupPopup(false); 
       }
     }
   }, [selectedVisibility]);
@@ -97,10 +97,10 @@ const VisibilityPopup: React.FC<VisibilityPopupProps> = ({
     if (option.id !== "groups") {
       toggleVisibilityPopup();
       setShowGroupPopup(false);
-      setSelectedGroup(null); // Clear selected group when choosing something other than group
+      setSelectedGroup(null); 
     }
     if (option.id === "groups") {
-      setShowGroupPopup(true); // Open the popup only when selecting "Group"
+      setShowGroupPopup(true);
     }
   };
 

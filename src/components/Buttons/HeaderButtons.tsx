@@ -7,15 +7,25 @@ import { IoMdArrowDropdownCircle } from "react-icons/io";
 import HeaderModal from "../Modals/HeaderModal";
 import IconButton from "./IconButton";
 import Sidebar from "../core/Sidebar";
+import Image from "next/image";
+import { useSelector } from "react-redux";
 
 type PopupType = "message" | "notification" | "sidebar" | null;
 
 export default function HeaderButtons() {
+  const image = useSelector((state: any) => state.auth.image)
+  const userId = useSelector((state: any) => state.auth.id);
+
   const [currentPopup, setCurrentPopup] = useState<PopupType | null>(null);
+  const [userImage, setUserImage] = useState("")
 
   const togglePopup = (type: PopupType) => {
     setCurrentPopup((prev) => (prev === type ? null : type));
   };
+
+  useEffect(() => {
+    setUserImage(image)
+  }, [userId, image])
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -36,7 +46,7 @@ export default function HeaderButtons() {
         document.removeEventListener("click", handleClickOutside);
       }
     };
-    
+
   }, [currentPopup]);
 
   const closePopup = () => {
@@ -72,7 +82,16 @@ export default function HeaderButtons() {
             className="bg-white rounded-full w-10 h-10 flex items-center justify-center"
           >
             <span className="min-w-10 min-h-10 max-w-10 max-h-10 rounded-full overflow-hidden block">
-              <img className="w-full block h-full" src="/logo.png" alt="logo" />
+              <Image
+                // layout="fill"
+                // objectFit="cover"
+                height={50}
+                width={50}
+                className="w-full h-full object-cover"
+                src={userImage ? userImage : "/profile-avatar-legacy-50.png"}
+                quality={100}
+                alt={"Image"}
+                priority />
             </span>
             <b className="absolute bottom-0 right-0 bg-white rounded-full">
               <IoMdArrowDropdownCircle />
@@ -404,7 +423,7 @@ export default function HeaderButtons() {
             //     </div>
             //   </section>
             // </div>
-            <Sidebar type="profile"/>
+            <Sidebar type="profile" />
           )}
         </div>
       </div>

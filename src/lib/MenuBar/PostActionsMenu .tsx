@@ -12,6 +12,7 @@ export const PostActionsMenu = ({
   deleted,
   postId,
   openEditModal
+  
 }: {
   isPinned: boolean;
   togglePin: () => void;

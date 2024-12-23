@@ -27,10 +27,7 @@ export const timeAgo = (date: any): string => {
   }
 
   export const  logLocalTime=(time:any) =>{
-    // Create a Date object from the UTC time
     const date = new Date(time);
-
-    // Format the time in 12-hour format (AM/PM)
     const options:any = { hour: 'numeric', minute: 'numeric', hour12: true };
     const localTime = date.toLocaleString('en-US', options);
 

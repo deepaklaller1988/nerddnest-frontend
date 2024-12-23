@@ -17,7 +17,7 @@ import { HiOutlineGif } from "react-icons/hi2";
 import { BiBarChartSquare } from "react-icons/bi";
 import { TiArrowSortedDown } from "react-icons/ti";
 import { IoDocumentAttach } from "react-icons/io5";
-import { uploadMultiFile } from "../core/UploadFile";
+import { uploadMultiFile } from "../../common/UploadFile";
 import { MdOutlineLinkedCamera } from "react-icons/md";
 import { HiOutlineVideoCamera } from "react-icons/hi2";
 import { IoDocumentAttachOutline, IoDocumentTextSharp } from "react-icons/io5";
@@ -26,10 +26,10 @@ import { setPostedData } from '../../redux/slices/data.slice';
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import { useApi } from "@/hooks/useAPI";
-import GifSearch from "../core/GifSearch";
+import GifSearch from "../core/Post/GifSearch";
 import { useDispatch, useSelector } from "react-redux";
 import { Field, Form, Formik } from "formik";
-import QuillEditor from "../core/QuillEditor";
+import QuillEditor from "../core/Post/QuillEditor";
 import MiniLoader from "../Loaders/Miniloader";
 
 import PopupHeader from "../Header/PopupHeader";
@@ -199,8 +199,6 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
       }
     }
   };
-
-
 
   const handleOnClick = (e: React.MouseEvent<SVGElement, MouseEvent>, name: any) => {
     if (name === "image" && !images) {
@@ -395,8 +393,8 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
   };
 
   const extractURLs = () => {
-    const plainText = quillRef.current.getEditor().getText().trim(); 
-    const urlRegex = /(https?:\/\/[^\s]+)/g; 
+    const plainText = quillRef.current.getEditor().getText().trim();
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
     const urls = plainText.match(urlRegex)
 
     return urls || []
@@ -407,7 +405,7 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
       toasterInfo("Please add some content or upload media before posting.", 3000, "id");
       return;
     }
-    const plainText = quillRef.current.getEditor().getText().trim(); 
+    const plainText = quillRef.current.getEditor().getText().trim();
     const urls = extractURLs();
     if (urls.length > 1) {
       toasterInfo("Only one URL can be included in the post. Please remove additional URLs.", 3000, "id");
@@ -418,8 +416,8 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
         userId: userId,
         postType: type,
         content: plainText,
-        mediaUrl: initialValues.mediaUrl,                                           
-        sharedLink: urls ? urls[0] :"",
+        mediaUrl: initialValues.mediaUrl,
+        sharedLink: urls ? urls[0] : "",
         visibility: selectedVisibility ? selectedVisibility.id : initialValues.visibility,
         scheduleTime: scheduleTime
       };
@@ -442,6 +440,7 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
     setPopupType("")
 
   };
+  
   return (
     <>
       <Formik

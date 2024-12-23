@@ -1,13 +1,13 @@
 "use client";
 
-import { toasterSuccess } from "@/components/core/Toaster";
-import AuthForm from "@/components/Forms/AuthForm";
 import useTitle from "@/hooks/useTitle";
-import { resetValidationSchema } from "@/utils/validationSchemas";
-import React, { Suspense, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
 import { useApi } from "@/hooks/useAPI";
 import { useDispatch } from "react-redux";
+import React, { Suspense, useState } from "react";
+import AuthForm from "@/components/Forms/AuthForm";
+import { toasterSuccess } from "@/components/core/Toaster";
+import { resetValidationSchema } from "@/utils/validationSchemas";
+import { useRouter, useSearchParams } from "next/navigation";
 import { setAuth, setUserId } from "@/redux/slices/auth.slice";
 import Loader from "@/components/Loaders/Loader";
 
@@ -44,8 +44,6 @@ function InnerResetPassword({ route }: { route: ReturnType<typeof useRouter> }) 
       toasterSuccess("Password changed successfully", 1000, "id");
       route.push("/home");
     }
-
-
 
   };
   return (

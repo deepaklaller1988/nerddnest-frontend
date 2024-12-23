@@ -7,7 +7,7 @@ import { IoMdAdd, IoMdSend } from "react-icons/io";
 import { HiOutlineChevronUpDown } from "react-icons/hi2";
 import { toasterError, toasterSuccess } from "../core/Toaster";
 import { useApi } from "@/hooks/useAPI";
-import { uploadFile } from "../core/UploadFile";
+import { uploadFile } from "../../common/UploadFile";
 import { useEffect, useState } from "react";
 import { IoCloseCircle } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";

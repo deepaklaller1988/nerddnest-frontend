@@ -1,6 +1,5 @@
 import React from "react";
 import Menu from "./Menu";
-import MenuList from "@/lib/MenuBar/SideMenu"
 import { MenuItemsProps } from "@/types/sidebarInterfaces";
 import User from "@/lib/MenuBar/SideMenu";
 import { useSelector } from "react-redux";

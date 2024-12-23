@@ -6,7 +6,7 @@ import { useApi } from '@/hooks/useAPI'
 import { FaCamera } from 'react-icons/fa6'
 import { useDispatch, useSelector } from 'react-redux'
 import { capitalizeName } from '@/utils/capitalizeName'
-import { uploadProfileImage } from '../core/UploadFile'
+import { uploadProfileImage } from '../../common/UploadFile'
 import { setUserId } from "../../redux/slices/auth.slice";
 import { MdMoreHoriz, MdOutlineExitToApp } from 'react-icons/md'
 import { UserProfileActionsMenu } from '@/lib/MenuBar/UserProfileActionsMenu'
@@ -81,7 +81,6 @@ export default function ProfileDetailCard({ data, type, buttonText, buttonIcon, 
                 return null;
         }
     };
-    console.log(data,"data-==========")
 
     const handleUploadImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];

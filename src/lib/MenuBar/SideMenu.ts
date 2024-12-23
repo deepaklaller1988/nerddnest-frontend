@@ -3,7 +3,7 @@ import { CgProfile } from "react-icons/cg";
 import { MdSettingsBrightness } from "react-icons/md";
 import { LiaCcDiscover } from "react-icons/lia";
 import { CgGames } from "react-icons/cg";
-import { IoMdLogOut } from "react-icons/io"; // Add logout icon
+import { IoMdLogOut } from "react-icons/io"; 
 
 
 export default class User {
