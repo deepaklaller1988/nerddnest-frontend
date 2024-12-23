@@ -1,6 +1,5 @@
 import React, { useRef, useState } from 'react'
 import { HiOutlineGif, HiOutlineVideoCamera } from "react-icons/hi2";
-import { CiFaceSmile } from "react-icons/ci";
 import { IoIosSend } from "react-icons/io";
 import ButtonFunction from './ButtonFunction';
 import { RxCross2 } from 'react-icons/rx';
@@ -9,14 +8,14 @@ import { toasterError, toasterInfo } from '../core/Toaster';
 import { useApi } from "@/hooks/useAPI";
 import { uploadMultiFile } from '../core/UploadFile';
 import { MdOutlineLinkedCamera } from 'react-icons/md';
-import { IoDocumentAttachOutline, IoPaperPlaneSharp } from 'react-icons/io5';
+import { IoDocumentAttachOutline } from 'react-icons/io5';
 import { BiBarChartSquare } from 'react-icons/bi';
 import CreatePostPopup from '../Modals/CreatePostModal';
 import { BsEmojiSmile } from 'react-icons/bs';
 import EmojiPicker from 'emoji-picker-react';
 import { useSelector } from 'react-redux';
 
-const MessageChatwindow = ({ id, data, isActive, commentsCount, updateCommentsCount }: any) => {
+const MessageChatwindow = ({ id, commentsCount, updateCommentsCount }: any) => {
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const [message, setMessage] = useState<string>("");
     const [images, setImages] = useState<File[]>([]);
@@ -29,7 +28,7 @@ const MessageChatwindow = ({ id, data, isActive, commentsCount, updateCommentsCo
     const [emoji, setEmoji] = useState(false);
     const [value, setValue] = useState<any>("");
     const [messageData, setMessageData] = useState<any>([]);
-    const [messageComment, setMessageComment] = useState<any>(false)
+    // const [messageComment, setMessageComment] = useState<any>(false)
     const { API } = useApi();
     const imageInputRef = useRef<HTMLInputElement | null>(null);
     const videoInputRef = useRef<HTMLInputElement | null>(null);

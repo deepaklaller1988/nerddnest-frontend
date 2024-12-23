@@ -318,5 +318,3 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup, onAddStory }) => {
 };
 
 export default CreateStoryModal;
-
-
