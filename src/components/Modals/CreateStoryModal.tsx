@@ -212,7 +212,7 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup, onAddStory }) => {
                                   <div className="p-6 rounded-xl border-dashed border-2 border-white/10">
                                     <label
                                       htmlFor={`file-upload-${index}`}
-                                      className="cursor-pointer py-4 px-6 rounded-md mt-4 flex flex-col gap-1 block text-center transition-all "
+                                      className="cursor-pointer py-4 px-6 rounded-md mt-4 flex-col gap-1 block text-center transition-all "
                                     >
                                       <span className="text-sm ">
                                         Drag & Drop your file here or

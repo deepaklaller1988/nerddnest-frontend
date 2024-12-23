@@ -551,8 +551,7 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
                       <button
                         type="button"
                         onClick={() => setSchedulePopupOpen(true)}
-                        className="text-white px-2 py-2 rounded-md flex items-center gap-1"
-                      >
+                        className="text-white px-2 py-2 rounded-md flex items-center gap-1">
                         <span>
                           <PiClockFill size={20} />
                         </span>
@@ -569,7 +568,7 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
                           } text-white rounded-md px-3 py-2`}
                       >
                         {scheduleTime ? "Schedule" : "Post"}
-                      </button>
+                      </button> 
                     </div>
                   </div>
                 </div>
