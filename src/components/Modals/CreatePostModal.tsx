@@ -547,8 +547,7 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
                         ) : null}
                       </div>
                     )}
-                  {/* {selectedName == "gif" && <GifSearch />}
-                  {selectedName == "poll" && <GifSearch />} */}
+                  {/* {selectedName == "poll" && <GifSearch />} */}
                   <div className="pt-4 flex justify-between border-t border-gray-500/10">
                     <IconSection selectedName={selectedName} type={type} />
                     <div className="flex items-center gap-1">
@@ -583,6 +582,7 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
           </Form>
         )}
       </Formik>
+      {selectedName == "gif" && <GifSearch />}
 
       <SchedulePostPopup
         isOpen={isSchedulePopupOpen}

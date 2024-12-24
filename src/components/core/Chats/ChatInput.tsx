@@ -119,7 +119,7 @@ export default function ChatInput() {
     };
 
     const handleEmojiSelect = (emoji: { emoji: string }) => {
-        setMessage(prevMessage => prevMessage + emoji.emoji);  
+        setMessage(prevMessage => prevMessage + emoji.emoji);
     };
 
     return (
@@ -135,13 +135,14 @@ export default function ChatInput() {
                         placeholder="Write a comment..."
                     />
                 </section>
-                <div className="border-t border-gray-500/10 flex justify-between items-center">
-                    {isUploadLoading &&
-                        <img src="/progress.gif" alt="Loading..." className="w-full h-20" />
-                    }
-                    {images.length > 0 && images.map((image, index) => (
-                        <section className="p-2 pb-4">
-                            <div className="relative mt-4 grid grid-cols-5 gap-2 uploaded-data">
+                <div className="border-t border-gray-500/10 flex flex-col justify-between items-center">
+                    <div className='w-full flex flex-row'>
+                        {isUploadLoading &&
+                            <img src="/progress.gif" alt="Loading..." className="w-full h-20" />
+                        }
+
+                        <div className="relative mt-4 grid grid-cols-12 gap-4 px-5 uploaded-data ">
+                            {images.length > 0 && images.map((image, index) => (
                                 <div key={index} className="relative uploaded-dataInner">
                                     {image instanceof File ? (
                                         <img
@@ -157,16 +158,12 @@ export default function ChatInput() {
                                         className="absolute top-0 right-0 text-red-500 cursor-pointer w-6 h-6 bg-white rounded-full z-10"
                                     />
                                 </div>
+                            ))}
+                        </div>
 
+                        {videos.length > 0 && videos.map((video, index) => (
 
-                            </div>
-                        </section>
-
-                    ))}
-                    {videos.length > 0 && videos.map((video, index) => (
-                        <section className="p-2 pb-4">
-
-                            <div className="relative mt-4 grid grid-cols-5 gap-2 uploaded-data">
+                            <div className="relative mt-4 grid grid-cols-12 gap-2 uploaded-data">
                                 <div key={index} className="relative uploaded-dataInner">
                                     {video instanceof File ? (
                                         <video
@@ -181,13 +178,11 @@ export default function ChatInput() {
                                     />
                                 </div>
                             </div>
-                        </section>
 
-                    ))}
-                    {files.length > 0 && files.map((file, index) => (
-                        <section className="p-2 pb-4">
+                        ))}
+                        {files.length > 0 && files.map((file, index) => (
 
-                            <div className="relative mt-4 grid grid-cols-5 gap-2 uploaded-data">
+                            <div className="relative mt-4 grid grid-cols-12 gap-2 uploaded-data">
                                 <div key={index} className="relative uploaded-dataInner">
                                     {file instanceof File ? (
                                         <a
@@ -204,54 +199,54 @@ export default function ChatInput() {
                                     />
                                 </div>
                             </div>
+
+                        ))}
+                    </div>
+
+                    <div className='flex flex-row justify-between items-center w-full'>
+                        <section className="p-4 pt-0 flex gap-4">
+                            <span className={`cursor-pointer ${(videos.length > 0 || files.length > 0) ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                                <MdOutlineLinkedCamera className="w-6 h-6 fill-green-600" onClick={() => handleMediaTypeSelection("image")} />
+                            </span>
+                            <span className={`cursor-pointer ${(images.length > 0 || files.length > 0) ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                                <HiOutlineVideoCamera className="w-6 h-6 stroke-yellow-500" onClick={() => handleMediaTypeSelection("videos")} />
+                            </span>
+                            <span className={`cursor-pointer ${(images.length > 0 || videos.length > 0) ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                                <IoDocumentAttachOutline className="w-6 h-6 stroke-rose-500" onClick={() => handleMediaTypeSelection("files")} />
+                            </span>
+                            <span className="cursor-pointer">
+                                <HiOutlineGif className="w-6 h-6 stroke-purple-700" />
+                            </span>
+                            <input
+                                type="file"
+                                name="images"
+                                ref={imageInputRef}
+                                accept="image/*"
+                                multiple
+                                className="hidden"
+                                onChange={handleFileChange}
+                            />
+                            <input
+                                type="file"
+                                ref={videoInputRef}
+                                accept="video/*"
+                                multiple
+                                name="video"
+                                className="hidden"
+                                onChange={handleFileChange}
+                            />
+                            <input
+                                type="file"
+                                name="file"
+                                ref={fileInputRef}
+                                accept="*/*"
+                                multiple
+                                className="hidden"
+                                onChange={handleFileChange}
+                            />
+
+
                         </section>
-
-                    ))}
-                    <section className="p-4 pt-0 flex gap-4">
-                        <span className={`cursor-pointer ${(videos.length > 0 || files.length > 0) ? 'opacity-50 cursor-not-allowed' : ''}`}>
-                            <MdOutlineLinkedCamera className="w-6 h-6 fill-green-600" onClick={() => handleMediaTypeSelection("image")} />
-                        </span>
-                        <span className={`cursor-pointer ${(images.length > 0 || files.length > 0) ? 'opacity-50 cursor-not-allowed' : ''}`}>
-                            <HiOutlineVideoCamera className="w-6 h-6 stroke-yellow-500" onClick={() => handleMediaTypeSelection("videos")} />
-                        </span>
-                        <span className={`cursor-pointer ${(images.length > 0 || videos.length > 0) ? 'opacity-50 cursor-not-allowed' : ''}`}>
-                            <IoDocumentAttachOutline className="w-6 h-6 stroke-rose-500" onClick={() => handleMediaTypeSelection("files")} />
-                        </span>
-                        <span className="cursor-pointer">
-                            <HiOutlineGif className="w-6 h-6 stroke-purple-700" />
-                        </span>
-                        <input
-                            type="file"
-                            name="images"
-                            ref={imageInputRef}
-                            accept="image/*"
-                            multiple
-                            className="hidden"
-                            onChange={handleFileChange}
-                        />
-                        <input
-                            type="file"
-                            ref={videoInputRef}
-                            accept="video/*"
-                            multiple
-                            name="video"
-                            className="hidden"
-                            onChange={handleFileChange}
-                        />
-                        <input
-                            type="file"
-                            name="file"
-                            ref={fileInputRef}
-                            accept="*/*"
-                            multiple
-                            className="hidden"
-                            onChange={handleFileChange}
-                        />
-
-
-                    </section>
-                    <div>
-
                         <section className="p-4 flex gap-4">
                             <CiFaceSmile onClick={handleEmojis} className="w-6 h-6 fill-green-800 mt-1" />
                             {emoji && (

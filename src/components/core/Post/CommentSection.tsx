@@ -15,6 +15,7 @@ import { FaTrash } from "react-icons/fa6";
 import { uploadMultiFile } from "../../../common/UploadFile";
 
 import { RxCross2 } from "react-icons/rx";
+import MiniLoader from "@/components/Loaders/Miniloader";
 
 type LikeData = {
   count: number;
@@ -407,12 +408,13 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
                   <IoPaperPlaneSharp className="fill-white" onClick={() => postComment(comment)} />
                 </button>
 
+                <section className="p-2 pb-4">
                 {isUploadLoading &&
                   <img src="/progress.gif" alt="Loading..." className="w-full h-20" />
                 }
-                {images.length > 0 && images.map((image, index) => (
-                  <section className="p-2 pb-4">
-                    <div className="relative mt-4 grid grid-cols-5 gap-2 uploaded-data">
+                {images.length > 0 &&
+                  <div className="relative mt-4 grid grid-cols-5 gap-2 uploaded-data">
+                    { images.map((image, index) => (
                       <div key={index} className="relative uploaded-dataInner">
                         {image instanceof File ? (
                           <img
@@ -428,16 +430,13 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
                           className="absolute top-0 right-0 text-red-500 cursor-pointer w-6 h-6 bg-white rounded-full z-10"
                         />
                       </div>
+                    ))}
 
+                  </div>
+}
+                  <div className="relative mt-4 grid grid-cols-5 gap-2 uploaded-data">
 
-                    </div>
-                  </section>
-
-                ))}
-                {videos.length > 0 && videos.map((video, index) => (
-                  <section className="p-2 pb-4">
-
-                    <div className="relative mt-4 grid grid-cols-5 gap-2 uploaded-data">
+                    {videos.length > 0 && videos.map((video, index) => (
                       <div key={index} className="relative uploaded-dataInner">
                         {video instanceof File ? (
                           <video
@@ -451,14 +450,11 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
                           className="absolute top-0 right-0 text-red-500 cursor-pointer w-6 h-6 bg-white rounded-full z-10"
                         />
                       </div>
-                    </div>
-                  </section>
+                    ))}
+                  </div>
+                  <div className="relative mt-4 grid grid-cols-5 gap-2 uploaded-data">
 
-                ))}
-                {files.length > 0 && files.map((file, index) => (
-                  <section className="p-2 pb-4">
-
-                    <div className="relative mt-4 grid grid-cols-5 gap-2 uploaded-data">
+                    {files.length > 0 && files.map((file, index) => (
                       <div key={index} className="relative uploaded-dataInner">
                         {file instanceof File ? (
                           <a
@@ -474,11 +470,9 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
                           className="absolute top-0 right-0 text-red-500 cursor-pointer w-6 h-6 bg-white rounded-full z-10"
                         />
                       </div>
-                    </div>
-                  </section>
-
-                ))}
-
+                    ))}
+                  </div>
+                </section>
                 <section className="p-4 pt-0 flex gap-4">
                   <span className={`cursor-pointer ${(videos.length > 0 || files.length > 0) ? 'opacity-50 cursor-not-allowed' : ''}`}>
                     <MdOutlineLinkedCamera className="w-6 h-6 fill-green-600" onClick={() => handleMediaTypeSelection("image")} />
