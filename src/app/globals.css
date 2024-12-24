@@ -433,16 +433,20 @@ label.customRadio input[type="radio"]:checked + span:before {
   max-height: 400px;
 }
 
-.gif-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+.gifSection {
+  position: absolute;
+  width: 250px;
+  bottom: 30px;
+  background: white;
+  padding: 10px;
+  border-radius: 10px;
+  max-height: 300px;
+  overflow: auto;
 }
 
-.gif-item img {
-  max-width: 200px;
-  max-height: 200px;
-  border-radius: 10px;
+.gifSection .thumbHub {
+  border-radius: 4px;
+  overflow: hidden;
 }
 section.stack section img, section.stack section video {
   aspect-ratio: 1/.8;

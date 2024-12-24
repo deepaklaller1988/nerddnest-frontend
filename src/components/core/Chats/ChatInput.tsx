@@ -9,6 +9,7 @@ import { uploadMultiFile } from '../../../common/UploadFile';
 import { toasterInfo } from '../Toaster';
 import { RxCross2 } from 'react-icons/rx';
 import EmojiPicker from 'emoji-picker-react';
+import GifSearch from '../Post/GifSearch';
 
 export default function ChatInput() {
     const { API } = useApi()
@@ -16,6 +17,7 @@ export default function ChatInput() {
     const videoInputRef: any = useRef(null);
     const fileInputRef: any = useRef(null);
     const emojiPickerRef = useRef<HTMLDivElement>(null);
+    const gifPickerRef = useRef<HTMLDivElement>(null);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const [emoji, setEmoji] = useState(false);
 
@@ -24,6 +26,7 @@ export default function ChatInput() {
     const [videos, setVideos] = useState<File[]>([]);
     const [files, setFiles] = useState<File[]>([]);
     const [message, setMessage] = useState<string>("");
+    const [gif, setGif] = useState(false);
 
     const [isUploadLoading, setIsUploadLoading] = useState(false);
     const [initialValues, setInitialValues] = useState()
@@ -47,6 +50,23 @@ export default function ChatInput() {
         };
     }, [emoji]);
 
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (
+                gifPickerRef.current &&
+                !gifPickerRef.current.contains(event.target as Node)
+            ) {
+                setGif(false);
+            }
+        };
+        if (gif) {
+            document.addEventListener("mousedown", handleClickOutside);
+        }
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [gif]);
+
 
     const getFileCount = (name: string): number => {
         if (name === "images") return images.length;
@@ -57,6 +77,11 @@ export default function ChatInput() {
     const handleEmojis = () => {
         setEmoji((prev) => !prev);
     };
+
+     const handlegif = () => {
+        setGif((prev) => !prev);
+    };
+
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name } = e.target;
         if (e.target.files) {
@@ -121,6 +146,9 @@ export default function ChatInput() {
     const handleEmojiSelect = (emoji: { emoji: string }) => {
         setMessage(prevMessage => prevMessage + emoji.emoji);
     };
+    const handleGifSelect = (gif: { gif: string }) => {
+        setMessage(prevMessage => prevMessage + gif.gif);
+    };
 
     return (
         <div className="mt-3">
@@ -128,7 +156,7 @@ export default function ChatInput() {
 
                 <section className="flex gap-4 cursor-pointer p-4">
                     <textarea
-                        className="text-white/50 resize-none bg-transparent w-full p-2 px-5 flex items-center text-gray-500/70"
+                        className="resize-none bg-transparent w-full p-2 px-5 flex items-center text-gray-500/70"
                         ref={textareaRef}
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
@@ -214,8 +242,9 @@ export default function ChatInput() {
                             <span className={`cursor-pointer ${(images.length > 0 || videos.length > 0) ? 'opacity-50 cursor-not-allowed' : ''}`}>
                                 <IoDocumentAttachOutline className="w-6 h-6 stroke-rose-500" onClick={() => handleMediaTypeSelection("files")} />
                             </span>
-                            <span className="cursor-pointer">
-                                <HiOutlineGif className="w-6 h-6 stroke-purple-700" />
+                            <span className="cursor-pointer relative">
+                                <HiOutlineGif onClick={handlegif}  className="w-6 h-6 stroke-purple-700" />
+                                {gif && <div className='gifSection'><GifSearch /></div>}
                             </span>
                             <input
                                 type="file"
@@ -260,6 +289,7 @@ export default function ChatInput() {
                                     />
                                 </div>
                             )}
+                           
                             <div className="p-1 bg-blue-800 rounded-full">
                                 <IoIosSend className="w-6 h-6 fill-white" />
                             </div>
