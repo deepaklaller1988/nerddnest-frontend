@@ -1,17 +1,31 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import MessageSidebar from "@/components/Sidebar/MessageSidebar";
 import ChatWindow from "@/components/core/Chats/ChatWindow";
 
-
 const ChatInterface = () => {
+
+  const [activeChatId, setActiveChatId] = useState(0);
+  const [chatData, setChatData] = useState<any>([
+    { id: "1", firstname: "indu", lastname: "dhiman", image: "", date: "12-2-2023" },
+    { id: "2", firstname: "anup", lastname: "kumar", image: "", date: "12-2-2023" }
+  ])
+
+  const [isHandleClickActive, setIsHandleClickActive] = useState<boolean>(false);
+
+  const handleEditClick = () => {
+    setIsHandleClickActive((prev) => !prev); 
+  };
+
+  const handleChatClick = (index: any) => {
+    setActiveChatId(index);
+  };
+
   return (
     <div className="messageSetInner">
       <div className="message flex h-full bg-white/10 overlap-hidden">
-        {/* Sidebar */}
-        <MessageSidebar />
-        {/* Chat Window */}
-        <ChatWindow />
+        <MessageSidebar chatData={chatData} activeChatId={activeChatId} onChatSelect={handleChatClick} onIconClick={handleEditClick}  isHandleClickActive={isHandleClickActive}/>
+        <ChatWindow activeChatId={activeChatId}  isHandleClickActive={isHandleClickActive} setIsHandleClickActive={setIsHandleClickActive}/>
       </div>
     </div>
   );

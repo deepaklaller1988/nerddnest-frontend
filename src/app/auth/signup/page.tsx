@@ -4,7 +4,6 @@ import { useApi } from "@/hooks/useAPI";
 import useTitle from "@/hooks/useTitle";
 import { useDispatch } from "react-redux";
 import AuthForm from "@/components/Forms/AuthForm";
-import { SignupFormValues } from "@/types/authInterfaces";
 import { toasterSuccess } from "@/components/core/Toaster";
 import { signupValidationSchema } from "@/utils/validationSchemas";
 import { setAuth, setUserId } from "@/redux/slices/auth.slice";
@@ -27,7 +26,7 @@ const Signup = () => {
   const [isClient, setIsClient] = useState(false);
   const [isLoading, setLoading] = useState(false);
 
-  const initialValues: SignupFormValues = {
+  const initialValues: any = {
     email: "",
     confirmemail: "",
     password: "",

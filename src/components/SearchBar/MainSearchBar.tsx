@@ -21,7 +21,7 @@ export default function MainSearchBar() {
       getSearchData()
     }
     else {
-      setResults([]); // Clear results if the search term is empty
+      setResults([]); 
     }
   }, [searchTerm, userId])
 

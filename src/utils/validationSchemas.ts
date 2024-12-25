@@ -1,4 +1,3 @@
-import { MenuHTMLAttributes } from "react";
 import * as Yup from "yup";
 
 const passwordRegex =
@@ -6,6 +5,10 @@ const passwordRegex =
 
 const emailValidation = Yup.string()
   .email("Invalid email format")
+  .matches(
+    /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, 
+    "Invalid email format (example: username@domain.com)"
+  )
   .required("Email is Required");
 
 const passwordValidation = Yup.string()

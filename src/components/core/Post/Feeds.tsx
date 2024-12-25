@@ -60,7 +60,8 @@ export default function Feeds() {
 // import { IoPaperPlaneSharp } from "react-icons/io5";
 // import Link from "next/link";
 // import Image from "next/image";
-// import FeedSearchBar from "../SearchBar/FeedSearchBar";
+// import FeedSearchBar from "@/components/SearchBar/FeedSearchBar";
+
 
 // export default function Feeds() {
 //   const [isOpen, setIsOpen] = useState(false);

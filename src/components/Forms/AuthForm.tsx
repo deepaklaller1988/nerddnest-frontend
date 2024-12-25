@@ -2,7 +2,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { FiMail, FiLock } from "react-icons/fi";
-import { AuthFormProps, AuthFormValues } from "@/types/authInterfaces";
 import { useState } from "react";
 import TermsOfServicePopup from "../Modals/Terms&Services";
 import { Formik, Form, Field, ErrorMessage } from "formik";
@@ -12,7 +11,7 @@ import {  usePathname, useSearchParams } from "next/navigation";
 import Confirmationtext from "../Modals/Confirmationtext";
 
 
-const AuthForm = <T extends AuthFormValues>({
+const AuthForm = ({
   type,
   initialValues,
   validationSchema,
@@ -23,7 +22,7 @@ const AuthForm = <T extends AuthFormValues>({
   handleResendActivationEmail,
   sucessActivationEmail,
   isLoading
-}: AuthFormProps<T>) => {
+}: any) => {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
   const Type = searchParams.get("type") || "";

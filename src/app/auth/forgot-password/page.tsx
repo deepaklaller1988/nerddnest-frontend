@@ -8,7 +8,6 @@ import AuthForm from "@/components/Forms/AuthForm";
 import { getErrorMessage } from "@/utils/errorHandler";
 import {  toasterSuccess } from "@/components/core/Toaster";
 import { forgotValidationSchema } from "@/utils/validationSchemas";
-import { ForgotPasswordFormValues } from "@/types/authInterfaces";
 
 export default function ForgotPassword() {
   useTitle("Lost Password");
@@ -17,7 +16,7 @@ export default function ForgotPassword() {
   const [isLoading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const [initialValues] = useState<ForgotPasswordFormValues>({
+  const [initialValues] = useState<any>({
     email: "",
   });
   

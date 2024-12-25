@@ -30,7 +30,7 @@ const PopupBlockReport: React.FC<DeletePopupProps> = ({ handlePopup, type }) => 
                                 <p className='text-black'>Please confirm you want to block this member.</p>
                                 <ul className="mt-3 text-black">
                                     You will no longer be able to:
-                                    <li className="mt-3 text-black">See blocked member's posts</li>
+                                    <li className="mt-3 text-black">See blocked members posts</li>
                                     <li className='text-black'>Mention this member in posts</li>
                                     <li className='text-black'>Invite this member to groups</li>
                                     <li className='text-black'>Message this member</li>

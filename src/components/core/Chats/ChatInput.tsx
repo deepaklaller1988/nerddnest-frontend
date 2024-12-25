@@ -78,7 +78,7 @@ export default function ChatInput() {
         setEmoji((prev) => !prev);
     };
 
-     const handlegif = () => {
+    const handlegif = () => {
         setGif((prev) => !prev);
     };
 
@@ -153,10 +153,9 @@ export default function ChatInput() {
     return (
         <div className="mt-3">
             <div className="w-full">
-
                 <section className="flex gap-4 cursor-pointer p-4">
                     <textarea
-                        className="resize-none bg-transparent w-full p-2 px-5 flex items-center text-gray-500/70"
+                        className="resize-none bg-transparent w-full p-2 px-5 flex items-center text-white"
                         ref={textareaRef}
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
@@ -191,8 +190,8 @@ export default function ChatInput() {
 
                         {videos.length > 0 && videos.map((video, index) => (
 
-                            <div className="relative mt-4 grid grid-cols-12 gap-2 uploaded-data">
-                                <div key={index} className="relative uploaded-dataInner">
+                            <div key={index} className="relative mt-4 grid grid-cols-12 gap-2 uploaded-data">
+                                <div className="relative uploaded-dataInner">
                                     {video instanceof File ? (
                                         <video
                                             controls
@@ -209,9 +208,8 @@ export default function ChatInput() {
 
                         ))}
                         {files.length > 0 && files.map((file, index) => (
-
-                            <div className="relative mt-4 grid grid-cols-12 gap-2 uploaded-data">
-                                <div key={index} className="relative uploaded-dataInner">
+                            <div key={index} className="relative mt-4 grid grid-cols-12 gap-2 uploaded-data">
+                                <div className="relative uploaded-dataInner">
                                     {file instanceof File ? (
                                         <a
                                             href={URL.createObjectURL(file)}
@@ -243,7 +241,7 @@ export default function ChatInput() {
                                 <IoDocumentAttachOutline className="w-6 h-6 stroke-rose-500" onClick={() => handleMediaTypeSelection("files")} />
                             </span>
                             <span className="cursor-pointer relative">
-                                <HiOutlineGif onClick={handlegif}  className="w-6 h-6 stroke-purple-700" />
+                                <HiOutlineGif onClick={handlegif} className="w-6 h-6 stroke-purple-700" />
                                 {gif && <div className='gifSection'><GifSearch /></div>}
                             </span>
                             <input
@@ -289,7 +287,7 @@ export default function ChatInput() {
                                     />
                                 </div>
                             )}
-                           
+
                             <div className="p-1 bg-blue-800 rounded-full">
                                 <IoIosSend className="w-6 h-6 fill-white" />
                             </div>

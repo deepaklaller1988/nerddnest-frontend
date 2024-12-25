@@ -5,13 +5,14 @@ const GifSearch = () => {
   const [gifs, setGifs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<any>(null);
+  const url = process.env.NEXT_PUBLIC_GIF_API;
 
   useEffect(() => {
     const fetchTrendingGifs = async () => {
       setLoading(true);
       try {
         const response = await fetch(
-          "https://api.giphy.com/v1/gifs/trending?api_key=QV1Ct5jaIOieqWjObXgVOue3QQQuj6LR"
+          `https://api.giphy.com/v1/gifs/trending?api_key=${url}`
         );
         const gifData = await response.json();
         console.log("GIF Data :- ", gifData);
@@ -34,6 +35,7 @@ const GifSearch = () => {
         {gifs.map((gif: any) => (
           <div key={gif.id} className="thumbHub w-full flex justify-center ">
             <img
+            onClick={gif.title}
               src={gif.images.fixed_height.url}
               alt={gif.title}
               className="w-full max-w-[140px] md:max-w-[200px] lg:max-w-[220px] "

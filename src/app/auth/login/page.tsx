@@ -6,7 +6,6 @@ import useTitle from "@/hooks/useTitle";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import AuthForm from "@/components/Forms/AuthForm";
-import { LoginFormValues } from "@/types/authInterfaces";
 import {  toasterSuccess } from "@/components/core/Toaster";
 import { loginValidationSchema } from "@/utils/validationSchemas";
 import { setAuth, setUserId } from "@/redux/slices/auth.slice";
@@ -24,7 +23,7 @@ const Login = () => {
   const { API } = useApi();
   const dispatch = useDispatch();
 
-  const [initialValues, setInitialValues] = useState<LoginFormValues>({
+  const [initialValues, setInitialValues] = useState<any>({
     email: "",
     password: "",
   });

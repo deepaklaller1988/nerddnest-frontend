@@ -1,45 +1,46 @@
-import React from 'react'
-import { FaSearch } from 'react-icons/fa'
+import MessageSearchBar from '../SearchBar/MessageSearchBar'
+import { TbMessageCircleOff } from "react-icons/tb";
+import { capitalizeName } from '@/utils/capitalizeName';
+import { FaEdit } from "react-icons/fa";
 
-export default function MessageSidebar() {
+export default function MessageSidebar({ chatData, activeChatId, onChatSelect ,onIconClick , isHandleClickActive }: any) {
   return (
     <div className="w-1/4 bg-[var(--sections)] border-r border-white/20">
-          <h2 className="text-xl font-semibold text-white p-4 py-7 pb-8">
-            Messages
-          </h2>
-          <div className="w-full bg-white/10 border-b border-white/5 px-4 py-2 relative">
-            <input
-              type="text"
-              className="w-full bg-white/0 py-2 placeholder:font-semibold placeholder:text-[var(--foreground)] pr-5"
-              placeholder="Search here..."
-            />
-            <button className="absolute right-7 top-5"><FaSearch /></button>
-          </div>
-          <div className="space-y-2 border-b border-white/5 border-r-4 hover:bg-white/5 border-r-white bg-white/10 duration-[.3s]">
-            <div className="flex items-center space-x-2 p-4 cursor-pointer">
-              <div className="w-10 h-10 min-w-10 min-h-10 rounded-full overflow-hidden border border-white">
-                <img src="dp.jpg" alt="dp" />
-              </div>
-              <div className="w-full relative">
-                <p className="font-semibold text-white">Alvin Marcos</p>
-                <p className="">You: hii</p>
-                <p className="text-xs absolute bottom-0 right-0">Tuesday</p>
-              </div>
+      <h2 className="flex flex-row gap-4 text-xl font-semibold text-white p-4 py-7 pb-8">
+        Messages 
+        
+        {!isHandleClickActive && <FaEdit size={16} fill='white' onClick={onIconClick }/>}
+      </h2>
+      <MessageSearchBar />
+
+      {chatData && chatData.length > 0 ? chatData.map((item: any, index: any) => (
+        <div key={index}
+          onClick={()=>onChatSelect(index) }
+          className={`space-y-2 border-b border-white/5 hover:bg-white/5 bg-white/10 duration-[.3s] ${activeChatId === index ? 'border-r-4 border-r-white' : ''
+            }`}
+        >
+          <div className="flex items-center space-x-2 p-4 cursor-pointer">
+            <div className="w-10 h-10 min-w-10 min-h-10 rounded-full overflow-hidden border border-white">
+              <img src="dp.jpg" alt="dp" />
             </div>
-          </div>
-          <div className="space-y-2 border-b border-white/5 border-r-4 hover:bg-white/5 bg-white/10 duration-[.3s]">
-            <div className="flex items-center space-x-2 p-4 cursor-pointer">
-              <div className="w-10 h-10 min-w-10 min-h-10 rounded-full overflow-hidden border border-white">
-                <img src="dp.jpg" alt="dp" />
-              </div>
-              <div className="w-full relative">
-                <p className="font-semibold text-white">Alvin Marcos</p>
-                <p className="">You: hii</p>
-                <p className="text-xs absolute bottom-0 right-0">Tuesday</p>
-              </div>
+            <div className="w-full relative">
+              <p className="font-semibold text-white">{capitalizeName(item.firstname)}  {capitalizeName(item.lastname)}</p>
+              <p className="">You: hii</p>
+              <p className="text-xs absolute bottom-0 right-0">Tuesday</p>
             </div>
           </div>
         </div>
+      ))
+
+        :
+        <div className='mt-10 flex flex-col justify-center items-center'>
+          <TbMessageCircleOff size={40} />
+          <h3>No Messages</h3>
+          <p>When you have new messages, they will appear here.</p>
+        </div>
+      }
+
+    </div>
 
   )
 }
