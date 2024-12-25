@@ -6,7 +6,6 @@ import PopupHeader from '../Header/PopupHeader';
 import Image from 'next/image';
 import { capitalizeName } from '@/utils/capitalizeName';
 import { useDispatch, useSelector } from 'react-redux';
-import QuillEditor from '../core/Post/QuillEditor';
 import EmojiPicker from 'emoji-picker-react';
 import { FiFile } from "react-icons/fi";
 import { RxCross2 } from "react-icons/rx";
@@ -33,6 +32,7 @@ import { GoGlobe } from 'react-icons/go';
 import { CiCamera, CiVideoOff, CiVideoOn } from 'react-icons/ci';
 import { TiArrowSortedDown } from 'react-icons/ti';
 import SchedulePostPopup from './SchedulePostModal';
+import QuillEditor from '../Post/QuillEditor';
 
 const EditPostModal = ({ postId, onClose,
 }: { postId: any; onClose: () => void }) => {

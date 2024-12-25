@@ -1,5 +1,4 @@
 import React from 'react';
-import { TabContentProps } from '@/types/sidebarInterfaces';
 import ViewButton from '../Buttons/ViewButtons';
 import Loader from '../Loaders/Loader';
 import { useRouter } from 'next/navigation';
@@ -14,7 +13,7 @@ const TabContent = <T extends string, Item>({
   activeTab,
   renderItem,
   
-}: TabContentProps<T, Item>) => {
+}: any) => {
   const router=useRouter()
   
   const handleClick = () => {
@@ -28,7 +27,7 @@ const TabContent = <T extends string, Item>({
       
       <div className="w-full">
         <section className="border-b border-[var(--foreground)] flex gap-4 mb-4">
-          {tabs && onTabSwitch && tabs.map((tab) => (
+          {tabs && onTabSwitch && tabs.map((tab:any) => (
             <button
               key={tab.tabName}
               onClick={() => onTabSwitch(tab.tabName)}

@@ -1,9 +1,8 @@
 "use client";
-import { ViewButtonProps } from "@/types/buttonInterface";
 import React from "react";
 import { FiArrowRight } from "react-icons/fi";
 
-const ViewButton= ({ name, onClick, className }:ViewButtonProps) => {
+const ViewButton= ({ name, onClick, className }:any) => {
   return (
     <button
       onClick={onClick}

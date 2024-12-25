@@ -1,11 +1,10 @@
 import Link from 'next/link';
 import React, { useState } from 'react';
 
-import { MenuItemProp } from '@/types/sidebarInterfaces';
 import { IoIosArrowDown, IoMdArrowDropright } from 'react-icons/io';
 import { useLogoutUser } from '@/utils/logout';
 
-const Menu: React.FC<MenuItemProp> = ({ name, icon, links, isOpen, onToggle }) => {
+const Menu: React.FC<any> = ({ name, icon, links, isOpen, onToggle }) => {
   const [active, setActive] = useState(false);
   const logout = useLogoutUser()
 
@@ -37,7 +36,7 @@ const Menu: React.FC<MenuItemProp> = ({ name, icon, links, isOpen, onToggle }) =
       </section>
       {links && isOpen && (
         <section className="bg-black/10 duration-[.5s] max-h-[100vh] overflow-hidden">
-          {links.map((link, idx) => (
+          {links.map((link:any, idx:any) => (
             <div key={idx}>
               <Link className="hover:bg-gray-200" href={link.href} legacyBehavior>
                 <a className="flex items-center gap-2 px-4 py-2 ">

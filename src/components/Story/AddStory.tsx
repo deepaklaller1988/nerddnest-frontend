@@ -1,14 +1,14 @@
 "use client"
 import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
-import CreateStoryModal from "../../Modals/CreateStoryModal";
+import CreateStoryModal from "../Modals/CreateStoryModal";
 import Image from "next/image";
 import { useApi } from "@/hooks/useAPI";
 import { useSelector } from "react-redux";
-import StoryDetailModal from "../../Modals/StoryDetailModal";
-import { selectStoryData } from '../../../redux/slices/data.slice';
+import StoryDetailModal from "../Modals/StoryDetailModal";
+import { selectStoryData } from '../../redux/slices/data.slice';
 import { capitalizeName } from "@/utils/capitalizeName";
-import { toasterError, toasterSuccess } from "../Toaster";
+import { toasterError, toasterSuccess } from "../core/Toaster";
 
 export default function AddStory() {
   const { API } = useApi()

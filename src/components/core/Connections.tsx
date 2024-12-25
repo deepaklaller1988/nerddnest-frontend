@@ -59,7 +59,7 @@ const Connections = () => {
       ]}
       onTabSwitch={handleTabSwitch}
       activeTab={activeTab}
-      renderItem={(connection) => <ConnectionItem key={connection.name} {...connection} />}
+      renderItem={(connection:any) => <ConnectionItem key={connection.name} {...connection} />}
       viewAllText="View All"
     />
   );

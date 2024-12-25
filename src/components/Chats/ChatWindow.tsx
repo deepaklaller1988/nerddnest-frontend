@@ -6,28 +6,27 @@ import { MessageActionsMenu } from '@/lib/MenuBar/MessageActionMenu';
 import { capitalizeName } from '@/utils/capitalizeName';
 import { useApi } from '@/hooks/useAPI';
 import { useSelector } from 'react-redux';
+import Multiselect from 'multiselect-react-dropdown';
 
 export default function ChatWindow({ activeChatId, data, isHandleClickActive, setIsHandleClickActive }: any) {
     const { API } = useApi()
-    const [options, setOptions] = useState<boolean>(false);
-    const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
     const userId = useSelector((state: any) => state.auth.id);
 
+    const [options, setOptions] = useState<boolean>(false);
     const [results, setResults] = useState<any>([]);
     const [searchTerm, setSearchTerm] = useState<string>("");
-    const handleToggleReadUnread = (data: any) => {
-    }
-    const openBlockModal = (data: any) => {
-    }
-    const openReportModal = (data: any) => { }
-    const handleToggleArchieveUnArc = (data: any) => { }
+    const [selectedUsers, setSelectedUsers] = useState<any[]>([]);
+    const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+    const handleToggleReadUnread = (data: any) => {}
+    const openBlockModal = (data: any) => {}
+    const openReportModal = (data: any) => {}
+    const handleToggleArchieveUnArc = (data: any) => {}
     const handleMouseLeave = () => setHoveredIndex(null);
     const handleMouseEnter = (index: number) => setHoveredIndex(index);
     const handleButtonPopup = () => {
         setOptions(!options);
     };
-
-
+console.log(results,"=======res")
     useEffect(() => {
         if (searchTerm && userId) {
             getSearchData()
@@ -90,6 +89,10 @@ export default function ChatWindow({ activeChatId, data, isHandleClickActive, se
         setIsHandleClickActive(false)
     }
 
+    const handleSelectChange = (selected: any) => {
+        setSelectedUsers(selected);
+    };
+    
     return (
         <div className="flex-1 flex flex-col bg-[var(--sections)]">
             <div className="flex items-center justify-between gap-6 border-b border-white/5 p-4">
@@ -162,8 +165,8 @@ export default function ChatWindow({ activeChatId, data, isHandleClickActive, se
                 }
             </div>
             {searchTerm && (
-                <div className="w-full overflow-y-auto overflow-x-hidden rounded-lg bg-white absolute mt-1 max-h-[500px]">
-                    {results.length > 0 ? (
+                <div className="w-96 overflow-y-auto overflow-x-hidden rounded-lg bg-white absolute mt-20 max-h-[500px]">
+                    {/* {results.length > 0 ? (
                         results.map((result: any, index: any) => (
                             <section
                                 key={index}
@@ -173,57 +176,63 @@ export default function ChatWindow({ activeChatId, data, isHandleClickActive, se
                                     <img src={result.image || "/profile-avatar-legacy-50.png"} alt="Image" />
                                 </span>
                                 <div className="w-full"
-                                // onClick={() => handleClick(result.id)}
+                                onClick={() => handleClick(result.id)}
                                 >
                                     <b className="text-[var(--highlight)]" >{capitalizeName(result.firstname)}  {capitalizeName(result.lastname)}</b>
-                                    <p>{result.description}</p>
-                                    {/* <div className="flex flex-wrap gap-x-2 text-[13px] text-black/30">
-                    <span>By {result.author}</span>
-                    <span className="middot">·</span>
-                    <span>{result.date}</span>
-                  </div> */}
+
                                 </div>
                             </section>
+
+                            <Multiselect
+                            options={results} // Options to display in the dropdown
+                            onSelect={handleSelectChange} 
+                            displayValue="firstname" 
+                            selectedValues={result?.filter((item: any) =>
+                                selectedUsers.includes(item.id)
+                              )}
+                            />
+                            
+                     
                         ))
                     ) : (
                         <div className="p-4 text-center text-gray-500">No results found.</div>
-                    )}
-
-                    {/* {results.length > 1 && <ViewButton
-            onClick={handleViewAll}
-            name="View All"
-            className="sticky bottom-0 bg-white font-semibold w-full p-4 text-center flex gap-2 items-center justify-center text-[var(--highlight-blue)] hover:text-[--highlight]"
-          /> } */}
+                    )}                  */}
                 </div>
             )}
+
             {/* Messages */}
             <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-4 bg-white/10 border-b border-white/5">
-                <div className="text-center text-gray-500 text-sm relative border-t border-white/5 mt-5 pb-5">
-                    <b className="absolute bg-[var(--highlght-hover)] rounded-full top-[-10px] px-3 text-sm text-white">Friday</b>
-                </div>
-                {messages &&
-                    messages.length > 0 &&
-                    messages.map((item: any, index: any) => (
-                        <div
-                            key={index}
-                            className={`w-full ${item.type === "sender" ? "sender flex justify-end" : "receiver"}`}
-                        >
-                            <div
-                                className={`inline-flex items-start space-x-3 rounded-xl p-4 max-w-[80%] ${item.type === "sender" ? "bg-black/20" : "bg-[var(--sections)]"
-                                    }`}
-                            >
-                                {item.type === "receiver" && (
-                                    <div className="min-w-10 min-h-10 max-w-10 max-h-10 bg-white rounded-full overflow-hidden border border-white">
-                                        <img src={item.sender.image} alt="dp" />
-                                    </div>
-                                )}
-                                <div>
-                                    <p className={item.type === "receiver" ? "text-white" : ""}>{item.text}</p>
-                                    <p className="text-xs text-gray-400 text-right relative top-2">{item.timestamp}</p>
-                                </div>
-                            </div>
+                {!isHandleClickActive &&
+                    <>
+
+                        <div className="text-center text-gray-500 text-sm relative border-t border-white/5 mt-5 pb-5">
+                            <b className="absolute bg-[var(--highlght-hover)] rounded-full top-[-10px] px-3 text-sm text-white">Friday</b>
                         </div>
-                    ))}
+                        {messages &&
+                            messages.length > 0 &&
+                            messages.map((item: any, index: any) => (
+                                <div
+                                    key={index}
+                                    className={`w-full ${item.type === "sender" ? "sender flex justify-end" : "receiver"}`}
+                                >
+                                    <div
+                                        className={`inline-flex items-start space-x-3 rounded-xl p-4 max-w-[80%] ${item.type === "sender" ? "bg-black/20" : "bg-[var(--sections)]"
+                                            }`}
+                                    >
+                                        {item.type === "receiver" && (
+                                            <div className="min-w-10 min-h-10 max-w-10 max-h-10 bg-white rounded-full overflow-hidden border border-white">
+                                                <img src={item.sender.image} alt="dp" />
+                                            </div>
+                                        )}
+                                        <div>
+                                            <p className={item.type === "receiver" ? "text-white" : ""}>{item.text}</p>
+                                            <p className="text-xs text-gray-400 text-right relative top-2">{item.timestamp}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                    </>
+                }
             </div>
             <ChatInput />
         </div>

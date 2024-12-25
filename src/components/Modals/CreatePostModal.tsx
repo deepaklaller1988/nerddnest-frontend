@@ -26,10 +26,10 @@ import { setPostedData } from '../../redux/slices/data.slice';
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import { useApi } from "@/hooks/useAPI";
-import GifSearch from "../core/Post/GifSearch";
+import GifSearch from "../Post/GifSearch";
 import { useDispatch, useSelector } from "react-redux";
 import { Field, Form, Formik } from "formik";
-import QuillEditor from "../core/Post/QuillEditor";
+import QuillEditor from "../Post/QuillEditor";
 import MiniLoader from "../Loaders/Miniloader";
 
 import PopupHeader from "../Header/PopupHeader";

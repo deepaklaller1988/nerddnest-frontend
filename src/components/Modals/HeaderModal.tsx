@@ -1,10 +1,9 @@
 "use client";
 import React from "react";
 import { useRouter } from "next/navigation";
-import { HeaderModalProps } from "@/types/headerInterface";
 import ViewButton from "../Buttons/ViewButtons";
 
-export default function HeaderModal({ type, closePopup }: HeaderModalProps) {
+export default function HeaderModal({ type, closePopup }: any) {
   const router = useRouter();
 
   const handleRoute = () => {

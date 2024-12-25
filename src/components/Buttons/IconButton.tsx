@@ -1,7 +1,6 @@
 import React from "react";
-import IconButtonProps from "@/types/iconInterface";
 
-const IconButton = ({ icon, className, onClick }: IconButtonProps) => {
+const IconButton = ({ icon, className, onClick }: any) => {
   return (
     <button onClick={onClick} className={className}>
       {icon}

@@ -8,7 +8,7 @@ import { HiOutlineVideoCamera } from "react-icons/hi2";
 import { IoDocumentAttachOutline } from "react-icons/io5";
 import { HiOutlineGif } from "react-icons/hi2";
 import { BiBarChartSquare } from "react-icons/bi";
-const CreatePostPopup = dynamic(() => import("../../../components/Modals/CreatePostModal"), { ssr: false });
+const CreatePostPopup = dynamic(() => import("../Modals/CreatePostModal"), { ssr: false });
 
 import Image from "next/image";
 import { capitalizeName } from '@/utils/capitalizeName';

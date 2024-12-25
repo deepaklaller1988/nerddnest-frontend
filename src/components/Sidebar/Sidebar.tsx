@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import MenuItems from "./MenuItems";
+import MenuItems from "../core/MenuItems";
 import Image from "next/image";
 import { useApi } from "@/hooks/useAPI";
 

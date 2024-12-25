@@ -1,10 +1,9 @@
 import React from "react";
 import Menu from "./Menu";
-import { MenuItemsProps } from "@/types/sidebarInterfaces";
 import User from "@/lib/MenuBar/SideMenu";
 import { useSelector } from "react-redux";
 
-const MenuItems: React.FC<MenuItemsProps> = ({ toggleSection, openSections, type }) => {
+const MenuItems: React.FC<any> = ({ toggleSection, openSections, type }) => {
   const userId = useSelector((state: any) => state.auth.id); 
   const menuList = User.list(userId); 
   return (

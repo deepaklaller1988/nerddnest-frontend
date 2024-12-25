@@ -6,7 +6,7 @@ import { IoMdArrowDropdownCircle } from "react-icons/io";
 
 import HeaderModal from "../Modals/HeaderModal";
 import IconButton from "./IconButton";
-import Sidebar from "../core/Sidebar";
+import Sidebar from "../Sidebar/Sidebar";
 import Image from "next/image";
 import { useSelector } from "react-redux";
 

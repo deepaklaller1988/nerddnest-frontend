@@ -1,7 +1,7 @@
 "use client";
 import dynamic from "next/dynamic";
-import FeedSearchBar from "../../SearchBar/FeedSearchBar";
 import { useState } from "react";
+import FeedSearchBar from "../SearchBar/FeedSearchBar";
 const PostContent = dynamic(() => import('./PostContent'), { ssr: false });
 
 export default function Feeds() {

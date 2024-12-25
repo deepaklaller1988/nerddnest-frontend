@@ -1,4 +1,3 @@
-import { MenuItem } from "@/types/sidebarInterfaces";
 import { CgProfile } from "react-icons/cg";
 import { MdSettingsBrightness } from "react-icons/md";
 import { LiaCcDiscover } from "react-icons/lia";

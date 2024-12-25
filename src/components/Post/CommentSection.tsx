@@ -10,12 +10,11 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 import { useApi } from "@/hooks/useAPI";
 import { useSelector } from "react-redux";
-import { toasterError, toasterInfo, toasterSuccess } from "../Toaster";
 import { FaTrash } from "react-icons/fa6";
-import { uploadMultiFile } from "../../../common/UploadFile";
 
 import { RxCross2 } from "react-icons/rx";
-import MiniLoader from "@/components/Loaders/Miniloader";
+import { toasterError, toasterInfo, toasterSuccess } from "../core/Toaster";
+import { uploadMultiFile } from "@/common/UploadFile";
 
 type LikeData = {
   count: number;

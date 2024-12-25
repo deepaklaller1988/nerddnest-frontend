@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import MessageSidebar from "@/components/Sidebar/MessageSidebar";
-import ChatWindow from "@/components/core/Chats/ChatWindow";
+import ChatWindow from "@/components/Chats/ChatWindow";
 
 const ChatInterface = () => {
 

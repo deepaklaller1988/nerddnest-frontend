@@ -5,7 +5,6 @@ import { useSelector } from "react-redux";
 import { useApi } from "@/hooks/useAPI";
 
 import Image from "next/image";
-import Loader from "../../Loaders/Loader";
 import { LuPin } from "react-icons/lu";
 import { timeAgo } from "@/utils/timeAgo";
 import { BiSolidLike } from "react-icons/bi";
@@ -13,15 +12,16 @@ import { BiSolidLike } from "react-icons/bi";
 import CommentSection from "./CommentSection";
 import { useRouter } from "next/navigation";
 import { TiArrowSortedDown } from "react-icons/ti";
-import EditPostModal from "../../Modals/EditPostModal";
-import DeletePopup from "../../Modals/DeleteConfirmation";
 import { IoDocumentTextOutline } from "react-icons/io5";
 import { capitalizeName } from "@/utils/capitalizeName";
-import { toasterError, toasterSuccess } from "../Toaster";
 import { PostActionsMenu } from "@/lib/MenuBar/PostActionsMenu ";
-import { selectPostedData } from '../../../redux/slices/data.slice';
 import { MdMoreHoriz, MdOutlineModeComment } from "react-icons/md";
 import { FeedVisiblityMenu } from "@/lib/MenuBar/FeedVisibiltyMenu";
+import { toasterError, toasterSuccess } from "../core/Toaster";
+import DeletePopup from "../Modals/DeleteConfirmation";
+import EditPostModal from "../Modals/EditPostModal";
+import Loader from "../Loaders/Loader";
+import { selectPostedData } from "@/redux/slices/data.slice";
 
 type LikeData = {
   count: number;
