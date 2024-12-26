@@ -1,32 +1,36 @@
 
 import React, { useEffect, useState } from 'react'
 import ChatInput from './ChatInput'
-import { BsThreeDots } from 'react-icons/bs'
-import { MessageActionsMenu } from '@/lib/MenuBar/MessageActionMenu';
-import { capitalizeName } from '@/utils/capitalizeName';
 import { useApi } from '@/hooks/useAPI';
 import { useSelector } from 'react-redux';
-import Multiselect from 'multiselect-react-dropdown';
+import { BsThreeDots } from 'react-icons/bs'
+import { capitalizeName } from '@/utils/capitalizeName';
+import { MessageActionsMenu } from '@/lib/MenuBar/MessageActionMenu';
+import useSocket from '@/hooks/useSocket';
+import Image from 'next/image';
+import { formatDate, formatTime } from '@/utils/timeAgo';
 
-export default function ChatWindow({ activeChatId, data, isHandleClickActive, setIsHandleClickActive }: any) {
+export default function ChatWindow({ activeChatId, isHandleClickActive, setIsHandleClickActive, selectedChatData }: any) {
     const { API } = useApi()
-    const userId = useSelector((state: any) => state.auth.id);
+    const socket = useSocket({})
 
+    const userId = useSelector((state: any) => state.auth.id);
     const [options, setOptions] = useState<boolean>(false);
+    const [messages, setMessages] = useState<any>([])
     const [results, setResults] = useState<any>([]);
     const [searchTerm, setSearchTerm] = useState<string>("");
-    const [selectedUsers, setSelectedUsers] = useState<any[]>([]);
+    const [selectedItems, setSelectedItems] = useState<any[]>([]);
     const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-    const handleToggleReadUnread = (data: any) => {}
-    const openBlockModal = (data: any) => {}
-    const openReportModal = (data: any) => {}
-    const handleToggleArchieveUnArc = (data: any) => {}
+    const handleToggleReadUnread = (data: any) => { }
+    const openBlockModal = (data: any) => { }
+    const openReportModal = (data: any) => { }
+    const handleToggleArchieveUnArc = (data: any) => { }
     const handleMouseLeave = () => setHoveredIndex(null);
     const handleMouseEnter = (index: number) => setHoveredIndex(index);
     const handleButtonPopup = () => {
         setOptions(!options);
     };
-console.log(results,"=======res")
+
     useEffect(() => {
         if (searchTerm && userId) {
             getSearchData()
@@ -35,6 +39,29 @@ console.log(results,"=======res")
             setResults([]);
         }
     }, [searchTerm, userId])
+
+    useEffect(() => {
+        if (activeChatId) {
+
+            getMessages(activeChatId)
+        }
+    }, [activeChatId])
+
+
+    useEffect(() => {
+        if (socket) {
+            socket?.on("msg-receive", (newMessage: any) => {
+                console.log("New message received:", newMessage);
+                getMessages(newMessage?.conversationId)
+            });
+
+            return () => {
+                socket.off("msg-receive");
+            };
+        }
+    }, [socket, activeChatId]);
+
+
 
     const getSearchData = async () => {
         const { success, error, data } = await API.get(`friends/search?userId=${userId}6&search=${searchTerm}`);
@@ -46,39 +73,15 @@ console.log(results,"=======res")
         }
     };
 
-    const handleClearSearch = () => {
-        setSearchTerm("");
-        setResults([]);
+    const getMessages = async (activeChatId: any) => {
+        const { success, error, data } = await API.get(`messages/get-messages?conversationId=${activeChatId}`);
+        if (success) {
+            setMessages(data)
+        }
+        else {
+            console.log(error);
+        }
     };
-
-    const messages: any = [
-        {
-            id: 1,
-            type: "receiver",
-            text: "Hi, i am marcos from Amazon, I want to know that which parcel is pending from your side? Hi, i am marcos from Amazon, I want to know that which parcel is pending from your side? Hi, i am marcos from Amazon, I want to know that which parcel is pending from your side? Hi, i am marcos from Amazon, I want to know that which parcel is pending from your side?",
-            timestamp: "4:37 AM",
-            sender: {
-                name: "Marcos",
-                image: "dp.jpg",
-            },
-        },
-        {
-            id: 2,
-            type: "sender",
-            text: "Hi, I m indu this Side",
-            timestamp: "4:39 AM",
-        },
-        {
-            id: 3,
-            type: "receiver",
-            text: "Can you resend the details? I couldn't find them in my inbox.",
-            timestamp: "4:41 AM",
-            sender: {
-                name: "Marcos",
-                image: "dp.jpg",
-            },
-        },
-    ];
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value || "";
@@ -87,12 +90,19 @@ console.log(results,"=======res")
 
     const onClose = () => {
         setIsHandleClickActive(false)
+        setSearchTerm('');
     }
-
-    const handleSelectChange = (selected: any) => {
-        setSelectedUsers(selected);
+    const handleSelectItem = (item: any) => {
+        if (!selectedItems.some(selected => selected.id === item.id)) {
+            setSelectedItems([...selectedItems, item]);
+            setSearchTerm('');
+        }
     };
-    
+
+    const handleRemoveItem = (id: any) => {
+        setSelectedItems(selectedItems.filter(item => item.id !== id));
+    };
+
     return (
         <div className="flex-1 flex flex-col bg-[var(--sections)]">
             <div className="flex items-center justify-between gap-6 border-b border-white/5 p-4">
@@ -101,48 +111,80 @@ console.log(results,"=======res")
                         <div className="flex gap-3 h-14">
                             <h2 className='mt-4 text-white'>To:</h2>
                         </div>
+                        {selectedItems.map(item => (
+                            <div
+                                key={item.id}
+                                className="flex items-center gap-2 bg-gray-500 text-white px-2 py-1 rounded-md"
+                            >
+                                <span className='text-white'>{item.firstname}</span>
+                                <button
+                                    className="text-xs font-bold"
+                                    onClick={() => handleRemoveItem(item.id)}
+                                >
+                                    ×
+                                </button>
+                            </div>
+                        ))}
                         <input
                             type="text"
                             value={searchTerm}
                             onChange={handleInputChange}
-                            className="w-full bg-white/0 py-2 placeholder:font-semibold placeholder:text-[var(--foreground)] pr-5"
-                            placeholder="Start Typing to find.."
+                            className="flex-1 bg-transparent py-1 text-white outline-none"
+                            placeholder="Start Typing to find..."
                         />
                         <button type="button" onClick={onClose} className="w-7 h-7 p-0 flex items-center justify-center rounded-full text-[30px] text-gray-600 hover:text-white">&times;</button>
-
+                        {searchTerm && results.length > 0 && (
+                            <div className="absolute z-10 mt-36 max-h-60 w-96 overflow-auto rounded-md bg-white shadow-lg">
+                                {results.map((item: any) => (
+                                    <div
+                                        key={item.id}
+                                        className="cursor-pointer p-2 hover:bg-gray-200"
+                                        onClick={() => handleSelectItem(item)}
+                                    >
+                                        {item.firstname} {item.lastname}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                        {searchTerm && results.length === 0 && (
+                            <div className="absolute z-10 mt-36 w-96 p-2 rounded-md bg-white shadow-lg text-center text-gray-500">
+                                No results found.
+                            </div>
+                        )}
                     </>
                     :
                     <>
                         <div className="flex gap-3">
                             <div className="w-14 rounded-full overflow-hidden border-2 border-white">
-                                <img
-                                    src="dp.jpg"
-                                    alt=""
+                                <Image
+                                    src={selectedChatData?.image || "/profile-avatar-legacy-50.png"}
+                                    alt="Image"
+                                    width={50}
+                                    height={50}
                                 />
                             </div>
                             <div>
                                 <h3 className="capitalize text-lg font-semibold text-white">
-                                    {capitalizeName(data?.firstname)}
-                                    {capitalizeName(data?.lastname)}
+                                    {capitalizeName(selectedChatData?.conversation_name)}
                                 </h3>
-                                <p className="">Started Friday</p>
+                                {/* <p className="">Started Friday</p> */}
                             </div>
                         </div>
                         <div></div>
                         <BsThreeDots onClick={handleButtonPopup} size={26} className="cursor-pointer relative" />
-
+                        {/* 
                         {options && (
                             <div
                                 className="absolute  right-5 !z-10 bg-[var(--bgh)] shadow-[0_-5px_25px_-15px_rgba(0,0,0,0.3)]"
                             >
                                 <div className="!z-10 shadow-[0_-5px_25px_-15px_rgba(0,0,0,0.3)] w-full min-w-[210px] py-2 rounded-lg bg-[var(--bgh)] absolute mt-0 right-0">                          {MessageActionsMenu({
-                                    postId: data?.id,
-                                    isMarkedRead: data?.isMarkedRead,
-                                    isArchieve: data?.isArchieve,
-                                    toggleReadUnread: () => handleToggleReadUnread(data),
-                                    toggleArchieveUnArc: () => handleToggleArchieveUnArc(data),
-                                    openBlockModal: () => openBlockModal(data.id),
-                                    openReportModal: () => openReportModal(data.id),
+                                    postId: chatData?.id,
+                                    isMarkedRead: chatData?.isMarkedRead,
+                                    isArchieve: chatData?.isArchieve,
+                                    toggleReadUnread: () => handleToggleReadUnread(chatData),
+                                    toggleArchieveUnArc: () => handleToggleArchieveUnArc(chatData),
+                                    openBlockModal: () => openBlockModal(chatData.id),
+                                    openReportModal: () => openReportModal(chatData.id),
 
                                 }).map(({ icon, label, onClick }, index) => (
 
@@ -160,81 +202,103 @@ console.log(results,"=======res")
                                 ))}
                                 </div>
                             </div>
-                        )}
+                        )} */}
                     </>
                 }
             </div>
-            {searchTerm && (
-                <div className="w-96 overflow-y-auto overflow-x-hidden rounded-lg bg-white absolute mt-20 max-h-[500px]">
-                    {/* {results.length > 0 ? (
-                        results.map((result: any, index: any) => (
-                            <section
-                                key={index}
-                                className="cursor-pointer flex gap-4 justify-between items-start p-4 border-b border-black/10 hover:bg-gray-400/10 duration-[.5s]"
-                            >
-                                <span className="min-w-12 min-h-12 w-12 h-12 bg-black/10 rounded-full flex items-center justify-center">
-                                    <img src={result.image || "/profile-avatar-legacy-50.png"} alt="Image" />
-                                </span>
-                                <div className="w-full"
-                                onClick={() => handleClick(result.id)}
-                                >
-                                    <b className="text-[var(--highlight)]" >{capitalizeName(result.firstname)}  {capitalizeName(result.lastname)}</b>
-
-                                </div>
-                            </section>
-
-                            <Multiselect
-                            options={results} // Options to display in the dropdown
-                            onSelect={handleSelectChange} 
-                            displayValue="firstname" 
-                            selectedValues={result?.filter((item: any) =>
-                                selectedUsers.includes(item.id)
-                              )}
-                            />
-                            
-                     
-                        ))
-                    ) : (
-                        <div className="p-4 text-center text-gray-500">No results found.</div>
-                    )}                  */}
-                </div>
-            )}
 
             {/* Messages */}
+
             <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-4 bg-white/10 border-b border-white/5">
                 {!isHandleClickActive &&
                     <>
-
-                        <div className="text-center text-gray-500 text-sm relative border-t border-white/5 mt-5 pb-5">
-                            <b className="absolute bg-[var(--highlght-hover)] rounded-full top-[-10px] px-3 text-sm text-white">Friday</b>
-                        </div>
                         {messages &&
                             messages.length > 0 &&
-                            messages.map((item: any, index: any) => (
-                                <div
-                                    key={index}
-                                    className={`w-full ${item.type === "sender" ? "sender flex justify-end" : "receiver"}`}
-                                >
-                                    <div
-                                        className={`inline-flex items-start space-x-3 rounded-xl p-4 max-w-[80%] ${item.type === "sender" ? "bg-black/20" : "bg-[var(--sections)]"
-                                            }`}
-                                    >
-                                        {item.type === "receiver" && (
-                                            <div className="min-w-10 min-h-10 max-w-10 max-h-10 bg-white rounded-full overflow-hidden border border-white">
-                                                <img src={item.sender.image} alt="dp" />
+                            (() => {
+                                let lastDate: string | null = null;
+                                return messages.map((item: any, index: any) => {
+                                    const currentDate = formatDate(item.createdAt);
+                                    const showDate = currentDate !== lastDate;
+                                    if (showDate) {
+                                        lastDate = currentDate;
+                                    }
+
+                                    return (
+                                        <div key={index}>
+                                            {showDate && (
+                                                <div className="text-center text-gray-500 text-sm relative border-t border-white/5 mt-5 pb-5">
+                                                    <b className="absolute bg-[var(--highlght-hover)] rounded-full top-[-10px] px-3 text-sm text-white">
+                                                        {currentDate}
+                                                    </b>
+                                                </div>
+                                            )}
+
+                                            <div
+                                                className={`w-full ${item.sender_id == userId ? "sender flex justify-end" : "receiver"
+                                                    }`}
+                                            >
+                                                <div
+                                                    className={`inline-flex items-start space-x-3 rounded-xl p-4 max-w-[80%] ${item.user_id == userId ? "bg-black/20" : "bg-[var(--sections)]"
+                                                        }`}
+                                                >
+                                                    {item.sender_id !== userId &&
+                                                      <div className="min-w-10 min-h-10 max-w-10 max-h-10 bg-white rounded-full overflow-hidden border border-white">
+                                                      <img src="dp.jpg" alt="dp" />
+                                                  </div>
+                                                    }
+                                                  
+                                                    <div>
+                                                        <p className={item.sender_id !== userId ? "text-white" : ""}>
+                                                            {item.content}
+                                                        </p>
+                                                        <div className="relative mt-4 grid grid-cols-4 gap-4 uploaded-data">
+                                                            {item?.media_url.map((file:any, index:any) => (
+                                                                <div key={index} className="relative uploaded-dataInner">
+                                                                    {item.media_type == "image" ? (
+                                                                        <Image
+                                                                            src={file instanceof File ? URL.createObjectURL(file) : file}
+                                                                            alt="uploaded"
+                                                                            height={70}
+                                                                            width={100}
+                                                                            className="object-cover rounded-lg w-40 h-30"
+                                                                        />
+                                                                    ) : null}
+
+                                                                    {item.media_type == "video" ? (
+                                                                        <video
+                                                                            controls
+                                                                            className="object-cover rounded-lg w-40 h-30"
+                                                                        >
+                                                                            <source src={file instanceof File ? URL.createObjectURL(file) : file} type="video/mp4" />
+                                                                            Your browser does not support the video tag.
+                                                                        </video>
+                                                                    ) : null}
+
+                                                                    {item.media_type == "document" ? (
+                                                                        <div className="flex items-center justify-center w-full h-30">
+                                                                            {/* {renderFilePreview(file)} */}
+                                                                            <span className="ml-2 text-sm text-gray-600">{file.name}</span>
+                                                                        </div>
+                                                                    ) : null}
+
+                                                                </div>
+                                                            ))}
+                                                        </div>   
+                                                        <p className="text-xs text-gray-400 text-right relative top-2">
+                                                            {formatTime(item.createdAt)}
+                                                        </p>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        )}
-                                        <div>
-                                            <p className={item.type === "receiver" ? "text-white" : ""}>{item.text}</p>
-                                            <p className="text-xs text-gray-400 text-right relative top-2">{item.timestamp}</p>
                                         </div>
-                                    </div>
-                                </div>
-                            ))}
+                                    );
+                                });
+                            })()}
                     </>
+
                 }
             </div>
-            <ChatInput />
+            <ChatInput participatedId={selectedItems.map((item: any) => item.id)} onClose={onClose} setSelectedItems={setSelectedItems} activeChatId={activeChatId} />
         </div>
     )
 }

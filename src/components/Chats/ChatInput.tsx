@@ -10,9 +10,14 @@ import { toasterInfo } from '../core/Toaster';
 import { RxCross2 } from 'react-icons/rx';
 import EmojiPicker from 'emoji-picker-react';
 import GifSearch from '../Post/GifSearch';
+import { useSelector } from 'react-redux';
+import useSocket from '@/hooks/useSocket';
 
-export default function ChatInput() {
+export default function ChatInput({ participatedId, activeChatId, setSelectedItems, onClose }: any) {
     const { API } = useApi()
+    const userId = useSelector((state: any) => state.auth.id);
+    const socket = useSocket({})
+
     const imageInputRef: any = useRef(null);
     const videoInputRef: any = useRef(null);
     const fileInputRef: any = useRef(null);
@@ -29,7 +34,17 @@ export default function ChatInput() {
     const [gif, setGif] = useState(false);
 
     const [isUploadLoading, setIsUploadLoading] = useState(false);
-    const [initialValues, setInitialValues] = useState()
+    const [initialValues, setInitialValues] = useState({
+        type: "",
+        participantIds: [],
+        senderId: "",
+        content: "",
+        mediaType: "text",
+        mediaUrl: []
+
+    })
+
+    console.log(initialValues.mediaUrl,"====")
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -126,10 +141,22 @@ export default function ChatInput() {
     const handleMediaTypeSelection = (type: string) => {
         if (type === 'image' && imageInputRef.current) {
             imageInputRef.current.click();
+            setInitialValues((prevValues: any) => ({
+                ...prevValues,
+                type:"image"
+            }));
         } else if (type === 'videos' && videoInputRef.current) {
             videoInputRef.current.click();
+            setInitialValues((prevValues: any) => ({
+                ...prevValues,
+                type:"video"
+            }));
         } else if (type === 'files' && fileInputRef.current) {
             fileInputRef.current.click();
+            setInitialValues((prevValues: any) => ({
+                ...prevValues,
+                type:"file"
+            }));
         }
     };
 
@@ -141,13 +168,72 @@ export default function ChatInput() {
         } else if (type === 'files') {
             setFiles(files.filter((_, i) => i !== index));
         }
+        setInitialValues((prevValues: any) => ({
+            ...prevValues,
+            mediaUrl: prevValues.mediaUrl.filter((_: any, i: any) => i !== index),
+            
+        }));
+
     };
 
     const handleEmojiSelect = (emoji: { emoji: string }) => {
         setMessage(prevMessage => prevMessage + emoji.emoji);
     };
+
     const handleGifSelect = (gif: { gif: string }) => {
         setMessage(prevMessage => prevMessage + gif.gif);
+    };
+
+    const handleSendMessages = async () => {
+        try {
+            const payload: any = {
+                senderId: userId,
+                content: message,
+                mediaType: initialValues.type?initialValues.type:"text",
+                mediaUrl: initialValues.mediaUrl ? initialValues.mediaUrl : []
+            };
+
+            if (participatedId.length > 0) {
+                payload.participantIds = participatedId;
+                socket?.emit('startConversation', payload, (response: any) => {
+                    console.log('New conversation started:', response);
+                    setMessage("");
+                    setSelectedItems([])
+                    onClose()
+                });
+                socket?.on("startConversation", (response: any) => {
+                    console.log('New conversation started:', response);
+                    const data =initialValues
+                    data.mediaUrl=[]
+                    setInitialValues(data)
+
+                    // setInitialValues((prevValues: any) => ({
+                    //     ...prevValues,
+                    //     mediaUrl: [],
+                    // }));
+                });
+            } else {
+                payload.conversationId = activeChatId
+                socket?.emit('sendMessage', payload, (response: any) => {
+                    console.log('Message sent to existing conversation:', response);
+                    setMessage("");
+                 
+                    setSelectedItems([])
+                    onClose()
+
+                });
+                socket?.on("sendMessage", (response: any) => {
+                    console.log('New conversation started:', response);
+                    const data =initialValues
+                    data.mediaUrl=[]
+                    setInitialValues(data)
+                    
+                });
+                console.log(initialValues,"==in")
+            }
+        } catch (error) {
+            console.error('Error sending message:', error);
+        }
     };
 
     return (
@@ -289,7 +375,7 @@ export default function ChatInput() {
                             )}
 
                             <div className="p-1 bg-blue-800 rounded-full">
-                                <IoIosSend className="w-6 h-6 fill-white" />
+                                <IoIosSend className="w-6 h-6 fill-white" onClick={handleSendMessages} />
                             </div>
                         </section>
                     </div>

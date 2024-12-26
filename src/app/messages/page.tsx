@@ -1,31 +1,53 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MessageSidebar from "@/components/Sidebar/MessageSidebar";
 import ChatWindow from "@/components/Chats/ChatWindow";
+import { useApi } from "@/hooks/useAPI";
+import { useSelector } from "react-redux";
 
 const ChatInterface = () => {
+  const { API } = useApi()
+  const userId = useSelector((state: any) => state.auth.id);
 
-  const [activeChatId, setActiveChatId] = useState(0);
-  const [chatData, setChatData] = useState<any>([
-    { id: "1", firstname: "indu", lastname: "dhiman", image: "", date: "12-2-2023" },
-    { id: "2", firstname: "anup", lastname: "kumar", image: "", date: "12-2-2023" }
-  ])
-
+  const [activeChatId, setActiveChatId] = useState(null);
+  const [chatData, setChatData] = useState<any>([])
   const [isHandleClickActive, setIsHandleClickActive] = useState<boolean>(false);
 
-  const handleEditClick = () => {
-    setIsHandleClickActive((prev) => !prev); 
+  useEffect(()=>{
+    if(userId){
+      getAllMessages()
+    }
+  },[userId])
+
+  const getAllMessages = async () => {
+    const { success, data, error, } = await API.get(`messages/get-conversations?userId=${userId}`);
+    if (success) {
+      setChatData(data)
+      if (data && data.length > 0) {
+        setActiveChatId(data[0].id); 
+      }
+    } else {
+      console.error(error);
+    }
   };
 
-  const handleChatClick = (index: any) => {
-    setActiveChatId(index);
+  const handleEditClick = () => {
+    setIsHandleClickActive((prev) => !prev);
   };
+
+  const handleChatClick = (id: any) => {
+    setActiveChatId(id);
+  };
+
+  const selectedChatData = chatData.find(
+    (chat: any) => chat.id === activeChatId
+  );
 
   return (
     <div className="messageSetInner">
       <div className="message flex h-full bg-white/10 overlap-hidden">
-        <MessageSidebar chatData={chatData} activeChatId={activeChatId} onChatSelect={handleChatClick} onIconClick={handleEditClick}  isHandleClickActive={isHandleClickActive}/>
-        <ChatWindow activeChatId={activeChatId}  isHandleClickActive={isHandleClickActive} setIsHandleClickActive={setIsHandleClickActive}/>
+        <MessageSidebar chatData={chatData} activeChatId={activeChatId} onChatSelect={handleChatClick} onIconClick={handleEditClick} isHandleClickActive={isHandleClickActive} />
+        <ChatWindow selectedChatData={selectedChatData}  activeChatId={activeChatId} isHandleClickActive={isHandleClickActive} setIsHandleClickActive={setIsHandleClickActive} />
       </div>
     </div>
   );

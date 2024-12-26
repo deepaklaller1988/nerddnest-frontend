@@ -403,7 +403,6 @@ const EditPostModal = ({ postId, onClose,
                             <div key={index} className="relative uploaded-dataInner">
                                 {fileType === "image" ? (
                                     <Image
-                                        // Using createObjectURL only if file is an instance of File
                                         src={file instanceof File ? URL.createObjectURL(file) : file}
                                         alt="uploaded"
                                         height={70}

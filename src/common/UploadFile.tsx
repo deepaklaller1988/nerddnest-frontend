@@ -16,7 +16,7 @@ export const uploadFile = async (file: File,API:any) => {
         const formData = new FormData();
         formData.append("file", file);
 
-        const { success, data, error } = await API.postFile("file/upload", formData); // Upload the file
+        const { success, data, error } = await API.postFile("file/upload", formData);
 
         if (!success) {
             console.error("File upload failed:", error);
