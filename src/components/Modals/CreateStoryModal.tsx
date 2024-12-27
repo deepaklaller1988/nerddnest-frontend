@@ -326,6 +326,7 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup, handleDeleteStories }) =
                               </button>
                               {index !== 0 && (
                                 <button
+                                type="button"
                                   className="cursor-pointer hover:rounded-full hover:bg-gray-200 hover:p-1"
                                   onClick={() => remove(index)}
                                 >

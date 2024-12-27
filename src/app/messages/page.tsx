@@ -46,8 +46,8 @@ const ChatInterface = () => {
   return (
     <div className="messageSetInner">
       <div className="message flex h-full bg-white/10 overlap-hidden">
-        <MessageSidebar chatData={chatData} activeChatId={activeChatId} onChatSelect={handleChatClick} onIconClick={handleEditClick} isHandleClickActive={isHandleClickActive} />
-        <ChatWindow selectedChatData={selectedChatData}  activeChatId={activeChatId} isHandleClickActive={isHandleClickActive} setIsHandleClickActive={setIsHandleClickActive} />
+        <MessageSidebar chatData={chatData} activeChatId={activeChatId} setActiveChatId ={setActiveChatId} onChatSelect={handleChatClick} onIconClick={handleEditClick} isHandleClickActive={isHandleClickActive} />
+        <ChatWindow getAllMessages ={getAllMessages} setActiveChatId={setActiveChatId} selectedChatData={selectedChatData}  activeChatId={activeChatId} isHandleClickActive={isHandleClickActive} setIsHandleClickActive={setIsHandleClickActive} />
       </div>
     </div>
   );

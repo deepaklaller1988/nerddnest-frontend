@@ -4,14 +4,14 @@ import { capitalizeName } from '@/utils/capitalizeName';
 import { FaEdit } from "react-icons/fa";
 import Image from 'next/image';
 
+export default function MessageSidebar({ setActiveChatId, chatData, activeChatId, onChatSelect, onIconClick, isHandleClickActive }: any) {
 
-export default function MessageSidebar({ chatData, activeChatId, onChatSelect, onIconClick, isHandleClickActive }: any) {
   return (
     <div className="w-1/4 bg-[var(--sections)] border-r border-white/20">
       <h2 className="flex flex-row gap-4 text-xl font-semibold text-white p-4 py-7 pb-8">
         Messages
 
-        {!isHandleClickActive && <FaEdit size={16} fill='white' onClick={onIconClick} />}
+        {!isHandleClickActive && <FaEdit size={16} fill='white' onClick={onIconClick} className='cursor-pointer' />}
       </h2>
       <MessageSearchBar />
 
@@ -19,7 +19,7 @@ export default function MessageSidebar({ chatData, activeChatId, onChatSelect, o
         <div key={index}
           onClick={() => onChatSelect(item.id)}
           className={`space-y-2 border-b border-white/5 hover:bg-white/5 bg-white/10 duration-[.3s]
-            ${activeChatId === item.id ? 'border-r-4 border-r-white' : ''
+            ${(activeChatId === item.id && !isHandleClickActive) ? 'border-r-4 border-r-white' : ''
             }`}
         >
           <div className="flex items-center space-x-2 p-4 cursor-pointer" onClick={() => item.id}>

@@ -24,6 +24,7 @@ type LikeData = {
 const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount }: any) => {
   const { API } = useApi();
   const userId = useSelector((state: any) => state.auth.id);
+  const image = useSelector((state: any) => state.auth.image) 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const [commentsData, setCommentsData] = useState<any>([]);
@@ -391,7 +392,7 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
               <span className="min-w-10 min-h-10 max-w-10 max-h-10 rounded-full overflow-hidden block">
                 <img
                   className="w-full block h-full"
-                  src="/dp.jpg"
+                  src={image || "/profile-avatar-legacy-50.png"}
                   alt="user"
                 />
               </span>

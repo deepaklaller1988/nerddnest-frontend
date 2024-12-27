@@ -10,7 +10,7 @@ import useSocket from '@/hooks/useSocket';
 import Image from 'next/image';
 import { formatDate, formatTime } from '@/utils/timeAgo';
 
-export default function ChatWindow({ activeChatId, isHandleClickActive, setIsHandleClickActive, selectedChatData }: any) {
+export default function ChatWindow({ getAllMessages, setActiveChatId, activeChatId, isHandleClickActive, setIsHandleClickActive, selectedChatData }: any) {
     const { API } = useApi()
     const socket = useSocket({})
 
@@ -21,12 +21,15 @@ export default function ChatWindow({ activeChatId, isHandleClickActive, setIsHan
     const [searchTerm, setSearchTerm] = useState<string>("");
     const [selectedItems, setSelectedItems] = useState<any[]>([]);
     const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+    const [message, setMessage] = useState<string>("");
+
     const handleToggleReadUnread = (data: any) => { }
     const openBlockModal = (data: any) => { }
     const openReportModal = (data: any) => { }
     const handleToggleArchieveUnArc = (data: any) => { }
     const handleMouseLeave = () => setHoveredIndex(null);
     const handleMouseEnter = (index: number) => setHoveredIndex(index);
+
     const handleButtonPopup = () => {
         setOptions(!options);
     };
@@ -42,17 +45,16 @@ export default function ChatWindow({ activeChatId, isHandleClickActive, setIsHan
 
     useEffect(() => {
         if (activeChatId) {
-
             getMessages(activeChatId)
         }
     }, [activeChatId])
 
-
     useEffect(() => {
         if (socket) {
             socket?.on("msg-receive", (newMessage: any) => {
-                console.log("New message received:", newMessage);
-                getMessages(newMessage?.conversationId)
+                console.log(newMessage, '==sdsd')
+                getMessages(newMessage?.conversation_id)
+                setActiveChatId(newMessage?.conversation_id)
             });
 
             return () => {
@@ -61,12 +63,10 @@ export default function ChatWindow({ activeChatId, isHandleClickActive, setIsHan
         }
     }, [socket, activeChatId]);
 
-
-
     const getSearchData = async () => {
         const { success, error, data } = await API.get(`friends/search?userId=${userId}6&search=${searchTerm}`);
         if (success) {
-            setResults(data)
+            setResults(data.filter((item: any) => item.id !== userId))
         }
         else {
             console.log(error);
@@ -74,12 +74,14 @@ export default function ChatWindow({ activeChatId, isHandleClickActive, setIsHan
     };
 
     const getMessages = async (activeChatId: any) => {
-        const { success, error, data } = await API.get(`messages/get-messages?conversationId=${activeChatId}`);
-        if (success) {
-            setMessages(data)
-        }
-        else {
-            console.log(error);
+        if (activeChatId) {
+            const { success, error, data } = await API.get(`messages/get-messages?conversationId=${activeChatId ? activeChatId : ""}`);
+            if (success) {
+                setMessages(data)
+            }
+            else {
+                console.log(error);
+            }
         }
     };
 
@@ -102,6 +104,23 @@ export default function ChatWindow({ activeChatId, isHandleClickActive, setIsHan
     const handleRemoveItem = (id: any) => {
         setSelectedItems(selectedItems.filter(item => item.id !== id));
     };
+
+    const handleChat = ({ payload, msgType }: any) => {
+        socket?.emit(msgType, payload, (response: any) => {
+            if (response.success) {
+                if (msgType == "startConversation") {
+                    console.log(response?.data?.conversation_id, "====conver")
+                    setActiveChatId(response?.data?.conversation_id)
+                }
+                getMessages(response?.data?.conversation_id)
+                getAllMessages()
+                setMessage("");
+                setSelectedItems([])
+                onClose()
+
+            }
+        });
+    }
 
     return (
         <div className="flex-1 flex flex-col bg-[var(--sections)]">
@@ -155,14 +174,17 @@ export default function ChatWindow({ activeChatId, isHandleClickActive, setIsHan
                     :
                     <>
                         <div className="flex gap-3">
-                            <div className="w-14 rounded-full overflow-hidden border-2 border-white">
-                                <Image
-                                    src={selectedChatData?.image || "/profile-avatar-legacy-50.png"}
-                                    alt="Image"
-                                    width={50}
-                                    height={50}
-                                />
-                            </div>
+                            {activeChatId ?
+                                <div className="w-14 rounded-full overflow-hidden border-2 border-white">
+                                    <Image
+                                        src={selectedChatData?.image || "/profile-avatar-legacy-50.png"}
+                                        alt="Image"
+                                        width={50}
+                                        height={50}
+                                    />
+                                </div>
+                                : <h2 className="flex flex-row gap-4 text-xl font-semibold text-white p-4 pb-4">{"New Conversation Start"}</h2>
+                            }
                             <div>
                                 <h3 className="capitalize text-lg font-semibold text-white">
                                     {capitalizeName(selectedChatData?.conversation_name)}
@@ -171,41 +193,15 @@ export default function ChatWindow({ activeChatId, isHandleClickActive, setIsHan
                             </div>
                         </div>
                         <div></div>
+
                         <BsThreeDots onClick={handleButtonPopup} size={26} className="cursor-pointer relative" />
-                        {/* 
-                        {options && (
-                            <div
-                                className="absolute  right-5 !z-10 bg-[var(--bgh)] shadow-[0_-5px_25px_-15px_rgba(0,0,0,0.3)]"
-                            >
-                                <div className="!z-10 shadow-[0_-5px_25px_-15px_rgba(0,0,0,0.3)] w-full min-w-[210px] py-2 rounded-lg bg-[var(--bgh)] absolute mt-0 right-0">                          {MessageActionsMenu({
-                                    postId: chatData?.id,
-                                    isMarkedRead: chatData?.isMarkedRead,
-                                    isArchieve: chatData?.isArchieve,
-                                    toggleReadUnread: () => handleToggleReadUnread(chatData),
-                                    toggleArchieveUnArc: () => handleToggleArchieveUnArc(chatData),
-                                    openBlockModal: () => openBlockModal(chatData.id),
-                                    openReportModal: () => openReportModal(chatData.id),
 
-                                }).map(({ icon, label, onClick }, index) => (
-
-                                    <button
-                                        key={index}
-                                        className={`flex gap-2 items-center px-4 py-2 w-full text-left hover:bg-gray-500/10 focus:outline-none ${hoveredIndex === index ? "drop" : ""
-                                            }`}
-                                        aria-label={label}
-                                        onMouseEnter={() => handleMouseEnter(index)}
-                                        onMouseLeave={handleMouseLeave}
-                                        onClick={onClick}
-                                    >
-                                        {icon} {label}
-                                    </button>
-                                ))}
-                                </div>
-                            </div>
-                        )} */}
                     </>
+
+
                 }
             </div>
+
 
             {/* Messages */}
 
@@ -242,17 +238,17 @@ export default function ChatWindow({ activeChatId, isHandleClickActive, setIsHan
                                                         }`}
                                                 >
                                                     {item.sender_id !== userId &&
-                                                      <div className="min-w-10 min-h-10 max-w-10 max-h-10 bg-white rounded-full overflow-hidden border border-white">
-                                                      <img src="dp.jpg" alt="dp" />
-                                                  </div>
+                                                        <div className="min-w-10 min-h-10 max-w-10 max-h-10 bg-white rounded-full overflow-hidden border border-white">
+                                                            <img src={selectedChatData?.image || "/profile-avatar-legacy-50.png"} alt="dp" />
+                                                        </div>
                                                     }
-                                                  
+
                                                     <div>
                                                         <p className={item.sender_id !== userId ? "text-white" : ""}>
                                                             {item.content}
                                                         </p>
                                                         <div className="relative mt-4 grid grid-cols-4 gap-4 uploaded-data">
-                                                            {item?.media_url.map((file:any, index:any) => (
+                                                            {item?.media_url.map((file: any, index: any) => (
                                                                 <div key={index} className="relative uploaded-dataInner">
                                                                     {item.media_type == "image" ? (
                                                                         <Image
@@ -283,7 +279,7 @@ export default function ChatWindow({ activeChatId, isHandleClickActive, setIsHan
 
                                                                 </div>
                                                             ))}
-                                                        </div>   
+                                                        </div>
                                                         <p className="text-xs text-gray-400 text-right relative top-2">
                                                             {formatTime(item.createdAt)}
                                                         </p>
@@ -298,7 +294,7 @@ export default function ChatWindow({ activeChatId, isHandleClickActive, setIsHan
 
                 }
             </div>
-            <ChatInput participatedId={selectedItems.map((item: any) => item.id)} onClose={onClose} setSelectedItems={setSelectedItems} activeChatId={activeChatId} />
+            <ChatInput message={message} setMessage={setMessage} handleChat={handleChat} participatedId={selectedItems.map((item: any) => item.id)} onClose={onClose} setSelectedItems={setSelectedItems} activeChatId={activeChatId} />
         </div>
     )
 }
