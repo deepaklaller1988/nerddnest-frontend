@@ -13,8 +13,8 @@ import { formatDate, formatTime } from '@/utils/timeAgo';
 export default function ChatWindow({ getAllMessages, setActiveChatId, activeChatId, isHandleClickActive, setIsHandleClickActive, selectedChatData }: any) {
     const { API } = useApi()
     const socket = useSocket({})
-
     const userId = useSelector((state: any) => state.auth.id);
+
     const [options, setOptions] = useState<boolean>(false);
     const [messages, setMessages] = useState<any>([])
     const [results, setResults] = useState<any>([]);
@@ -53,7 +53,6 @@ export default function ChatWindow({ getAllMessages, setActiveChatId, activeChat
         if (socket) {
             socket?.on("msg-receive", (newMessage: any) => {
                 console.log(newMessage, '==sdsd')
-                getMessages(newMessage?.conversation_id)
                 setActiveChatId(newMessage?.conversation_id)
             });
 
@@ -104,7 +103,7 @@ export default function ChatWindow({ getAllMessages, setActiveChatId, activeChat
     const handleRemoveItem = (id: any) => {
         setSelectedItems(selectedItems.filter(item => item.id !== id));
     };
-
+console.log(messages)
     const handleChat = ({ payload, msgType }: any) => {
         socket?.emit(msgType, payload, (response: any) => {
             if (response.success) {
@@ -112,7 +111,8 @@ export default function ChatWindow({ getAllMessages, setActiveChatId, activeChat
                     console.log(response?.data?.conversation_id, "====conver")
                     setActiveChatId(response?.data?.conversation_id)
                 }
-                getMessages(response?.data?.conversation_id)
+                // getMessages(response?.data?.conversation_id)
+                setMessages((prev: any) => [...prev, response.data]);
                 getAllMessages()
                 setMessage("");
                 setSelectedItems([])
@@ -248,9 +248,9 @@ export default function ChatWindow({ getAllMessages, setActiveChatId, activeChat
                                                             {item.content}
                                                         </p>
                                                         <div className="relative mt-4 grid grid-cols-4 gap-4 uploaded-data">
-                                                            {item?.media_url.map((file: any, index: any) => (
+                                                            {item?.media_url?.map((file: any, index: any) => (
                                                                 <div key={index} className="relative uploaded-dataInner">
-                                                                    {item.media_type == "image" ? (
+                                                                    {item?.media_type == "image" ? (
                                                                         <Image
                                                                             src={file instanceof File ? URL.createObjectURL(file) : file}
                                                                             alt="uploaded"
@@ -260,7 +260,7 @@ export default function ChatWindow({ getAllMessages, setActiveChatId, activeChat
                                                                         />
                                                                     ) : null}
 
-                                                                    {item.media_type == "video" ? (
+                                                                    {item?.media_type == "video" ? (
                                                                         <video
                                                                             controls
                                                                             className="object-cover rounded-lg w-40 h-30"
@@ -270,10 +270,10 @@ export default function ChatWindow({ getAllMessages, setActiveChatId, activeChat
                                                                         </video>
                                                                     ) : null}
 
-                                                                    {item.media_type == "document" ? (
+                                                                    {item?.media_type == "document" ? (
                                                                         <div className="flex items-center justify-center w-full h-30">
                                                                             {/* {renderFilePreview(file)} */}
-                                                                            <span className="ml-2 text-sm text-gray-600">{file.name}</span>
+                                                                            <span className="ml-2 text-sm text-gray-600">{file?.name}</span>
                                                                         </div>
                                                                     ) : null}
 
@@ -281,7 +281,7 @@ export default function ChatWindow({ getAllMessages, setActiveChatId, activeChat
                                                             ))}
                                                         </div>
                                                         <p className="text-xs text-gray-400 text-right relative top-2">
-                                                            {formatTime(item.createdAt)}
+                                                            {formatTime(item?.createdAt)}
                                                         </p>
                                                     </div>
                                                 </div>

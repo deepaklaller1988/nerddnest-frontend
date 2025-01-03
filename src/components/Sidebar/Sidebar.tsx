@@ -3,26 +3,27 @@ import React, { useEffect, useState } from "react";
 import MenuItems from "../core/MenuItems";
 import Image from "next/image";
 import { useApi } from "@/hooks/useAPI";
+import { useSelector } from "react-redux";
 
 interface SidebarProps {
-  type: string; 
+  type: string;
 }
 
-export default function Sidebar({ type }: SidebarProps) { 
-  const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
+export default function Sidebar({ type }: SidebarProps) {
   const { API } = useApi();
+  const firstName = useSelector((state: any) => state.auth.firstName);
+  const lastName = useSelector((state: any) => state.auth.lastName);
+  const image = useSelector((state: any) => state.auth.image);
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
+  const [userImage, setUserImage] = useState("")
+
+    useEffect(() => {
+      setUserImage(image)
+    }, [image])
 
   const toggleSection = (section: string) => {
     setOpenSections((prev) => ({ ...prev, [section]: !prev[section] }));
   };
-
-  // useEffect(()=>{
-  // async function abc(){
-  //   const data=await API.get("auth/get-users")
-  //   console.log(data)
-  // }
-  // abc();
-  // },[])
 
   return (
     <>
@@ -31,20 +32,26 @@ export default function Sidebar({ type }: SidebarProps) {
           <h2 className="text-white font-semibold p-4">
             WELCOME TO ACCOUNT
           </h2>
-          <MenuItems toggleSection={toggleSection} openSections={openSections} type="home"/>
+          <MenuItems toggleSection={toggleSection} openSections={openSections} type="home" />
         </div>
       ) : (
         <div className="w-full min-w-[280px] overflow-y-auto overflow-x-hidden rounded-lg bg-[var(--bgh)] absolute right-0 mt-1 max-h-[500px]">
           <section className="sticky top-0 bg-black/10 cursor-pointer flex gap-4 justify-between items-center p-4 border-b border-b-1 border-black/10 hover:bg-black/20 duration-[.5s]">
             <span className="min-w-10 min-h-10 max-w-10 max-h-10 rounded-full overflow-hidden block">
-              <Image height={100} width={100} className="w-full block h-full" src="/logo.png" alt="logo" />
+              <Image
+                height={100}
+                width={100}
+                className="w-full block h-full"
+                src={userImage || "/profile-avatar-legacy-50.png"}
+                alt="logo"
+              />
             </span>
             <div className="w-full">
-              <b className="text-white">Ambros Marcos</b>
+              <b className="text-white">{firstName + " " + lastName}</b>
             </div>
           </section>
-          <MenuItems toggleSection={toggleSection} openSections={openSections} type="sidebar"/>
-         
+          <MenuItems toggleSection={toggleSection} openSections={openSections} type="sidebar" />
+
         </div>
       )}
     </>

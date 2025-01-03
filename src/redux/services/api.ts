@@ -54,10 +54,10 @@ const baseQueryWithReauth = async (args: any, api: any, extraOptions: any) => {
 
   if (result.error) {
     const errorData = result.error.data as ApiError;
-    
     if (errorData) {
       const error = await handleError(errorData);
-
+      
+      console.log(error,"=========================")
       if (error.toast) {
         toasterError(error.toast);
       }
