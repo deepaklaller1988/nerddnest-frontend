@@ -11,7 +11,6 @@ import { RxCross2 } from 'react-icons/rx';
 import EmojiPicker from 'emoji-picker-react';
 import GifSearch from '../Post/GifSearch';
 import { useSelector } from 'react-redux';
-import useSocket from '@/hooks/useSocket';
 
 export default function ChatInput({ participatedId, activeChatId, message,setMessage,handleChat }: any) {
     const { API } = useApi()
@@ -23,8 +22,7 @@ export default function ChatInput({ participatedId, activeChatId, message,setMes
     const gifPickerRef = useRef<HTMLDivElement>(null);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const [emoji, setEmoji] = useState(false);
-
-
+    
     const [images, setImages] = useState<File[]>([]);
     const [videos, setVideos] = useState<File[]>([]);
     const [files, setFiles] = useState<File[]>([]);

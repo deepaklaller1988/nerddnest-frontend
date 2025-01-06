@@ -6,13 +6,13 @@ import { useSelector } from 'react-redux';
 import { BsThreeDots } from 'react-icons/bs'
 import { capitalizeName } from '@/utils/capitalizeName';
 import { MessageActionsMenu } from '@/lib/MenuBar/MessageActionMenu';
-import useSocket from '@/hooks/useSocket';
 import Image from 'next/image';
 import { formatDate, formatTime } from '@/utils/timeAgo';
+import { getSocket } from '@/utils/socketService';
 
 export default function ChatWindow({ getAllMessages, setActiveChatId, activeChatId, isHandleClickActive, setIsHandleClickActive, selectedChatData }: any) {
     const { API } = useApi()
-    const socket = useSocket({})
+    const socket = getSocket()
     const userId = useSelector((state: any) => state.auth.id);
 
     const [options, setOptions] = useState<boolean>(false);
@@ -52,7 +52,6 @@ export default function ChatWindow({ getAllMessages, setActiveChatId, activeChat
     useEffect(() => {
         if (socket) {
             socket?.on("msg-receive", (newMessage: any) => {
-                console.log(newMessage, '==sdsd')
                 setActiveChatId(newMessage?.conversation_id)
             });
 
@@ -103,15 +102,13 @@ export default function ChatWindow({ getAllMessages, setActiveChatId, activeChat
     const handleRemoveItem = (id: any) => {
         setSelectedItems(selectedItems.filter(item => item.id !== id));
     };
-console.log(messages)
+
     const handleChat = ({ payload, msgType }: any) => {
         socket?.emit(msgType, payload, (response: any) => {
             if (response.success) {
                 if (msgType == "startConversation") {
-                    console.log(response?.data?.conversation_id, "====conver")
                     setActiveChatId(response?.data?.conversation_id)
                 }
-                // getMessages(response?.data?.conversation_id)
                 setMessages((prev: any) => [...prev, response.data]);
                 getAllMessages()
                 setMessage("");

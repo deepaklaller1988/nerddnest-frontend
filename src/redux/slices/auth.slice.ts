@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../store";
+import { initializeSocket, disconnectSocket } from "../../utils/socketService";
 
 interface AuthState {
   accessToken: string | null;
@@ -7,7 +8,8 @@ interface AuthState {
   id: number | null;
   firstName: string | null;
   lastName: string | null;
-  image?:string |null
+  image?: string | null;
+  isSocketConnected?: boolean;
 }
 
 const initialState: AuthState = {
@@ -24,9 +26,10 @@ const initialState: AuthState = {
   lastName: typeof window !== "undefined" && localStorage.getItem("user")
     ? JSON.parse(localStorage.getItem("user")!).lastName
     : null,
-    image :typeof window !== "undefined" && localStorage.getItem("user")
+  image: typeof window !== "undefined" && localStorage.getItem("user")
     ? JSON.parse(localStorage.getItem("user")!).image
     : null,
+    isSocketConnected: false,
 };
 
 const authSlice = createSlice({
@@ -38,9 +41,10 @@ const authSlice = createSlice({
       if (typeof window !== "undefined") {
         localStorage.setItem("accessToken", action.payload.accessToken);
       }
+      initializeSocket(action.payload.accessToken);
     },
-   
-    setUserId(state, action: PayloadAction<{image?:any,id: number; userId: string; firstName: string; lastName: string }>) {
+
+    setUserId(state, action: PayloadAction<{ image?: any; id: number; userId: string; firstName: string; lastName: string }>) {
       state.id = action.payload.id;
       state.userId = action.payload.userId;
       state.firstName = action.payload.firstName;
@@ -59,6 +63,7 @@ const authSlice = createSlice({
         );
       }
     },
+
     clearAuth(state) {
       state.accessToken = null;
       state.userId = null;
@@ -66,6 +71,8 @@ const authSlice = createSlice({
       state.firstName = null;
       state.image = null;
       state.lastName = null;
+      disconnectSocket();
+
       if (typeof window !== "undefined") {
         localStorage.removeItem("accessToken");
         localStorage.removeItem("user");
@@ -75,6 +82,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { setAuth ,setUserId, clearAuth } = authSlice.actions;
+export const { setAuth, setUserId, clearAuth } = authSlice.actions;
 export const isAuthenticated = (state: RootState) => !!state.auth.accessToken;
 export default authSlice.reducer;
