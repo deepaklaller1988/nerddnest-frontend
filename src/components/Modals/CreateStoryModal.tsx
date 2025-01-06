@@ -66,13 +66,55 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup, handleDeleteStories }) =
   };
 
 
+  // const handleAddStory = async (values: any, setFieldValue: any) => {
+  //   const hasValidStories = values.stories.some(
+  //     (story: any) => story.storyText || story.storyLink || story.storyMedia
+  //   );
+
+  //   if (!hasValidStories) {
+  //     toasterError("Please add at least one story before submitting.");
+  //     return;
+  //   }
+
+  //   const updatedValues = {
+  //     ...values,
+  //     storyCoverImage: values.storyCoverImage,
+  //     mediaUrl: values.storyCoverImage,
+  //     stories: values.stories.map((story: any) => ({
+  //       ...story,
+  //       mediaUrl: story.storyMedia,
+  //     })),
+  //   };
+
+  //   try {
+  //     const { data, success, error } = await API.post("story/create", updatedValues);
+  //     if (success) {
+  //       toasterSuccess("Story Created Successfully!", 2000, "id");
+  //       dispatch(setStoryData(data));
+  //       togglePopup();
+  //     } else {
+  //       toasterError(error || "Failed to Create Story");
+  //     }
+  //   } catch (err) {
+  //     console.error("Error posting story:", err);
+  //     toasterError("An error occurred while posting the story");
+  //   }
+  // };
+ 
   const handleAddStory = async (values: any, setFieldValue: any) => {
     const hasValidStories = values.stories.some(
-      (story: any) => story.storyText || story.storyLink || story.storyMedia
+      (story: any) => story.storyText && story.storyLink && story.storyMedia
     );
-
-    if (!hasValidStories) {
-      toasterError("Please add at least one story before submitting.");
+  
+     const isCoverFileValid = values.storyCoverImage;
+    const isTitleValid = values.coverTitle;
+  
+    if (
+      !hasValidStories || 
+      !isCoverFileValid || 
+      !isTitleValid
+    ) {
+      toasterError("Please fill all required fields.");
       return;
     }
 
@@ -87,7 +129,10 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup, handleDeleteStories }) =
     };
 
     try {
-      const { data, success, error } = await API.post("story/create", updatedValues);
+      const { data, success, error } = await API.post(
+        "story/create",
+        updatedValues
+      );
       if (success) {
         toasterSuccess("Story Created Successfully!", 2000, "id");
         dispatch(setStoryData(data));
@@ -100,7 +145,6 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup, handleDeleteStories }) =
       toasterError("An error occurred while posting the story");
     }
   };
-
   const handleFileChange = async (
     e: React.ChangeEvent<HTMLInputElement>,
     setFieldValue: (field: string, value: any) => void,

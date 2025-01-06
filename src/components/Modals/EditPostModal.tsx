@@ -32,7 +32,7 @@ import { toasterInfo, toasterSuccess } from '../core/Toaster';
 import { setPostedData } from '../../redux/slices/data.slice';
 import { CiCamera, CiVideoOn } from 'react-icons/ci';
 
-const EditPostModal = ({ postId, onClose,}: { postId: any; onClose: () => void }) => {
+const EditPostModal = ({ postId, onClose, }: { postId: any; onClose: () => void }) => {
     const { API } = useApi()
     const dispatch = useDispatch();
     const quillRef = useRef<any>(null);
@@ -102,7 +102,14 @@ const EditPostModal = ({ postId, onClose,}: { postId: any; onClose: () => void }
                 isScheduled: data?.is_scheduled || "",
                 time: data?.schedule_time || ""
             })
-            setValue(data?.content);
+            const urlRegex = /(https?:\/\/[^\s]+)/g;
+
+            const formattedContent = data?.content.replace(urlRegex, (url:any) => {
+                return `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`;
+            });
+                const finalContent = formattedContent.replace(/\n/g, '<br>');
+    
+            setValue(finalContent);
             const scheduleDate = new Date(data?.schedule_time);
             const formattedDate = scheduleDate.toISOString().split('T')[0];
             const formattedTime = scheduleDate.toISOString().split('T')[1].slice(0, 5);
@@ -251,22 +258,22 @@ const EditPostModal = ({ postId, onClose,}: { postId: any; onClose: () => void }
 
     const handleEmojiSelect = (emoji: any, content: any) => {
         if (typeof window !== "undefined" && quillRef.current) {
-          const quillInstance = quillRef.current.getEditor();
-          let selection = quillInstance.getSelection()
-          if (!selection) {
-            quillInstance.focus();
-            const length = quillInstance.getLength();
-            quillInstance.setSelection(length, 0);
-            selection = quillInstance.getSelection();
-          }
-    
-          if (selection) {
-            const cursorPosition = selection.index;
-            quillInstance.insertText(cursorPosition, emoji.emoji);
-            quillInstance.setSelection(cursorPosition + emoji.emoji.length);
-          }
+            const quillInstance = quillRef.current.getEditor();
+            let selection = quillInstance.getSelection()
+            if (!selection) {
+                quillInstance.focus();
+                const length = quillInstance.getLength();
+                quillInstance.setSelection(length, 0);
+                selection = quillInstance.getSelection();
+            }
+
+            if (selection) {
+                const cursorPosition = selection.index;
+                quillInstance.insertText(cursorPosition, emoji.emoji);
+                quillInstance.setSelection(cursorPosition + emoji.emoji.length);
+            }
         }
-      };
+    };
 
     const getFileCount = (name: string): number => {
         switch (name) {
@@ -306,14 +313,14 @@ const EditPostModal = ({ postId, onClose,}: { postId: any; onClose: () => void }
                     if (setFileHandler) {
                         setFileHandler((prevFiles) => [
                             ...prevFiles,
-                            ...uploadData, 
+                            ...uploadData,
                         ]);
                     }
 
                     setInitialValues((prevValues: any) => ({
                         ...prevValues,
                         mediaUrl: [
-                            ...(prevValues.mediaUrl || []), 
+                            ...(prevValues.mediaUrl || []),
                             ...uploadData,
                         ],
                     }));
@@ -365,7 +372,7 @@ const EditPostModal = ({ postId, onClose,}: { postId: any; onClose: () => void }
         label: string,
         acceptedFiles: string,
         fileType: string,
-        filesList: any[] 
+        filesList: any[]
     ) => {
         return (
             <div className="mb-4">

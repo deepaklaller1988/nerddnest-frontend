@@ -260,7 +260,7 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
                   <span className="relative min-w-10 min-h-10 max-w-10 max-h-10 rounded-full block border border-2 border-black/5 border-white">
                     <img
                       className="w-full h-full bg-cover rounded-full"
-                      src="/logo.png"
+                      src={commentData?.commenter?.image || "/profile-avatar-legacy-50.png"}
                       alt="logo"
                     />
                   </span>

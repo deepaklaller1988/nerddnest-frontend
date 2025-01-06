@@ -359,7 +359,7 @@ export default function PostContent({ filter }: any) {
             const urlsInContent = extractURLs(content);
 
             if (urlsInContent.length > 0) {
-              const firstUrl = urlsInContent[0]; 
+              const firstUrl = urlsInContent[0];
               content = content.replace(firstUrl,
                 `<a href="${firstUrl}" target="_blank" rel="noopener noreferrer" class="text-[var(--highlight-blue)]">${firstUrl}</a>`);
             }
@@ -437,8 +437,9 @@ export default function PostContent({ filter }: any) {
                       <span>
                         {data.pinned ? (
                           <LuPin
+                            type="button"
                             className="w-4 h-4 cursor-pointer"
-                            onClick={handleTogglePin}
+                            onClick={()=>handleTogglePin(data)}
                           />
                         ) : (
                           ""
