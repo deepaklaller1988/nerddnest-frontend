@@ -1,13 +1,13 @@
 "use client"
 import React from 'react'
+import Feeds from '@/components/Post/Feeds'
 import Groups from '@/components/core/Groups'
+import PostFeed from '@/components/Post/PostFeed'
 import Sidebar from '@/components/Sidebar/Sidebar'
 import AddStory from '@/components/Story/AddStory'
 import Connections from '@/components/core/Connections'
 import LatestUpdates from '@/components/core/LatestUpdates'
 import FriendSuggestion from '@/components/core/FriendSuggestions'
-import PostFeed from '@/components/Post/PostFeed'
-import Feeds from '@/components/Post/Feeds'
 
 export default function Home() {
 

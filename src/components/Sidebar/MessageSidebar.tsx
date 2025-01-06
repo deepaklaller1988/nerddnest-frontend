@@ -1,10 +1,10 @@
-import MessageSearchBar from '../SearchBar/MessageSearchBar'
+import Image from 'next/image';
+import { FaEdit } from "react-icons/fa";
 import { TbMessageCircleOff } from "react-icons/tb";
 import { capitalizeName } from '@/utils/capitalizeName';
-import { FaEdit } from "react-icons/fa";
-import Image from 'next/image';
+import MessageSearchBar from '../SearchBar/MessageSearchBar'
 
-export default function MessageSidebar({ setActiveChatId, chatData, activeChatId, onChatSelect, onIconClick, isHandleClickActive }: any) {
+export default function MessageSidebar({chatData, activeChatId, onChatSelect, onIconClick, isHandleClickActive }: any) {
 
   return (
     <div className="w-1/4 bg-[var(--sections)] border-r border-white/20">

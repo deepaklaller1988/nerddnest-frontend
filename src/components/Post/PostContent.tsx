@@ -1,27 +1,24 @@
 import React, { useEffect, useRef, useState } from "react";
-import Link from "next/link";
-
-import { useSelector } from "react-redux";
-import { useApi } from "@/hooks/useAPI";
 
 import Image from "next/image";
+import Loader from "../Loaders/Loader";
 import { LuPin } from "react-icons/lu";
+import { useApi } from "@/hooks/useAPI";
+import { useSelector } from "react-redux";
 import { timeAgo } from "@/utils/timeAgo";
-import { BiSolidLike } from "react-icons/bi";
-
-import CommentSection from "./CommentSection";
 import { useRouter } from "next/navigation";
+import { BiSolidLike } from "react-icons/bi";
+import CommentSection from "./CommentSection";
 import { TiArrowSortedDown } from "react-icons/ti";
-import { IoDocumentTextOutline } from "react-icons/io5";
+import EditPostModal from "../Modals/EditPostModal";
+import DeletePopup from "../Modals/DeleteConfirmation";
 import { capitalizeName } from "@/utils/capitalizeName";
+import { IoDocumentTextOutline } from "react-icons/io5";
+import { selectPostedData } from "@/redux/slices/data.slice";
+import { toasterError, toasterSuccess } from "../core/Toaster";
 import { PostActionsMenu } from "@/lib/MenuBar/PostActionsMenu ";
 import { MdMoreHoriz, MdOutlineModeComment } from "react-icons/md";
 import { FeedVisiblityMenu } from "@/lib/MenuBar/FeedVisibiltyMenu";
-import { toasterError, toasterSuccess } from "../core/Toaster";
-import DeletePopup from "../Modals/DeleteConfirmation";
-import EditPostModal from "../Modals/EditPostModal";
-import Loader from "../Loaders/Loader";
-import { selectPostedData } from "@/redux/slices/data.slice";
 
 type LikeData = {
   count: number;
@@ -52,19 +49,9 @@ export default function PostContent({ filter }: any) {
   const [currentPostId, setCurrentPostId] = useState<number | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  const toggleCommentSection = (index: any) => {
-    setActiveCommentIndex(activeCommentIndex === index ? null : index);
-  };
+  const handleMouseLeave = () => setHoveredIndex(null);
+  const handleMouseEnter = (index: number) => setHoveredIndex(index);
 
-  const openEditModal = (postId: number) => {
-    setCurrentPostId(postId);
-    setIsEditModalOpen(true);
-  };
-
-  const closeEditModal = () => {
-    setIsEditModalOpen(false);
-    setCurrentPostId(null);
-  };
   useEffect(() => {
     if (userId) {
       getAllPosts(filter)
@@ -102,6 +89,42 @@ export default function PostContent({ filter }: any) {
       }
     };
   }, [openPostVisibilityIndex, openPostActionMenuIndex]);
+
+  useEffect(() => {
+    const fetchUserLikes = async () => {
+      try {
+        const response = await API.get(`posts/get-user-liked-posts?userId=${userId}`);
+        if (response.success) {
+          const likedPostIds = response.data.map((like: any) => like.id);
+          const likedPostsState = likedPostIds.reduce((acc: any, postId: any) => {
+            acc[postId] = true;
+            return acc;
+          }, {});
+          setLikedPosts(likedPostsState);
+        } else {
+          console.error('Error fetching liked posts:', response.error);
+        }
+      } catch (error) {
+        console.error('Error fetching liked posts:', error);
+      }
+    };
+
+    fetchUserLikes();
+  }, [userId]);
+
+  const toggleCommentSection = (index: any) => {
+    setActiveCommentIndex(activeCommentIndex === index ? null : index);
+  };
+
+  const openEditModal = (postId: number) => {
+    setCurrentPostId(postId);
+    setIsEditModalOpen(true);
+  };
+
+  const closeEditModal = () => {
+    setIsEditModalOpen(false);
+    setCurrentPostId(null);
+  };
 
   const getAllPosts = async (filter: string) => {
     setLoading(true);
@@ -156,32 +179,11 @@ export default function PostContent({ filter }: any) {
       setIsVisibilityLoader(false);
     }
   };
+
   const handleItemClick = async (id: any, userId: any, name: any) => {
     setOpenPostVisibiltyIndex(null);
     await updateVisibilty(id, userId, name);
   };
-
-  useEffect(() => {
-    const fetchUserLikes = async () => {
-      try {
-        const response = await API.get(`posts/get-user-liked-posts?userId=${userId}`);
-        if (response.success) {
-          const likedPostIds = response.data.map((like: any) => like.id);
-          const likedPostsState = likedPostIds.reduce((acc: any, postId: any) => {
-            acc[postId] = true;
-            return acc;
-          }, {});
-          setLikedPosts(likedPostsState);
-        } else {
-          console.error('Error fetching liked posts:', response.error);
-        }
-      } catch (error) {
-        console.error('Error fetching liked posts:', error);
-      }
-    };
-
-    fetchUserLikes();
-  }, [userId]);
 
   const likePost = async (postId: any) => {
     const currentLikedState = likedPosts[postId] || false;
@@ -216,9 +218,6 @@ export default function PostContent({ filter }: any) {
   const handleImageClick = (id: number) => {
     router.push(`/postdetails?id=${id}`);
   };
-
-  const handleMouseLeave = () => setHoveredIndex(null);
-  const handleMouseEnter = (index: number) => setHoveredIndex(index);
 
   const handleDeleteClick = (id: number) => {
     setDeleteItemId(id);
@@ -285,6 +284,7 @@ export default function PostContent({ filter }: any) {
       console.error("API Error:", error);
     }
   };
+
   const handleConfirmDelete = async () => {
     if (deleteItemId === null) return;
 
@@ -303,6 +303,7 @@ export default function PostContent({ filter }: any) {
       setDeleteItemId(null);
     }
   };
+
   const getVisibilityIcon = (visibility: any) => {
     const selectedItem = FeedVisiblityMenu.find(item => item.name === visibility);
     return selectedItem ? selectedItem.Icon : null;
@@ -353,13 +354,12 @@ export default function PostContent({ filter }: any) {
             return content.match(urlRegex) || [];
           };
 
-          // Function to render content with one clickable link
           const renderContentWithLinks = () => {
             let content = data.content;
             const urlsInContent = extractURLs(content);
 
             if (urlsInContent.length > 0) {
-              const firstUrl = urlsInContent[0]; // Get the first URL
+              const firstUrl = urlsInContent[0]; 
               content = content.replace(firstUrl,
                 `<a href="${firstUrl}" target="_blank" rel="noopener noreferrer" class="text-[var(--highlight-blue)]">${firstUrl}</a>`);
             }

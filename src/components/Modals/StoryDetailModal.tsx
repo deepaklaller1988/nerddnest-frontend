@@ -17,9 +17,9 @@ const StoryDetailModal: React.FC<StoryDetailModalProps> = ({
   selectedStory
 }) => {
 
+  const [story,setStory]=useState(stories)
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentUserIndex, setCurrentUserIndex] = useState(selectedStory.index);
-  const [story,setStory]=useState(stories)
 
   const formattedStories: any[] = story.flatMap((story) =>
     story.stories.map((item: any) => {
@@ -61,9 +61,9 @@ const StoryDetailModal: React.FC<StoryDetailModalProps> = ({
 
   const onStoryEnd = (storyIndex: number) => {
     if (storyIndex + 1 >= alldata[currentUserIndex]?.stories.length) {
-      goToNextUser();  // Go to the next user when the current user's stories are finished
+      goToNextUser(); 
     } else {
-      setCurrentIndex(storyIndex + 1);  // Move to the next story automatically
+      setCurrentIndex(storyIndex + 1); 
     }
   };
 

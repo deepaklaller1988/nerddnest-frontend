@@ -1,8 +1,8 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { RootState } from "../store";
 import Error from "@/utils/Error";
+import { RootState } from "../store";
 import { toasterError } from "@/components/core/Toaster";
 import { clearAuth, setAuth } from "../slices/auth.slice";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 interface ApiError {
   error: {
@@ -10,7 +10,6 @@ interface ApiError {
     message: string;
   };
 }
-
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 

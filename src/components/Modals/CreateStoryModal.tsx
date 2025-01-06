@@ -1,18 +1,17 @@
-import { AddStoryValidationSchema } from "@/utils/validationSchemas";
-import { Field, FieldArray, Form, Formik } from "formik";
-import InputField from "../core/InputField";
-import { RxCross2 } from "react-icons/rx";
 import Button from "../Buttons/Button";
-import { IoMdAdd, IoMdSend } from "react-icons/io";
-import { HiOutlineChevronUpDown } from "react-icons/hi2";
-import { toasterError, toasterSuccess } from "../core/Toaster";
 import { useApi } from "@/hooks/useAPI";
-import { uploadFile } from "../../common/UploadFile";
+import { RxCross2 } from "react-icons/rx";
+import InputField from "../core/InputField";
 import { useEffect, useState } from "react";
 import { IoCloseCircle } from "react-icons/io5";
+import { IoMdAdd, IoMdSend } from "react-icons/io";
+import { uploadFile } from "../../common/UploadFile";
 import { useDispatch, useSelector } from "react-redux";
+import { HiOutlineChevronUpDown } from "react-icons/hi2";
+import { Field, FieldArray, Form, Formik } from "formik";
 import { setStoryData } from "../../redux/slices/data.slice";
-
+import { toasterError, toasterSuccess } from "../core/Toaster";
+import { AddStoryValidationSchema } from "@/utils/validationSchemas";
 
 const CreateStoryModal: React.FC<any> = ({ togglePopup, handleDeleteStories }) => {
   const { API } = useApi();
@@ -60,7 +59,6 @@ const CreateStoryModal: React.FC<any> = ({ togglePopup, handleDeleteStories }) =
       }
     }
   };
-
 
   const handleDeleteStory = (storyId: any) => {
     handleDeleteStories(storyId);

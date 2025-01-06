@@ -2,38 +2,40 @@
 
 import dynamic from 'next/dynamic';
 
-import React, { useEffect, useRef, useState } from "react";
-import { MdOutlineLinkedCamera } from "react-icons/md";
-import { HiOutlineVideoCamera } from "react-icons/hi2";
-import { IoDocumentAttachOutline } from "react-icons/io5";
-import { HiOutlineGif } from "react-icons/hi2";
-import { BiBarChartSquare } from "react-icons/bi";
-const CreatePostPopup = dynamic(() => import("../Modals/CreatePostModal"), { ssr: false });
-
 import Image from "next/image";
-import { capitalizeName } from '@/utils/capitalizeName';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
+import { HiOutlineGif } from "react-icons/hi2";
+import { BiBarChartSquare } from "react-icons/bi";
+import { MdOutlineLinkedCamera } from "react-icons/md";
+import { capitalizeName } from '@/utils/capitalizeName';
+import { HiOutlineVideoCamera } from "react-icons/hi2";
+import { IoDocumentAttachOutline } from "react-icons/io5";
+import React, { useEffect, useRef, useState } from "react";
+const CreatePostPopup = dynamic(() => import("../Modals/CreatePostModal"), { ssr: false });
 
 export default function PostFeed() {
   const route=useRouter()
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [isClient, setIsClient] = useState(false)
-  const [popupType, setPopupType] = useState<string | null>(null);
   const popupRef = useRef<HTMLDivElement>(null);
+
   const firstName = useSelector((state: any) => state.auth.firstName) || "";
   const userId = useSelector((state: any) => state.auth.id) || "";
   const lastName = useSelector((state: any) => state.auth.lastName) || "";
   const image = useSelector((state: any) => state.auth.image) || "";
+
+  const [isClient, setIsClient] = useState(false)
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [popupType, setPopupType] = useState<string | null>(null);
+
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
 
   const handleClick = (type: string) => {
     setPopupType(type);
     setIsPopupOpen(true);
   };
 
-  useEffect(() => {
-    setIsClient(true)
-  }, [])
 
   return (
     isClient ?

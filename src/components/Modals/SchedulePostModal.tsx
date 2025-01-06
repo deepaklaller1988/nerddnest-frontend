@@ -1,6 +1,6 @@
 "use client"
-import React, { useEffect, useState } from "react";
 import Button from "../Buttons/Button";
+import React, { useEffect, useState } from "react";
 import { MdOutlineArrowRightAlt } from "react-icons/md";
 import ViewAllScheduleModal from "./ViewAllScheduleModal";
 
@@ -125,8 +125,6 @@ const SchedulePostPopup = ({ isOpen, onClose, onScheduleComplete,isScheduling,in
             <MdOutlineArrowRightAlt
               className="ml-1 mt-0.5 text-[var(--highlight)]"
               size={20}
-
-
             />
           </div>
           }
@@ -145,7 +143,6 @@ const SchedulePostPopup = ({ isOpen, onClose, onScheduleComplete,isScheduling,in
             onClick={handleSchedule}
           />
         </div>
-
 
         {isViewPopupOpen && <ViewAllScheduleModal
           isViewPopupOpen={isViewPopupOpen}

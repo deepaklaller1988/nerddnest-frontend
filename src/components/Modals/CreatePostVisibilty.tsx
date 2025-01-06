@@ -27,15 +27,26 @@ const VisibilityPopup: React.FC<VisibilityPopupProps> = ({
   sendSelectedIcon,
   selectedVisibility,
 }) => {
-  const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
-  const [showGroupPopup, setShowGroupPopup] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [showGroupPopup, setShowGroupPopup] = useState(false);
+  const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
+  const [currentSelectedVisibility, setCurrentSelectedVisibility] = useState(selectedVisibility);
 
   const [Groups, setGroups] = useState([
     { id: 1, name: "Group 1", image: "/logo.png" },
     { id: 2, name: "Group 2", image: "/logo.png" },
     { id: 3, name: "Group 3", image: "/logo.png" },
   ]);
+
+  useEffect(() => {
+    if (selectedVisibility?.name) {
+      setCurrentSelectedVisibility(selectedVisibility);
+      if (selectedVisibility.id === "groups") {
+        setSelectedGroup(selectedVisibility);
+        setShowGroupPopup(false); 
+      }
+    }
+  }, [selectedVisibility]);
 
   const visibilityOptions = [
     {
@@ -79,18 +90,6 @@ const VisibilityPopup: React.FC<VisibilityPopupProps> = ({
       description: "Visible to members of a group",
     },
   ];
-
-  const [currentSelectedVisibility, setCurrentSelectedVisibility] = useState(selectedVisibility);
-
-  useEffect(() => {
-    if (selectedVisibility?.name) {
-      setCurrentSelectedVisibility(selectedVisibility);
-      if (selectedVisibility.id === "groups") {
-        setSelectedGroup(selectedVisibility);
-        setShowGroupPopup(false); 
-      }
-    }
-  }, [selectedVisibility]);
 
   const handleVisibilitySelect = (option: any) => {
     sendSelectedIcon(option);

@@ -1,6 +1,6 @@
 "use client";
-import dynamic from "next/dynamic";
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import FeedSearchBar from "../SearchBar/FeedSearchBar";
 const PostContent = dynamic(() => import('./PostContent'), { ssr: false });
 

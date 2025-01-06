@@ -1,7 +1,7 @@
 import { HiOutlineVideoCamera } from "react-icons/hi2";
 import { IoDocumentAttachOutline } from "react-icons/io5";
 import { HiOutlineGif } from "react-icons/hi2";
-import { BiBarChartSquare, BiSolidLike } from "react-icons/bi";
+import { BiSolidLike } from "react-icons/bi";
 import { IoPaperPlaneSharp } from "react-icons/io5";
 import {
   MdMoreHoriz,
@@ -23,26 +23,26 @@ type LikeData = {
 
 const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount }: any) => {
   const { API } = useApi();
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const userId = useSelector((state: any) => state.auth.id);
   const image = useSelector((state: any) => state.auth.image) 
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const [commentsData, setCommentsData] = useState<any>([]);
-  const [comment, setComment] = useState<string>("");
-  const [replyComment, setReplyComment] = useState<string>("");
-  const [activeReplyId, setActiveReplyId] = useState<string | null>(null);
-  const [likeComment, setLikeComment] = useState<any>(false)
-  const [innerCommentLike, setInnerCommentLike] = useState<{ [key: string]: LikeData }>({});
-  const [images, setImages] = useState<File[]>([]);
-  const [videos, setVideos] = useState<File[]>([]);
-  const [files, setFiles] = useState<File[]>([]);
-  const [isUploadLoading, setIsUploadLoading] = useState(false);
-  const [initialValues, setInitialValues] = useState<any>({ mediaUrl: [] });
   const imageInputRef = useRef<HTMLInputElement | null>(null);
   const videoInputRef = useRef<HTMLInputElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
+  const [files, setFiles] = useState<File[]>([]);
+  const [images, setImages] = useState<File[]>([]);
+  const [videos, setVideos] = useState<File[]>([]);
+  const [comment, setComment] = useState<string>("");
+  const [commentsData, setCommentsData] = useState<any>([]);
+  const [likeComment, setLikeComment] = useState<any>(false)
+  const [replyComment, setReplyComment] = useState<string>("");
+  const [isUploadLoading, setIsUploadLoading] = useState(false);
+  const [activeReplyId, setActiveReplyId] = useState<string | null>(null);
+  const [initialValues, setInitialValues] = useState<any>({ mediaUrl: [] });
   const [deleteButtonIndex, setDeleteButtonIndex] = useState<number | null>(null);
+  const [innerCommentLike, setInnerCommentLike] = useState<{ [key: string]: LikeData }>({});
 
   useEffect(() => {
     if (isActive && textareaRef.current) {
@@ -55,8 +55,6 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
       getAllCommentData(id);
     }
   }, [id, isActive]);
-
-
 
   const toggleDeleteButton = (index: number) => {
     setDeleteButtonIndex(deleteButtonIndex === index ? null : index);
@@ -135,6 +133,28 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
     }
   };
 
+  const getAllLikes = async (commentId: any) => {
+    const { success, data, error, count } = await API.get(`posts/get-likes-comment?commentId=${commentId}`);
+    if (success) {
+      setInnerCommentLike((prevState) => ({
+        ...prevState,
+        [commentId]: {
+          users: data?.map((like: any) => like.user),
+          count: data?.length,
+        },
+      }));
+    } else {
+      console.error(error);
+    }
+  };
+
+  const getFileCount = (name: string): number => {
+    if (name === "images") return images.length;
+    if (name === "video") return videos.length;
+    if (name === "document") return files.length;
+    return 0;
+  };
+  
   const handleDelete = async (commentId: any) => {
     try {
       const response = await API.delete(`posts/delete-comment`, { id: commentId });
@@ -168,30 +188,6 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
     }
   };
 
-
-  const getAllLikes = async (commentId: any) => {
-    const { success, data, error, count } = await API.get(`posts/get-likes-comment?commentId=${commentId}`);
-    if (success) {
-      setInnerCommentLike((prevState) => ({
-        ...prevState,
-        [commentId]: {
-          users: data?.map((like: any) => like.user),
-          count: data?.length,
-        },
-      }));
-    } else {
-      console.error(error);
-    }
-  };
-
-
-  const getFileCount = (name: string): number => {
-    if (name === "images") return images.length;
-    if (name === "video") return videos.length;
-    if (name === "document") return files.length;
-    return 0;
-  };
-  
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name } = e.target;
     if (e.target.files) {
@@ -232,6 +228,7 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
       }
     }
   };
+  
   const handleMediaTypeSelection = (type: string) => {
     if (type === 'image' && imageInputRef.current) {
       imageInputRef.current.click(); 
@@ -513,10 +510,7 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
                     className="hidden"
                     onChange={handleFileChange}
                   />
-
-
                 </section>
-
               </section>
             </section>
           </div>

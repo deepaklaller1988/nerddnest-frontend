@@ -1,41 +1,38 @@
-import { useApi } from '@/hooks/useAPI';
-import { Field, Form, Formik } from 'formik';
-import { useState, useEffect, useRef } from 'react';
-
-import PopupHeader from '../Header/PopupHeader';
 import Image from 'next/image';
-import { capitalizeName } from '@/utils/capitalizeName';
-import { useDispatch, useSelector } from 'react-redux';
-import EmojiPicker from 'emoji-picker-react';
 import { FiFile } from "react-icons/fi";
-import { RxCross2 } from "react-icons/rx";
-import { FaCamera, FaCaretDown } from "react-icons/fa";
+import { useApi } from '@/hooks/useAPI';
 import { FaVideo } from "react-icons/fa";
-import { PiClockFill, PiGifFill } from "react-icons/pi";
-
+import { RxCross2 } from "react-icons/rx";
+import { Field, Form, Formik } from 'formik';
 import { MdInsertChart } from "react-icons/md";
 import { TbFileTypeXls } from "react-icons/tb";
 import { HiOutlineGif } from "react-icons/hi2";
 import { BiBarChartSquare } from "react-icons/bi";
 import { IoDocumentAttach } from "react-icons/io5";
-import { uploadMultiFile } from "../../common/UploadFile";
+import { useState, useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { MdOutlineLinkedCamera } from "react-icons/md";
 import { HiOutlineVideoCamera } from "react-icons/hi2";
+import { FaCamera, FaCaretDown } from "react-icons/fa";
+import { capitalizeName } from '@/utils/capitalizeName';
+import { PiClockFill, PiGifFill } from "react-icons/pi";
+import { uploadMultiFile } from "../../common/UploadFile";
 import { IoDocumentAttachOutline, IoDocumentTextSharp } from "react-icons/io5";
-import VisibilityPopup from './CreatePostVisibilty';
-import { setPostedData } from '../../redux/slices/data.slice';
 
-import MiniLoader from '../Loaders/Miniloader';
-import { toasterInfo, toasterSuccess } from '../core/Toaster';
-import { BsEmojiSmile } from 'react-icons/bs';
 import { GoGlobe } from 'react-icons/go';
-import { CiCamera, CiVideoOff, CiVideoOn } from 'react-icons/ci';
+import EmojiPicker from 'emoji-picker-react';
+import QuillEditor from '../Post/QuillEditor';
+import { BsEmojiSmile } from 'react-icons/bs';
+import MiniLoader from '../Loaders/Miniloader';
+import PopupHeader from '../Header/PopupHeader';
 import { TiArrowSortedDown } from 'react-icons/ti';
 import SchedulePostPopup from './SchedulePostModal';
-import QuillEditor from '../Post/QuillEditor';
+import VisibilityPopup from './CreatePostVisibilty';
+import { toasterInfo, toasterSuccess } from '../core/Toaster';
+import { setPostedData } from '../../redux/slices/data.slice';
+import { CiCamera, CiVideoOn } from 'react-icons/ci';
 
-const EditPostModal = ({ postId, onClose,
-}: { postId: any; onClose: () => void }) => {
+const EditPostModal = ({ postId, onClose,}: { postId: any; onClose: () => void }) => {
     const { API } = useApi()
     const dispatch = useDispatch();
     const quillRef = useRef<any>(null);
@@ -307,19 +304,17 @@ const EditPostModal = ({ postId, onClose,
                     setIsUploadLoading(false);
 
                     if (setFileHandler) {
-                        // Update the state with the previous files + newly uploaded files
                         setFileHandler((prevFiles) => [
                             ...prevFiles,
-                            ...uploadData, // Assuming uploadData contains the new URLs of uploaded files
+                            ...uploadData, 
                         ]);
                     }
 
-                    // Update the media URL in the initial values (for submit)
                     setInitialValues((prevValues: any) => ({
                         ...prevValues,
                         mediaUrl: [
-                            ...(prevValues.mediaUrl || []), // Existing media URLs
-                            ...uploadData, // Newly uploaded media URLs
+                            ...(prevValues.mediaUrl || []), 
+                            ...uploadData,
                         ],
                     }));
                 } catch (error) {
@@ -370,7 +365,7 @@ const EditPostModal = ({ postId, onClose,
         label: string,
         acceptedFiles: string,
         fileType: string,
-        filesList: any[] // List of files to display
+        filesList: any[] 
     ) => {
         return (
             <div className="mb-4">

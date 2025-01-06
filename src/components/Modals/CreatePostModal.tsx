@@ -175,11 +175,9 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
     setSelectedVisibility({ icon: option.icon, name: option.name, id: option.id });
   };
 
-
   const handleEmojis = () => {
     setEmoji((prev) => !prev);
   };
-
 
   const handleEmojiSelect = (emoji: any, content: any) => {
     if (typeof window !== "undefined" && quillRef.current) {

@@ -1,19 +1,18 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import MenuItems from "../core/MenuItems";
 import Image from "next/image";
-import { useApi } from "@/hooks/useAPI";
+import MenuItems from "../core/MenuItems";
 import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
 
 interface SidebarProps {
   type: string;
 }
 
 export default function Sidebar({ type }: SidebarProps) {
-  const { API } = useApi();
   const firstName = useSelector((state: any) => state.auth.firstName);
   const lastName = useSelector((state: any) => state.auth.lastName);
   const image = useSelector((state: any) => state.auth.image);
+
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
   const [userImage, setUserImage] = useState("")
 

@@ -1,6 +1,6 @@
 import { useApi } from '@/hooks/useAPI';
-import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
 import { toasterError, toasterSuccess } from '../core/Toaster';
 
 export default function FriendsContent() {

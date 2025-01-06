@@ -1,13 +1,13 @@
 "use client"
-import React, { useEffect, useState } from "react";
-import Slider from "react-slick";
-import CreateStoryModal from "../Modals/CreateStoryModal";
 import Image from "next/image";
+import Slider from "react-slick";
 import { useApi } from "@/hooks/useAPI";
 import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { capitalizeName } from "@/utils/capitalizeName";
+import CreateStoryModal from "../Modals/CreateStoryModal";
 import StoryDetailModal from "../Modals/StoryDetailModal";
 import { selectStoryData } from '../../redux/slices/data.slice';
-import { capitalizeName } from "@/utils/capitalizeName";
 import { toasterError, toasterSuccess } from "../core/Toaster";
 
 export default function AddStory() {
@@ -85,9 +85,8 @@ export default function AddStory() {
             onClick={toggleCreatePopup}
           >
             <Image
-              // height={60}
-              // width={60}
-              layout="fill"
+              height={60}
+              width={60}
               className="w-full object-cover min-h-[100px]"
               src={userImage ? userImage : "/profile-avatar-legacy-50.png"}
               alt="dp"

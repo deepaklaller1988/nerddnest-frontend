@@ -1,17 +1,17 @@
 import { useApi } from "@/hooks/useAPI";
-import React, { useEffect, useState } from "react";
-import { MdDeleteForever } from "react-icons/md";
 import { MdEdit } from "react-icons/md";
 import { useSelector } from "react-redux";
-import DeletePopup from "./DeleteConfirmation";
-import { toasterError, toasterSuccess } from "../core/Toaster";
 import EditPostModal from "./EditPostModal";
-import { FeedVisiblityMenu } from "@/lib/MenuBar/FeedVisibiltyMenu";
+import DeletePopup from "./DeleteConfirmation";
 import { DateFormatter } from "@/utils/timeAgo";
+import { MdDeleteForever } from "react-icons/md";
+import React, { useEffect, useState } from "react";
+import { toasterError, toasterSuccess } from "../core/Toaster";
+import { FeedVisiblityMenu } from "@/lib/MenuBar/FeedVisibiltyMenu";
+
 type ViewAllScheduleModalProps = {
     isViewPopupOpen: any
     onClose: () => void;
-    
 };
 
 const ViewAllScheduleModal = ({ onClose }: ViewAllScheduleModalProps) => {
@@ -88,6 +88,7 @@ const ViewAllScheduleModal = ({ onClose }: ViewAllScheduleModalProps) => {
                         onCancel={handleClosePopup}
                     />
                 )}
+
                 {isEditModalOpen && (
                     <div
                         className="fixed inset-0 flex items-center justify-center z-50 bg-gray-800 bg-opacity-50"
@@ -95,7 +96,6 @@ const ViewAllScheduleModal = ({ onClose }: ViewAllScheduleModalProps) => {
                         <EditPostModal
                             postId={currentPostId!}
                             onClose={closeEditModal}
-
                         />
                     </div>
                 )}

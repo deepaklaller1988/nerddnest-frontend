@@ -192,10 +192,7 @@ export default function ChatWindow({ getAllMessages, setActiveChatId, activeChat
                         <div></div>
 
                         <BsThreeDots onClick={handleButtonPopup} size={26} className="cursor-pointer relative" />
-
                     </>
-
-
                 }
             </div>
 

@@ -1,16 +1,17 @@
 import { useApi } from '@/hooks/useAPI';
-import React, { useEffect, useRef, useState } from 'react';
-import { CiFaceSmile } from 'react-icons/ci';
-import { HiOutlineGif, HiOutlineVideoCamera } from 'react-icons/hi2';
-import { IoIosSend } from 'react-icons/io';
-import { IoDocumentAttachOutline } from 'react-icons/io5';
-import { MdOutlineLinkedCamera } from 'react-icons/md';
-import { uploadMultiFile } from '../../common/UploadFile';
-import { toasterInfo } from '../core/Toaster';
-import { RxCross2 } from 'react-icons/rx';
-import EmojiPicker from 'emoji-picker-react';
 import GifSearch from '../Post/GifSearch';
 import { useSelector } from 'react-redux';
+import { RxCross2 } from 'react-icons/rx';
+import { IoIosSend } from 'react-icons/io';
+import { CiFaceSmile } from 'react-icons/ci';
+import EmojiPicker from 'emoji-picker-react';
+import { toasterInfo } from '../core/Toaster';
+import { MdOutlineLinkedCamera } from 'react-icons/md';
+import { IoDocumentAttachOutline } from 'react-icons/io5';
+import { uploadMultiFile } from '../../common/UploadFile';
+import React, { useEffect, useRef, useState } from 'react';
+import { HiOutlineGif, HiOutlineVideoCamera } from 'react-icons/hi2';
+
 
 export default function ChatInput({ participatedId, activeChatId, message,setMessage,handleChat }: any) {
     const { API } = useApi()
@@ -22,7 +23,7 @@ export default function ChatInput({ participatedId, activeChatId, message,setMes
     const gifPickerRef = useRef<HTMLDivElement>(null);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const [emoji, setEmoji] = useState(false);
-    
+
     const [images, setImages] = useState<File[]>([]);
     const [videos, setVideos] = useState<File[]>([]);
     const [files, setFiles] = useState<File[]>([]);
