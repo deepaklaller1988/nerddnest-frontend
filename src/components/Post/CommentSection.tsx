@@ -15,6 +15,8 @@ import { FaTrash } from "react-icons/fa6";
 import { RxCross2 } from "react-icons/rx";
 import { toasterError, toasterInfo, toasterSuccess } from "../core/Toaster";
 import { uploadMultiFile } from "@/common/UploadFile";
+import { capitalizeName } from "@/utils/capitalizeName";
+import { getErrorMessage } from "@/utils/errorHandler";
 
 type LikeData = {
   count: number;
@@ -22,10 +24,11 @@ type LikeData = {
 };
 
 const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount }: any) => {
+  console.log(commentsCount,"==============")
   const { API } = useApi();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const userId = useSelector((state: any) => state.auth.id);
-  const image = useSelector((state: any) => state.auth.image) 
+  const image = useSelector((state: any) => state.auth.image)
 
   const imageInputRef = useRef<HTMLInputElement | null>(null);
   const videoInputRef = useRef<HTMLInputElement | null>(null);
@@ -40,8 +43,10 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
   const [replyComment, setReplyComment] = useState<string>("");
   const [isUploadLoading, setIsUploadLoading] = useState(false);
   const [activeReplyId, setActiveReplyId] = useState<string | null>(null);
+  const [showDelete, setShowDelete] = useState(false);
   const [initialValues, setInitialValues] = useState<any>({ mediaUrl: [] });
   const [deleteButtonIndex, setDeleteButtonIndex] = useState<number | null>(null);
+  const [deleteinnerButtonIndex, setDeleteinnerButtonIndex] = useState<number | null>(null);
   const [innerCommentLike, setInnerCommentLike] = useState<{ [key: string]: LikeData }>({});
 
   useEffect(() => {
@@ -59,6 +64,9 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
   const toggleDeleteButton = (index: number) => {
     setDeleteButtonIndex(deleteButtonIndex === index ? null : index);
   };
+  const toggleInnerDeleteComment = (index: number) => {
+    setDeleteinnerButtonIndex(deleteinnerButtonIndex === index ? null : index);
+  };
 
   const getAllCommentData = async (postId: any) => {
     try {
@@ -70,7 +78,7 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
         data.forEach((comment: any) => {
           setLikeComment((prev: any) => ({
             ...prev,
-            [comment.id]: comment.likes_count > 0, 
+            [comment.id]: comment.likes_count > 0,
           }));
         });
       } else {
@@ -84,7 +92,7 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
 
   const postComment = async (comment: string) => {
     if (!comment.trim() && images.length === 0 && videos.length === 0 && files.length === 0) {
-      toasterError("Please enter a comment or add media."); 
+      toasterError("Please enter a comment or add media.");
       return;
     }
     try {
@@ -113,6 +121,7 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
 
   const postReplyComment = async (commentId: any) => {
     if (!replyComment.trim()) return;
+
     try {
       const { success, error } = await API.post("posts/reply-comment", {
         postId: id,
@@ -154,22 +163,39 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
     if (name === "document") return files.length;
     return 0;
   };
-  
+
   const handleDelete = async (commentId: any) => {
     try {
-      const response = await API.delete(`posts/delete-comment`, { id: commentId });
-      if (response.success) {
+      const { success, data, error } = await API.delete(`posts/delete-comment`, { id: commentId });
+      if (success) {
         toasterSuccess("Comment has been deleted successfully");
         setCommentsData((prevComments: any) =>
           prevComments.filter((comment: any) => comment.id !== commentId)
         );
         updateCommentsCount(id, commentsCount - 1);
         setDeleteButtonIndex(null);
-      } else {
-        toasterError("Failed to delete the comment");
       }
-    } catch (error) {
-      toasterError("An error occurred while deleting the comment");
+
+    } catch (error: any) {
+      const errorMessage = getErrorMessage(error?.code);
+      toasterError(errorMessage);
+    }
+  };
+
+  const handleDeleteInnerComment = async (commentId: any) => {
+    try {
+      const { success, data, error } = await API.delete(`posts/delete-comment`, { id: commentId });
+      if (success) {
+        toasterSuccess("Comment has been deleted successfully");
+        // setCommentsData((prevComments: any) =>
+        //   prevComments.filter((comment: any) => comment.id !== commentId)
+        // );
+        setDeleteinnerButtonIndex(null);
+      }
+
+    } catch (error: any) {
+      const errorMessage = getErrorMessage(error?.code);
+      toasterError(errorMessage);
     }
   };
 
@@ -180,7 +206,7 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
     if (success) {
       setLikeComment((prevState: any) => ({
         ...prevState,
-        [commentId]: newLikeStatus 
+        [commentId]: newLikeStatus
       }));
       getAllLikes(commentId)
       toasterSuccess(data.message, 1000, "id")
@@ -228,22 +254,22 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
       }
     }
   };
-  
+
   const handleMediaTypeSelection = (type: string) => {
     if (type === 'image' && imageInputRef.current) {
-      imageInputRef.current.click(); 
+      imageInputRef.current.click();
     } else if (type === 'videos' && videoInputRef.current) {
       videoInputRef.current.click();
     } else if (type === 'files' && fileInputRef.current) {
-      fileInputRef.current.click(); 
+      fileInputRef.current.click();
     }
   };
 
   const handleDeleteMedia = (type: string, index: number) => {
     if (type === 'images') {
-      setImages(images.filter((_, i) => i !== index)); 
+      setImages(images.filter((_, i) => i !== index));
     } else if (type === 'video') {
-      setVideos(videos.filter((_, i) => i !== index)); 
+      setVideos(videos.filter((_, i) => i !== index));
     } else if (type === 'files') {
       setFiles(files.filter((_, i) => i !== index));
     }
@@ -269,7 +295,7 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
                       <span className="inline-block min-w-[200px] max-w-full bg-gray-500/5 p-2 rounded-[12px]">
                         <p>
                           <b className="text-white font-[600]">
-                            {commentData.commenter?.firstname || "Anonymous"}
+                            {capitalizeName(commentData.commenter?.firstname) + "  " + capitalizeName(commentData.commenter?.lastname)}
                           </b>
                         </p>
 
@@ -284,11 +310,8 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
                                   alt={`uploaded-image-${index}`}
                                   className="object-cover rounded-lg w-full h-full"
                                 />
-
-
                               </div>
                             ))}
-
                           </div>
                         }
                         {commentData.content_type === "video" && (
@@ -311,8 +334,6 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
                         >
                           {likeComment[commentData.id] ? 'Unlike' : 'Like'}
                         </span>
-
-
                         <span className="cursor-pointer hover:underline" onClick={() => setActiveReplyId(commentData.commenter.id)}>
                           Reply
                         </span>
@@ -326,12 +347,13 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
                     </div>
 
                     {commentData.replies &&
-                      commentData.replies.map((reply: any) => (
+                      commentData.replies.map((reply: any,index:any) => (
+                        console.log(reply, "===reply"),
                         <div className="flex items-start gap-2 mt-4 innerReply" key={reply.id}>
                           <span className="relative min-w-10 min-h-10 max-w-10 max-h-10 rounded-full block border border-2 border-black/5 border-white">
                             <img
                               className="w-full block h-full bg-cover bg-center overflow-hidden rounded-full"
-                              src="/logo.png"
+                              src={reply.commenter.image || "/profile-avatar-legacy-50.png"}
                               alt="logo"
                             />
                           </span>
@@ -339,7 +361,7 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
                             <div className="max-w-full">
                               <span className="inline-block min-w-[200px] max-w-full bg-gray-500/5 p-2 rounded-[12px]">
                                 <p>
-                                  <b>{reply.commenterName || "Anonymous"}</b>
+                                  <b>{capitalizeName(reply.commenter.firstname) + " " + capitalizeName(reply.commenter.lastname)}</b>
                                 </p>
                                 <p>{reply.comment}</p>
                               </span>
@@ -347,8 +369,7 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
                                 <span className="cursor-pointer text-green-600 hover:underline">
                                   Like
                                 </span>
-                                <span className="cursor-pointer hover:underline">Reply</span>
-                                <span className="text-sm text-black/30">
+                                <span className="text-sm text-white/30">
                                   {new Date(reply.createdAt).toLocaleDateString()}
                                 </span>
                                 <span className="bg-blue-500 p-1 rounded-full">
@@ -357,9 +378,21 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
                               </div>
                             </div>
                           </div>
-                          <span onClick={() => handleDelete(reply.id)} className="hover:bg-gray-500/5 relative min-h-10 min-w-10 max-w-10 flex items-center justify-center rounded-lg cursor-pointer block border border-2 border-black/5 border-white">
+
+                          {reply.commenter_id == userId && <span className="relative w-6" onClick={() => toggleInnerDeleteComment(index)}
+                          >
                             <MdMoreHoriz className="w-6 h-6" />
-                          </span>
+                            {deleteinnerButtonIndex === index && (
+                              <div className="absolute w-[80px] bg-white/10 rounded-lg top-5 right-0 justify-center p-1 bg-gray-500/5 text-center shadow-lg">
+                                <button
+                                  onClick={() => handleDeleteInnerComment(commentData.id)}
+                                  className="flex items-center text-white"
+                                >
+                                  <FaTrash className="fill-white mr-2" /> Delete
+                                </button>
+                              </div>
+                            )}
+                          </span>}
                         </div>
                       ))}
                   </div>
@@ -406,31 +439,31 @@ const CommentSection = ({ id, data, isActive, commentsCount, updateCommentsCount
                 </button>
 
                 <section className="p-2 pb-4">
-                {isUploadLoading &&
-                  <img src="/progress.gif" alt="Loading..." className="w-full h-20" />
-                }
-                {images.length > 0 &&
-                  <div className="relative mt-4 grid grid-cols-5 gap-2 uploaded-data">
-                    { images.map((image, index) => (
-                      <div key={index} className="relative uploaded-dataInner">
-                        {image instanceof File ? (
-                          <img
-                            src={URL.createObjectURL(image)}
-                            alt={`uploaded-image-${index}`}
-                            className="object-cover rounded-lg w-full h-full"
+                  {isUploadLoading &&
+                    <img src="/progress.gif" alt="Loading..." className="w-full h-20" />
+                  }
+                  {images.length > 0 &&
+                    <div className="relative mt-4 grid grid-cols-5 gap-2 uploaded-data">
+                      {images.map((image, index) => (
+                        <div key={index} className="relative uploaded-dataInner">
+                          {image instanceof File ? (
+                            <img
+                              src={URL.createObjectURL(image)}
+                              alt={`uploaded-image-${index}`}
+                              className="object-cover rounded-lg w-full h-full"
+                            />
+                          ) : (
+                            ""
+                          )}
+                          <RxCross2
+                            onClick={() => handleDeleteMedia('images', index)}
+                            className="absolute top-0 right-0 text-red-500 cursor-pointer w-6 h-6 bg-white rounded-full z-10"
                           />
-                        ) : (
-                          ""
-                        )}
-                        <RxCross2
-                          onClick={() => handleDeleteMedia('images', index)}
-                          className="absolute top-0 right-0 text-red-500 cursor-pointer w-6 h-6 bg-white rounded-full z-10"
-                        />
-                      </div>
-                    ))}
+                        </div>
+                      ))}
 
-                  </div>
-}
+                    </div>
+                  }
                   <div className="relative mt-4 grid grid-cols-5 gap-2 uploaded-data">
 
                     {videos.length > 0 && videos.map((video, index) => (

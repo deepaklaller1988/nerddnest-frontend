@@ -22,6 +22,8 @@ export const getErrorMessage = (errorCode: string): string => {
               return "Token Expired"
               case "ERR_HANDLE_ALREADY_EXIST":
                 return "Handle has already been taken"
+                case "Comment not found.":
+                  return "Comment Not Found"
          
     default:
       return 'An unexpected error occurred. Please try again.';
