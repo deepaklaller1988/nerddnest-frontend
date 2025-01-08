@@ -35,10 +35,10 @@ const GifSearch = () => {
         {gifs.map((gif: any) => (
           <div key={gif.id} className="thumbHub w-full flex justify-center ">
             <img
-            onClick={gif.title}
+            onClick={()=>gif.title}
               src={gif.images.fixed_height.url}
               alt={gif.title}
-              className="w-full max-w-[140px] md:max-w-[200px] lg:max-w-[220px] "
+              className="w-full max-w-[140px] md:max-w-[200px] lg:max-w-[220px]  z-40"
             />
           </div>
         ))}

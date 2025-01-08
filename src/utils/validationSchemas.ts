@@ -80,7 +80,7 @@ export const AddStoryValidationSchema = Yup.object({
     .test(
       "fileType",
       `Unsupported file format. Allowed formats: ${allowedFileTypes.join(
-        ", "
+        ","
       )}`,
       validateFileType
     ),

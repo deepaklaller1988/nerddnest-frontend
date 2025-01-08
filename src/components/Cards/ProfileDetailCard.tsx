@@ -135,7 +135,7 @@ export default function ProfileDetailCard({ data, type, buttonText, buttonIcon, 
                                     ) : (
                                     <img
                                         src={profileImage || 'profile-avatar-legacy-50.png'}
-                                        className='w-full h-full object-cover runded-lg block' alt="dp" />)}
+                                        className='w-full h-full object-cover runded-lg block object-top' alt="dp" />)}
                                     {data.id == userId && 
                                     <span className='absolute left-4 top-4 rounded-lg bg-white p-2'>
                                         <input className='top-0 left-0 absolute w-full h-full opacity-0 cursor-pointer'
