@@ -266,10 +266,14 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
             setFileHandler((prevFiles) => [...prevFiles, ...newFiles]);
           }
 
+          // setInitialValues((prevValues: any) => ({
+          //   ...prevValues,
+          //   mediaUrl: uploadData,
+          // }));
           setInitialValues((prevValues: any) => ({
             ...prevValues,
-            mediaUrl: uploadData,
-          }));
+            mediaUrl: [...prevValues.mediaUrl, ...uploadData], 
+          }))
 
         } catch (error) {
           setIsUploadLoading(false);
@@ -282,6 +286,7 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
       }
     }
   };
+
 
   const handleFileDelete = (index: number, type: 'images' | 'video' | 'document') => {
     if (type === 'images') {
